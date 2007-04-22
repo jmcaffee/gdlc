@@ -1,0 +1,19 @@
+rule G-Calc20PercentCombinedLoanAmount ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Max2ndLoanAmount = (.20 * Combined_Loan_Amount);
+  end
+end
+
+rule G-Restrict2ndTo20Percent ()
+  if ( Loan_Amount_2nd > Max2ndLoanAmount )
+  then
+    Decision = "Referred";
+    message(exception, exception, "Requested 2nd loan amount exceeds 20% maximum of <DPM>Max2ndLoanAmount</DPM>");
+  end
+end
+
+ruleset G-Restrict2ndLoanAmount(continue)
+	rule G-Calc20PercentCombinedLoanAmount ();
+	rule G-Restrict2ndTo20Percent();
+end

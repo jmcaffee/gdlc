@@ -1,0 +1,960 @@
+/*
+ */
+
+options {
+  MULTI = true;
+  VISITOR = true;
+}
+
+PARSER_BEGIN(GdlParser)
+
+package runtime.parser;
+
+import runtime.parser.DumpVisitor;
+
+public class GdlParser {
+
+  public static void main(String args[]) {
+    GdlParser parser;
+    if (args.length == 0) {
+      System.out.println("Guideline Parser :  Reading from standard input . . .");
+      parser = new GdlParser(System.in);
+    } else if (args.length == 1) {
+      System.out.println("Guideline Parser :  Reading from file " + args[0] + " . . .");
+      try {
+        parser = new GdlParser(new java.io.FileInputStream(args[0]));
+      } catch (java.io.FileNotFoundException e) {
+        System.out.println("Guideline Parser :  File " + args[0] + " not found.");
+        return;
+      }
+    } else {
+      System.out.println("Guideline Parser :  Usage is one of:");
+      System.out.println("         java GdlParser < inputfile");
+      System.out.println("OR");
+      System.out.println("         java GdlParser inputfile");
+      return;
+    }
+    try {
+      ASTCompilationUnit cu = parser.CompilationUnit();
+      System.out.println("Guideline Parser :  Guideline parsed successfully.");
+        dump(cu);
+    } catch (ParseException e) {
+      System.out.println("Guideline Parser :  Encountered errors during parse.");
+      System.out.println(e.toString());
+      System.out.println("Guideline Parser :  Encountered errors during parse.");
+    }
+  }
+
+  static public void dump() {
+        ((SimpleNode)jjtree.rootNode()).dump(">");
+  
+  }
+  
+  public static void dump(ASTCompilationUnit cu) {
+        DumpVisitor v=new DumpVisitor();
+  
+        System.out.println(cu.jjtAccept(v,null));
+  //        ((SimpleNode)jjtree.rootNode()).dump(">");
+      
+    }
+    
+
+}
+
+PARSER_END(GdlParser)
+
+SKIP :
+{
+  " "
+| "\t"
+| "\r"
+| "\n"
+}
+
+
+TOKEN :  /* GDL Keywords */
+{
+  < ALIAS:    "alias">
+| < INCLUDE:  "include">
+| < IMPORT:   "import">
+}
+
+
+
+TOKEN :  /* GDL Keywords 2 */
+{
+  < DPM:      "dpm">
+| < DSM:      "dsm">
+| < PPM:      "ppm">
+}
+
+
+
+SPECIAL_TOKEN :  /* DPM Variable modifier */
+{
+  < DECISION: "decision">
+}
+
+
+
+TOKEN :  /* DPM Variable Types */
+{
+  < BOOLEAN:    "boolean">
+| < DATE:       "date">
+| < MONEY:      "money">
+| < NUMERIC:    "numeric">
+| < PERCENTAGE: "percentage">
+| < TEXT:       "text">
+}
+
+
+
+TOKEN :  /* PPM Variable Types */
+{
+  < APPLICATION:"app">
+| < CREDIT:     "crd">
+| < PRODUCT:    "prd">
+}
+
+
+
+TOKEN :  /* Guideline Keywords */
+{
+  < GUIDELINE:  "guideline">
+| < RULESET:    "ruleset">
+| < RULE:       "rule">
+| < MESSAGE:    "message">
+| < IF:         "if">
+| < THEN:       "then">
+| < ELSE:       "else">
+| < END:        "end">
+| < TRUE:       ( "true" | "TRUE" ) >
+| < FALSE:      ( "false" | "FALSE" ) >
+| < CONTINUE:   "continue">
+}
+
+
+
+TOKEN :  /* Guideline 'Message' Keywords */
+{
+  < MSG_EXC:          "exception">
+| < MSG_EXC_ASSETS:   "assets">
+| < MSG_FINDINGS:     "findings">
+| < MSG_OBSERVATION:  "observation">
+| < MSG_CREDIT:       "credit">
+}
+
+
+
+TOKEN :
+{ 
+    < NUMERIC_CONSTANT: ( <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> ) >
+}
+
+
+TOKEN :
+{
+  < INTEGER_LITERAL:
+        <DECIMAL_LITERAL> (["l","L"])?
+      | <HEX_LITERAL> (["l","L"])?
+      | <OCTAL_LITERAL> (["l","L"])?
+  >
+|
+  < #DECIMAL_LITERAL: ["0"-"9"] (["0"-"9"])* >
+|
+  < #HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ >
+|
+  < #OCTAL_LITERAL: "0" (["0"-"7"])* >
+|
+  < FLOATING_POINT_LITERAL:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+|
+  < CHARACTER_LITERAL:
+      "'"
+      (   (~["'","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )
+      "'"
+  >
+|
+  < STRING_LITERAL:
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+}
+
+
+TOKEN :
+{
+  < FILENAME_LITERAL:
+      "\""
+      (   (~["\"","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+  >
+}
+
+
+
+TOKEN :   /* Seperators */
+{
+  < LPAREN:     "(" >
+| < RPAREN:     ")" >
+| < LBRACE:     "{" >
+| < RBRACE:     "}" >
+| < LBRACKET:   "[" >
+| < RBRACKET:   "]" >
+| < SEMICOLON:  ";" >
+| < COMMA:      "," >
+| < DOT:        "." >
+}
+  
+
+TOKEN :   /* Special tokens */
+{
+  < PL:         "PL">
+| < ASSIGN:     "=">
+| < QUOTE:      "'">
+| < DQUOTE:     "\"">
+}
+/* | < EOL:        "\n">
+*/
+
+
+
+TOKEN :  /* Math Operators */
+{
+  < PLUS:     "+" >
+| < MINUS:    "-">
+| < MULT:     "*">
+| < DIV:      "/">
+| < RAISETO:  "^">
+}
+  
+
+
+TOKEN :  /* Equality Operators */
+{
+  < EQU:    "==" >
+| < NEQ1:   "!=">
+| < NEQ2:   "<>">
+| < LT:     "<">
+| < GT:     ">">
+| < LEQ:    "<=">
+| < GEQ:    ">=">
+}
+  
+
+
+
+TOKEN :  /* Boolean Operators */
+{
+  < AND1:   "&&" >
+| < AND2:   "and" >
+| < OR1:    "||">
+| < OR2:    "or">
+}
+  
+
+
+/* IDENTIFIERS */
+
+TOKEN :
+{
+  < IDENTIFIER: <LETTER> ( "-" | <LETTER>|<DIGIT>)* >
+|
+  < #LETTER:
+      ["_","a"-"z","A"-"Z"]
+  >
+|
+  < #DIGIT:
+      ["0"-"9"]
+  >
+}
+
+
+/* CompilationUnit */
+ASTCompilationUnit CompilationUnit() :
+{}
+{
+  ( VarDef() 
+  | Alias() 
+  | Import() 
+  | Include() 
+  | RuleDef() 
+  | RulesetDef() )* 
+  ( GuidelineDef() )? 
+  <EOF>  
+  { return jjtThis; }
+}
+
+
+
+void VarDef() :
+{}
+{
+  ( <DPM> VarType() Name() EOS() )
+  | ( <PPM> PpmVarType() Name() EOS() )
+}
+
+
+
+void VarType() :
+{}
+{
+  <BOOLEAN>       { jjtThis.data.put("DpmType","1");}
+  | <DATE>        { jjtThis.data.put("DpmType","2");}
+  | <MONEY>       { jjtThis.data.put("DpmType","3");}
+  | <NUMERIC>     { jjtThis.data.put("DpmType","4");}
+  | <PERCENTAGE>  { jjtThis.data.put("DpmType","5");}
+  | <TEXT>        { jjtThis.data.put("DpmType","6");}
+} 
+
+/*
+void VarType() :
+{ Token t; }
+{
+  t=<BOOLEAN>       { jjtThis.data.put("VarType","1");}
+  | t=<DATE>        { jjtThis.data.put("VarType","2");}
+  | t=<MONEY>       { jjtThis.data.put("VarType","3");}
+  | t=<NUMERIC>     { jjtThis.data.put("VarType","4");}
+  | t=<PERCENTAGE>  { jjtThis.data.put("VarType","5");}
+  | t=<TEXT>        { jjtThis.data.put("VarType","6");}
+} 
+*/
+
+void PpmVarType() :
+{ Token t; }
+{
+  t=<APPLICATION>   { jjtThis.data.put("PpmType","APP");}
+  | t=<CREDIT>      { jjtThis.data.put("PpmType","CRD");}
+  | t=<PRODUCT>     { jjtThis.data.put("PpmType","PRD");}
+}
+
+
+
+void Alias() :
+{}
+{
+  <ALIAS> <LPAREN> AliasType() "," Name() "," AliasOf() <RPAREN> EOS()
+}
+
+
+
+void AliasType() :
+{ Token t; }
+{
+  t=<RULE>        { jjtThis.data.put("AliasType",token.image);}
+  | t=<RULESET>   { jjtThis.data.put("AliasType",token.image);}
+  | t=<DPM>       { jjtThis.data.put("AliasType",token.image);}
+  | t=<PPM>       { jjtThis.data.put("AliasType",token.image);} 
+}
+
+
+
+void AliasOf() :
+{}
+{
+  StringLiteral() 
+}
+
+
+
+void EOS() #void :
+{}
+{
+  ( ";" )
+}
+
+
+void Import() :
+{}
+{
+  <IMPORT> <LPAREN> ImportType() "," Filename() <RPAREN> EOS()
+}
+
+
+void Filename() :
+{}
+{
+  <FILENAME_LITERAL> { jjtThis.data.put("value",token.image);}
+}
+
+
+void ImportType() :
+{}
+{
+  ( <DPM>
+  | <PPM>
+  ) { jjtThis.data.put("value",token.image);}
+}
+
+
+void Include() :
+{}
+{
+  <INCLUDE> ParenFilenameLiteral() EOS()
+}
+
+
+void ParenFilenameLiteral() #void :
+{}
+{
+  ( ( <LPAREN> Filename() <RPAREN> ) | Filename() )
+}
+
+void ParenStringLiteral() #void :
+{}
+{
+  ( ( <LPAREN> StringLiteral() <RPAREN> ) | StringLiteral() ) 
+}
+
+void GuidelineDef() :
+{} 
+{
+  <GUIDELINE> ( <LPAREN> ParenStringLiteral() <RPAREN> )  //#Name(1)   
+  ( ( LOOKAHEAD(4)
+    RulesetDef() 
+  | RulesetRef()  )
+  | ( LOOKAHEAD(5)
+    RuleRef() 
+  | RuleDef() ) )+ 
+
+  <END> 
+}
+
+
+
+
+void StringLiteral() #Str : 
+{}
+{
+  <STRING_LITERAL>  { jjtThis.data.put("value",token.image);}
+}
+
+void Name() :
+{}
+{
+  <IDENTIFIER> { jjtThis.data.put("value",token.image);}
+}
+
+void RulesetDef() :
+{}
+{
+  "ruleset" Name() <LPAREN> ( ExecuteType() ) ( "," <PL> )? <RPAREN>
+  (LOOKAHEAD(5) RuleDef()
+    | RuleRef() )+ 
+  <END>
+}
+
+
+
+void ExecuteType() :
+{}
+{
+  <TRUE>        { jjtThis.data.put("value","1");} 
+  | <FALSE>     { jjtThis.data.put("value","2");} 
+  | <CONTINUE>  { jjtThis.data.put("value","3");} 
+}
+
+
+
+void RulesetRef() :
+{}
+{
+  "ruleset" Name() <LPAREN> <RPAREN> EOS()
+}
+
+
+
+void RuleDef() :
+{}
+{
+  "rule" Name() <LPAREN> <RPAREN>
+  ( IfThenElse() )
+  <END>
+}
+
+
+
+void RuleRef() :
+{}
+{
+  "rule" Name() <LPAREN> <RPAREN> EOS()
+}
+
+
+
+void IfThenElse() #void :
+{}
+{
+  "if" <LPAREN> Condition() <RPAREN>
+  "then"
+  IfActions()
+  ( <ELSE> 
+    ElseActions()
+  )?
+  <END>
+ 
+}
+
+// COMPARISON EXPRESSIONS
+
+/*
+Condition  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompTerm )*
+*/
+void Condition() :
+{}
+{
+  Expression()
+}
+
+/*
+Expression  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompTerm )*
+*/
+void Expression() :
+{}  
+{
+  Compute()
+}
+
+/*
+Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompTerm )*
+*/
+void Compute() #LogicalCompute(>1) :
+{}
+{
+  CompTerm() ( LogicalOperator() CompTerm() )*
+}
+
+
+
+void LogicalOperator() :
+{ Token t; }
+{
+  ( t=<AND1>
+  | t=<AND2>
+  | t=<OR1>
+  | t=<OR2> ) { jjtThis.setText( t.image ); }
+}
+
+
+
+/*
+CompTerm  --> Primary ( LT Primary 
+            | GT Primary
+            | NEQ1 Primary
+            | NEQ2 Primary
+            | EQU Primary
+            | LEQ Primary
+            | GEQ Primary)*
+
+*/
+void CompTerm() #EqualityCompute(>1) :
+{}
+{
+  Operand() ( EqualityOperator() Operand() )*
+ 
+}
+
+
+
+/*
+void EqualityOperator() :
+{ Token t; }
+{
+  t=<LT> { jjtThis.setText( t.image ); }
+  | t=<GT> { jjtThis.setText( t.image ); }
+  | t=<NEQ1> { jjtThis.setText( t.image ); }
+  | t=<NEQ2> { jjtThis.setText( t.image ); }
+  | t=<EQU> { jjtThis.setText( t.image ); }
+  | t=<LEQ> { jjtThis.setText( t.image ); }
+  | t=<GEQ> { jjtThis.setText( t.image ); }
+}
+*/
+void EqualityOperator() :
+{ Token t; }
+{
+  ( t=<LT>
+  | t=<GT>
+  | t=<NEQ1>
+  | t=<NEQ2>
+  | t=<EQU>
+  | t=<LEQ>
+  | t=<GEQ> ) { jjtThis.setText( t.image ); }
+}
+
+
+
+/*
+Operand   --> NUMERIC_CONSTANT
+        | STRING_LITERAL
+        | Variable
+        | LPAREN Compute RPAREN
+
+*/
+/*
+ASTOperand Operand() :
+{}
+{
+  ( Constant()
+    | Variable()
+    | Brace()
+  )
+  { return jjtThis; }
+}
+*/
+void Operand() #void :
+{}
+{
+  ( Constant()
+    | Variable()
+    | Brace()
+  )
+}
+
+
+
+
+void Brace() :
+{}
+{
+  <LPAREN> Compute() <RPAREN>
+}
+
+
+
+
+void Constant() :
+{ Token t; }
+{
+  ( t=<NUMERIC_CONSTANT>
+  | t=<STRING_LITERAL> ) { jjtThis.setText( t.image ); }
+}
+
+
+
+// MATH EXPRESSIONS
+
+/*
+MathExpression  --> MathTerm ( PLUS MathTerm | MINUS MathTerm )*
+*/
+void MathExpression() :
+{}
+{
+  /*MathCompute() ( PlusOperator() MathCompute() | MinusOperator() MathCompute() )*  */
+  MCompute()
+}
+
+
+/*
+MCompute  --> MathTerm ( PLUS MathTerm | MINUS MathTerm )*
+*/
+void MCompute() #MathCompute(>1) :
+{}
+{
+  MathCompute() ( PlusOperator() MathCompute() | MinusOperator() MathCompute() )*  
+}
+
+
+/*
+PlusOperator - This is here so that the tree builds correctly and the 
+                operator can be retrieved.
+*/
+void PlusOperator() :
+{ Token t; }
+{
+  t=<PLUS> {jjtThis.setText( t.image ); }
+}
+
+
+
+/*
+MinusOperator - This is here so that the tree builds correctly and the 
+                operator can be retrieved.
+*/
+void MinusOperator() :
+{ Token t; }
+{
+  t=<MINUS> {jjtThis.setText( t.image ); }
+}
+
+
+
+/*
+MathCompute    --> MTerm ( MULT MTerm | DIV MTerm )*
+*/
+void MathCompute() #MathCompute(>1):
+{}
+{
+  MultTerm() ( MultOperator() MultTerm() | DivOperator() MultTerm() )*  
+}
+
+
+/*
+MultOperator - This is here so that the tree builds correctly and the 
+                operator can be retrieved.
+*/
+void MultOperator() :
+{ Token t; }
+{
+  t=<MULT> {jjtThis.setText( t.image ); }
+}
+
+
+
+/*
+DivOperator - This is here so that the tree builds correctly and the 
+                operator can be retrieved.
+*/
+void DivOperator() :
+{ Token t; }
+{
+  t=<DIV> {jjtThis.setText( t.image ); }
+}
+
+
+
+/*
+MultTerm     --> MathOperand ( RAISETO MathOperand )*
+*/
+void MultTerm() #MathCompute(>1) :
+{}
+{
+  MathOperand() ( RaiseToOperator() MathOperand() )*   
+}
+
+
+/*
+RaiseToOperator - This is here so that the tree builds correctly and the 
+                operator can be retrieved.
+*/
+void RaiseToOperator() :
+{ Token t; }
+{
+  t=<RAISETO> {jjtThis.setText( t.image ); }
+}
+
+
+
+/*
+MathOperand   --> NUMERIC_CONSTANT
+          | LPAREN MathExpression RPAREN
+          | MINUS MathOperand
+          
+
+*/
+void MathOperand() #void :
+{}
+{
+//  ( <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> )
+//  <NUMERIC_CONSTANT>
+  MathConstant()
+  | Variable()
+  | MathBrace()
+  | ( <MINUS>  MathOperand() )
+}
+
+
+
+void MathBrace() #Brace :
+{}
+{
+//  ( <LPAREN> MathExpression() <RPAREN> )
+  ( <LPAREN> MCompute() <RPAREN> )
+}
+
+
+
+
+void MathConstant() :
+{ Token t; }
+{
+  t=<NUMERIC_CONSTANT> { jjtThis.setText( t.image ); }
+}
+
+
+
+void IfActions() :
+{}
+{
+  ( 
+    Assign() 
+  | Message() 
+  )* 
+}
+
+void ElseActions() :
+{}
+{
+  ( 
+    Assign() 
+  | Message() 
+  )* 
+}
+
+void Assign() :
+{}
+{
+  AssignTo() <ASSIGN> AssignValue() EOS()
+}
+
+
+void AssignTo() :
+{}
+{
+  Variable()
+}
+
+
+void AssignValue() :
+{}
+{
+  (LOOKAHEAD(2)
+    MathExpression()
+    | ConstantExpression()
+  )
+}
+
+
+void ConstantExpression() #Expression :
+{}
+{
+  Constant()
+}
+
+
+
+void Message() :
+{}
+{
+  "message" <LPAREN> ( ( Exptn() "," ExptnType() ) | MessageType() ) "," StringLiteral() <RPAREN> EOS()
+}
+
+void Exptn() :
+{}
+{
+  <MSG_EXC>
+}
+
+
+void ExptnType() :
+{ Token t;}
+{
+  ( t=<MSG_EXC_ASSETS> | t=<MSG_EXC> ) { jjtThis.setText(t.image); }
+}
+
+void MessageType() :
+{ Token t; }
+{
+  ( t=<MSG_FINDINGS> | t=<MSG_OBSERVATION> | t=<MSG_CREDIT> ) { jjtThis.setText(t.image); }
+}
+
+
+void Variable() :
+{}
+{
+  Name()
+//  ( VarCast() )? <IDENTIFIER>
+}
+
+void VarCast() :
+{}
+{
+  <LPAREN> VariableType() <RPAREN>
+}
+
+
+void VariableType() :
+{}
+{
+  ( <DPM> | <DSM> | <PPM> )
+}
+
+
+void AndOperator() :
+{}
+{
+  <AND1>
+| <AND2> 
+}
+
+void OrOperator() :
+{}
+{
+  <OR1> 
+| <OR2> 
+}
+
+/* Example Rules/sets
+
+rule G-TestRule ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total
+    Rate = Rate_1st
+  else
+    Rate_1st = 0
+    Rate = 0
+  end
+end
+
+rule G-TestRule2 ()
+  if ( Loan_Amount_1st > 100000 &&
+        ( Loan_Amount_1st < 200000 ||
+          Loan_Amount_1st == 1 
+        )
+     )
+  then
+    Rate = Rate_1st
+  end
+end
+
+ruleset CoolRuleset(true,0)
+
+  rule G-TestRule3 ()
+    if ( Loan_Amount == Loan_Amount )
+    then
+      Rate_1st = Rate_1st + Rate_Adj-Total; Rate = Rate_1st
+    end
+  end
+  
+  rule G-TestRule4 ()
+    if ( Loan_Amount_1st > 100000 &&
+          ( (Loan_Amount_1st < 200000) ||
+            Loan_Amount_1st == 1 
+          )
+       )
+    then
+      Rate = Rate_1st;
+    end
+  end
+
+end
+
+*/

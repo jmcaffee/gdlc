@@ -1,0 +1,211 @@
+<project name="JavaCC Build File" default="dist" basedir="/net.bd.gdlc">
+	<description>Build a JavaCC example</description>
+
+
+	<!-- Build environment properties -->
+	<property file="build.env.properties"/>
+	<property environment="env" />
+	<property name="javacc.home" 		location="${env.JAVACC_HOME}"/>
+
+
+	<!-- Project properties -->
+<!-- 
+	<property name="src"				location="${basedir}/src"/>
+	<property name="grammar.src"		location="${basedir}/src/grammar"/>
+	<property name="build.dir"			location="${basedir}/build"/>
+	<property name="dist.dir" 			location="${basedir}/dist"/>
+
+	<property name="parser.src"			location="${build.dir}/src/example00"/>
+	<property name="javacc.target"		location="${grammar.src}/example0.jj"/>
+-->
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: init                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="init">
+		<mkdir dir="${parser.src}" />
+        <mkdir dir="${build.dir}"/>
+    	<mkdir dir="${dist.dir}"/>
+    </target>
+
+
+	
+    <!-- ================================= 
+          target: build              
+         ================================= -->
+    <target name="build" 
+    		depends="init, build-parser, compile" 
+    		description="--> build the parser">
+        <echo>create build</echo>
+        
+    </target>
+
+
+	<!-- ================================= 
+          target: dist              
+         ================================= -->
+    <target name="dist" 
+    		depends="init, build" 
+    		description="--> build the parser distribution">
+    	<copy 	todir="${dist.dir}"
+    			includeEmptyDirs="false">
+    		<fileset dir="${build.dir}"/>
+    	</copy>
+    </target>
+
+	
+	
+    <!-- ================================= 
+          target: build-parser
+         ================================= -->
+    <target name="build-parser"
+    		depends="init" 
+    		description="--> build the parser classes">
+    	
+		<tstamp>
+			<format property="today" pattern="yyMMdd-HHmm"/>
+		</tstamp>
+	
+		<jjtree
+			target="${jjtree.target}"
+			outputdirectory="${parser.src}"
+			javacchome="${javacc.home}"
+			static="true"
+		/>
+
+		<javacc
+			target="${javacc.target}"
+			outputdirectory="${parser.src}"
+			javacchome="${javacc.home}"
+			static="true"
+		/>
+
+    </target>
+
+    <!-- ================================= 
+          target: compile
+         ================================= -->
+    <target name="compile"
+    	depends="init, copy-custom-src"
+    	description="--> compile the source">
+    	
+		<tstamp>
+			<format property="today" pattern="yyMMdd-HHmm"/>
+		</tstamp>
+
+
+
+    </target>
+
+	<!--  Now handled by copy-custom-src
+			<copy 
+			todir="${parser.src}" 
+			file="${grammar.src}/SimpleNode.java" 
+			overwrite="true" />
+		
+		<copy 
+			todir="${parser.src}" 
+			file="${grammar.src}/Compute.java" 
+			overwrite="true" />
+		
+		<copy 
+			todir="${parser.src}" 
+			file="${grammar.src}/ASTLogicalCompute.java" 
+			overwrite="true" />
+		
+		<copy 
+			todir="${parser.src}" 
+			file="${grammar.src}/ASTEqualityCompute.java" 
+			overwrite="true" />
+		
+		<javac srcdir="${parser.src}"
+			destdir="${build.dir}"
+			debug="on"
+		/>
+	
+	-->
+
+	<!-- ================================= 
+          target: copy-custom-src              
+         ================================= -->
+    <target name="copy-custom-src" 
+    	depends="init, backup-parser-src" 
+    	description="--> copy custom parser src files to build dir">
+        
+		<delete>
+			<fileset dir="${parser.src}" id="custom.src.set">
+			    <include name="ASTEqualityCompute.java"/>
+			    <include name="ASTLogicalCompute.java"/>
+			    <include name="BaseNode.java"/>
+			    <include name="Compute.java"/>
+			    <include name="DumpVisitor.java"/>
+			    <include name="SimpleNode.java"/>
+			</fileset>
+		</delete>
+
+
+    </target>
+
+	<!--
+	    	<copy todir="${parser.src}" overwrite="true">
+			<fileset dir="${grammar.src}/runtime/parser">
+			  <include name="**/*.java"/>
+			</fileset>
+		</copy>
+	
+	-->
+	<!-- ================================= 
+          target: backup-parser-src              
+         ================================= -->
+    <target name="backup-parser-src" 
+    	depends="init" 
+    	description="--> backup generated parser src file that are replaced with custom src">
+
+    	<delete dir="${build.dir}/backup/runtime/parser" />
+    	<copy todir="${build.dir}/backup/runtime/parser">
+  	    <fileset dir="${parser.src}">
+  	    	<exclude name="**/*.bak" />
+  	    </fileset>
+  	  </copy>
+        
+    </target>
+	
+    <!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean" 
+    		depends="clean-build, clean-dist, clean-parser-src" 
+    		description="--> delete all directories">
+    	
+    </target>
+
+
+    <!-- ================================= 
+          target: clean-build              
+         ================================= -->
+    <target name="clean-build" 
+    		description="--> delete build directory">
+        <delete dir="${build.dir}" />
+    </target>
+
+	
+    <!-- ================================= 
+          target: clean-dist              
+         ================================= -->
+    <target name="clean-dist" 
+    		description="--> delete distribution directory">
+       	<delete dir="${dist.dir}"/>
+    </target>
+
+
+    <!-- ================================= 
+          target: clean-parser-src
+         ================================= -->
+    <target name="clean-parser-src" 
+    		description="--> delete generated parser src directory">
+        <delete dir="${parser.src}" />
+    </target>
+
+	
+
+</project>

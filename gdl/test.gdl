@@ -1,0 +1,87 @@
+import(dpm,"c:\some\file\path.dict");
+import(ppm,"c:\some\file\path.dict");
+
+include "c:\some\other\file\path.gdl";
+include ("c:\some\other\file\path.gdl");
+
+			dpm 	numeric 	G-TestDpm;
+decision 	dpm 	numeric 	testDsm;
+
+			ppm 	app 		appPpm;
+			ppm 	crd 		creditPpm;
+			ppm 	prd			productPpm;
+
+			dpm 	boolean 	BoolDpm;
+			dpm 	date 		DateDpm;
+			dpm 	money 		MoneyDpm;
+			dpm 	numeric 	NumDpm;
+			dpm 	percentage 	PercDpm;
+			dpm 	text 		TextDpm;
+
+alias (rule, G-TestRule, "G-Test Rule");
+alias (ruleset, G-TestRule, "G-Test Rule");
+alias (dpm, G-TestDpm, "G-Test DPM");
+alias (ppm, G-TestPpm, "G-Test PPM");
+
+rule G-TestRule ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+    Rate = Rate_1st;
+  else
+    Rate_1st = 0;
+    Rate = 0;
+  end
+end
+
+rule G-TestRule2 ()
+  if ( Loan_Amount_1st > 100000 &&
+        ( Loan_Amount_1st < 200000 ||
+          Loan_Amount_1st == 1 
+        )
+     )
+  then
+    Rate = Rate_1st;
+  end
+end
+
+ruleset CoolRuleset(true)
+
+  rule G-TestRule3 ()
+    if ( Loan_Amount == Loan_Amount )
+    then
+      Rate_1st = Rate_1st + Rate_Adj-Total; Rate = Rate_1st;
+    end
+  end
+  
+  rule G-TestRule4 ()
+    if ( Loan_Amount_1st > 100000 &&
+          ( (Loan_Amount_1st < 200000) ||
+            Loan_Amount_1st == 1 
+          )
+       )
+    then
+      Rate = Rate_1st;
+    end
+  end
+
+end
+
+guideline ("Test Guideline")
+
+	ruleset CoolRuleset();
+	rule	G-TestRule4();
+
+  rule G-TestRule5 ()
+    if ( Loan_Amount_1st > 100000 &&
+          ( (Loan_Amount_1st < 200000) ||
+            Loan_Amount_1st == 1 
+          )
+       )
+    then
+      Rate = Rate_1st;
+    end
+  end
+
+	
+end

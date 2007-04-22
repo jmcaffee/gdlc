@@ -1,0 +1,15 @@
+  rule G-AssignTest ()
+    if ( Loan_Amount_1st > 100000 &&
+          ( (Loan_Amount_1st < 200000) ||
+            Loan_Amount_1st == 1 
+          )
+       )
+    then
+      Rate_1st = Rate_1st + Rate_Adj-Total; Rate = Rate_1st;
+      Ans = (( 3 + 2 ) * 2) / 2;
+    else
+      Ans = "Testing";
+    end
+  end
+  
+

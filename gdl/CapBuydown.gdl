@@ -1,0 +1,166 @@
+import(dpm,"c:\some\file\path.dict");
+
+include "c:\some\other\file\path.gdl";
+include ("c:\some\other\file\path.gdl");
+
+//****************************************************************************
+// Aliases
+
+alias (lookup, HLK-MaxMarginBuydown_BRO_LK1,"HLK-MaxMarginBuydown BRO LK1");
+alias (lookup, HLK-MaxMarginBuyup_BRO_LK1, 	"HLK-MaxMarginBuyup BRO LK1");
+alias (dpm, G-TestRule, "G-Test Rule");
+alias (ppm, G-TestRule, "G-Test Rule");
+
+
+//****************************************************************************
+// Rule/sets definitions
+//****************************************************************************
+rule HLK-LookupMinMargin ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    maxMarginBuydown 	= LK(HLK-MaxMarginBuydown_BRO_LK1);
+    maxMarginBuyup 		= LK(HLK-MaxMarginBuyup_BRO_LK1);
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-LookupBuydownPrice ()
+  if ( User_Type != "Correspondent" )
+  then
+    Margin_Adj-Price = maxMarginBuydown;
+    maxBuydownPrice = LK(HLK-Price2nd_BRO_LK1);
+  else
+    Margin_Adj-Price = maxMarginBuydown;
+    maxBuydownPrice = LK(HLK-Price2nd_COR_LK1);
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-LookupBuyupPrice ()
+  if ( User_Type != "Correspondent" )
+  then
+    Margin_Adj-Price = maxMarginBuyup;
+    maxBuyupPrice = LK(HLK-Price2nd_BRO_LK1);
+  else
+    Margin_Adj-Price = maxMarginBuyup;
+    maxBuyupPrice = LK(HLK-Price2nd_BRO_LK1);
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-CapBuydownPrice-BRO()
+  if ( (User_Type == "Broker") && 
+  		(Final_Price_2nd > maxBuydownPrice ) )
+  then
+    Final_Price_2nd = maxBuydownPrice;
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-CapBuydownPrice-RTN()
+  if ( (User_Type == "Retention") && 
+  		(Final_Price_2nd > maxBuydownPrice ) )
+  then
+    Final_Price_2nd = maxBuydownPrice;
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-CapBuydownPrice-COR()
+  if ( (User_Type == "Correspondent") && 
+  		(Final_Price_2nd < maxBuydownPrice ) )
+  then
+    Final_Price_2nd = maxBuydownPrice;
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-CapBuyupPrice-BRO ()
+  if ( (User_Type == "Broker") && 
+  		(Final_Price_2nd < maxBuyupPrice ) )
+  then
+    Final_Price_2nd = maxBuyupPrice;
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-CapBuyupPrice-RTN ()
+  if ( (User_Type == "Retention") && 
+  		(Final_Price_2nd < maxBuyupPrice ) )
+  then
+    Final_Price_2nd = maxBuyupPrice;
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-CapBuyupPrice-COR ()
+  if ( (User_Type == "Correspondent") && 
+  		(Final_Price_2nd > maxBuyupPrice ) )
+  then
+    Final_Price_2nd = maxBuyupPrice;
+  end
+end
+
+
+
+//****************************************************************************
+rule HLK-SetMinPriceAllowed ()
+  if (User_Type != "Correspondent")
+  then
+    Min_Price = -4;
+  else
+  	Min_Price = 104;
+  end
+end
+
+
+
+//****************************************************************************
+ruleset HLK-ApplyMinimumCaps(continue)
+
+  	rule HLK-LookupMinMargin ();
+  
+	rule HLK-LookupBuydownPrice ();
+	
+	rule HLK-LookupBuyupPrice ();
+	
+	rule HLK-CapBuydownPrice-BRO()
+
+	rule HLK-CapBuydownPrice-RTN()
+
+	rule HLK-CapBuydownPrice-COR()
+
+	rule HLK-CapBuyupPrice-BRO ()
+
+	rule HLK-CapBuyupPrice-RTN ()
+
+	rule HLK-CapBuyupPrice-COR ()
+
+	rule HLK-SetMinPriceAllowed ()
+
+end
+
+
+
+//****************************************************************************
+guideline ("Test Guideline")
+
+	ruleset HLK-ApplyMinimumCaps();
+	
+end
