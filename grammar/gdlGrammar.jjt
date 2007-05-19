@@ -4,12 +4,14 @@
 options {
   MULTI = true;
   VISITOR = true;
+  STATIC = false;
 }
 
 PARSER_BEGIN(GdlParser)
 
 package runtime.parser;
 
+import runtime.main.Log;
 import runtime.parser.DumpVisitor;
 
 public class GdlParser {
@@ -17,14 +19,14 @@ public class GdlParser {
   public static void main(String args[]) {
     GdlParser parser;
     if (args.length == 0) {
-      System.out.println("Guideline Parser :  Reading from standard input . . .");
+      Log.status("Guideline Parser :  Reading from standard input . . .");
       parser = new GdlParser(System.in);
     } else if (args.length == 1) {
-      System.out.println("Guideline Parser :  Reading from file " + args[0] + " . . .");
+      Log.status("Guideline Parser :  Reading from file " + args[0] + " . . .");
       try {
         parser = new GdlParser(new java.io.FileInputStream(args[0]));
       } catch (java.io.FileNotFoundException e) {
-        System.out.println("Guideline Parser :  File " + args[0] + " not found.");
+        Log.error("Guideline Parser :  File " + args[0] + " not found.");
         return;
       }
     } else {
@@ -36,16 +38,15 @@ public class GdlParser {
     }
     try {
       ASTCompilationUnit cu = parser.CompilationUnit();
-      System.out.println("Guideline Parser :  Guideline parsed successfully.");
+      Log.status("Guideline Parser :  Guideline parsed successfully.");
         dump(cu);
     } catch (ParseException e) {
-      System.out.println("Guideline Parser :  Encountered errors during parse.");
-      System.out.println(e.toString());
-      System.out.println("Guideline Parser :  Encountered errors during parse.");
+      Log.error("Guideline Parser :  Encountered errors during parse.");
+      Log.error(e.toString());
     }
   }
 
-  static public void dump() {
+  public void dump() {
         ((SimpleNode)jjtree.rootNode()).dump(">");
   
   }
@@ -69,6 +70,8 @@ SKIP :
 | "\t"
 | "\r"
 | "\n"
+| <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/">
 }
 
 
@@ -207,18 +210,13 @@ TOKEN :
 {
   < FILENAME_LITERAL:
       "\""
-      (   (~["\"","\n","\r"])
-        | ("\\"
-            ( ["n","t","b","r","f","\\","'","\""]
-            | ["0"-"7"] ( ["0"-"7"] )?
-            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
-            )
-          )
+      ( ["\\",".",":","/"]
+      	| ["_","a"-"z","A"-"Z"]
+        | ["0"-"9"]
       )*
       "\""
   >
 }
-
 
 
 TOKEN :   /* Seperators */
@@ -316,52 +314,39 @@ ASTCompilationUnit CompilationUnit() :
 
 
 void VarDef() :
-{}
+{String nm,typ;}
 {
-  ( <DPM> VarType() Name() EOS() )
-  | ( <PPM> PpmVarType() Name() EOS() )
+  ( <DPM> typ=VarType(){jjtThis.data.put("ProductType",typ);jjtThis.data.put("Type","DPM");jjtThis.data.put("varType","DPM");} nm=Name(){jjtThis.data.put("Name",nm);} EOS() )
+  | ( <PPM> typ=PpmVarType(){jjtThis.data.put("Type",typ);jjtThis.data.put("varType","PPM");} nm=Name(){jjtThis.data.put("Name",nm);} EOS() )
 }
 
-
-
-void VarType() :
+String VarType() #void :
 {}
 {
-  <BOOLEAN>       { jjtThis.data.put("DpmType","1");}
-  | <DATE>        { jjtThis.data.put("DpmType","2");}
-  | <MONEY>       { jjtThis.data.put("DpmType","3");}
-  | <NUMERIC>     { jjtThis.data.put("DpmType","4");}
-  | <PERCENTAGE>  { jjtThis.data.put("DpmType","5");}
-  | <TEXT>        { jjtThis.data.put("DpmType","6");}
+  <BOOLEAN>       { return new String("1");}
+  | <DATE>        { return new String("2");}
+  | <MONEY>       { return new String("3");}
+  | <NUMERIC>     { return new String("4");}
+  | <PERCENTAGE>  { return new String("5");}
+  | <TEXT>        { return new String("6");}
 } 
 
-/*
-void VarType() :
-{ Token t; }
-{
-  t=<BOOLEAN>       { jjtThis.data.put("VarType","1");}
-  | t=<DATE>        { jjtThis.data.put("VarType","2");}
-  | t=<MONEY>       { jjtThis.data.put("VarType","3");}
-  | t=<NUMERIC>     { jjtThis.data.put("VarType","4");}
-  | t=<PERCENTAGE>  { jjtThis.data.put("VarType","5");}
-  | t=<TEXT>        { jjtThis.data.put("VarType","6");}
-} 
-*/
 
-void PpmVarType() :
-{ Token t; }
+String PpmVarType() #void :
+{}
 {
-  t=<APPLICATION>   { jjtThis.data.put("PpmType","APP");}
-  | t=<CREDIT>      { jjtThis.data.put("PpmType","CRD");}
-  | t=<PRODUCT>     { jjtThis.data.put("PpmType","PRD");}
+  <APPLICATION> 	{ return new String("APP");}
+  | <CREDIT>      	{ return new String("CRD");}
+  | <PRODUCT>     	{ return new String("PRD");}
 }
+
 
 
 
 void Alias() :
-{}
+{String nm;}
 {
-  <ALIAS> <LPAREN> AliasType() "," Name() "," AliasOf() <RPAREN> EOS()
+  <ALIAS> <LPAREN> AliasType() "," nm=Name(){jjtThis.data.put("Name",nm);} "," AliasOf() <RPAREN> EOS()
 }
 
 
@@ -369,10 +354,10 @@ void Alias() :
 void AliasType() :
 { Token t; }
 {
-  t=<RULE>        { jjtThis.data.put("AliasType",token.image);}
-  | t=<RULESET>   { jjtThis.data.put("AliasType",token.image);}
-  | t=<DPM>       { jjtThis.data.put("AliasType",token.image);}
-  | t=<PPM>       { jjtThis.data.put("AliasType",token.image);} 
+  t=<RULE>        { jjtThis.data.put("value",token.image);}
+  | t=<RULESET>   { jjtThis.data.put("value",token.image);}
+  | t=<DPM>       { jjtThis.data.put("value",token.image);}
+  | t=<PPM>       { jjtThis.data.put("value",token.image);} 
 }
 
 
@@ -393,51 +378,51 @@ void EOS() #void :
 
 
 void Import() :
-{}
+{String it,fn;}
 {
-  <IMPORT> <LPAREN> ImportType() "," Filename() <RPAREN> EOS()
+  <IMPORT> <LPAREN> (it=ImportType(){jjtThis.data.put("importType",it);}) "," (fn=Filename(){jjtThis.data.put("filename",fn);}) <RPAREN> EOS()
 }
 
 
-void Filename() :
+String Filename() #void :
 {}
 {
-  <FILENAME_LITERAL> { jjtThis.data.put("value",token.image);}
+  <FILENAME_LITERAL> { return token.image;}
 }
 
 
-void ImportType() :
+String ImportType() #void :
 {}
 {
   ( <DPM>
   | <PPM>
-  ) { jjtThis.data.put("value",token.image);}
+  ) { return token.image;}
 }
 
 
 void Include() :
-{}
+{String fn;}
 {
-  <INCLUDE> ParenFilenameLiteral() EOS()
+  <INCLUDE> fn=ParenFilenameLiteral(){jjtThis.data.put("filename",fn);} EOS()
 }
 
 
-void ParenFilenameLiteral() #void :
-{}
+String ParenFilenameLiteral() #void :
+{String fn;}
 {
-  ( ( <LPAREN> Filename() <RPAREN> ) | Filename() )
+  ( ( <LPAREN> fn=Filename() <RPAREN> ) | fn=Filename() ){ return fn;}
 }
 
-void ParenStringLiteral() #void :
-{}
+String ParenStringLiteral() #void :
+{String str;}
 {
-  ( ( <LPAREN> StringLiteral() <RPAREN> ) | StringLiteral() ) 
+  ( ( <LPAREN> str=StringLiteral() <RPAREN> ) | str=StringLiteral() ){ return str;} 
 }
 
 void GuidelineDef() :
-{} 
+{String nm;} 
 {
-  <GUIDELINE> ( <LPAREN> ParenStringLiteral() <RPAREN> )  //#Name(1)   
+  <GUIDELINE> ( <LPAREN> nm=ParenStringLiteral() <RPAREN> ){jjtThis.data.put("Name",nm);jjtThis.data.put("GuidelineID","1");jjtThis.data.put("Version","1");jjtThis.data.put("StartDate","");}   
   ( ( LOOKAHEAD(4)
     RulesetDef() 
   | RulesetRef()  )
@@ -451,22 +436,22 @@ void GuidelineDef() :
 
 
 
-void StringLiteral() #Str : 
+String StringLiteral() #void : 
 {}
 {
-  <STRING_LITERAL>  { jjtThis.data.put("value",token.image);}
+  <STRING_LITERAL>  { return token.image;}
 }
 
-void Name() :
+String Name() #void :
 {}
 {
-  <IDENTIFIER> { jjtThis.data.put("value",token.image);}
+  <IDENTIFIER> {  return token.image; }
 }
 
 void RulesetDef() :
-{}
+{String nm, et;}
 {
-  "ruleset" Name() <LPAREN> ( ExecuteType() ) ( "," <PL> )? <RPAREN>
+  "ruleset" nm=Name(){jjtThis.data.put("Name",nm);jjtThis.data.put("Id","99999");jjtThis.data.put("Type","0");} <LPAREN> ( et=ExecuteType(){jjtThis.data.put("ExecuteType",et);} ) ( "," <PL> )? <RPAREN>
   (LOOKAHEAD(5) RuleDef()
     | RuleRef() )+ 
   <END>
@@ -474,28 +459,28 @@ void RulesetDef() :
 
 
 
-void ExecuteType() :
+String ExecuteType() #void :
 {}
 {
-  <TRUE>        { jjtThis.data.put("value","1");} 
-  | <FALSE>     { jjtThis.data.put("value","2");} 
-  | <CONTINUE>  { jjtThis.data.put("value","3");} 
+  <TRUE>        { return new String("1");} 
+  | <FALSE>     { return new String("2");} 
+  | <CONTINUE>  { return new String("3");} 
 }
 
 
 
 void RulesetRef() :
-{}
+{String nm;}
 {
-  "ruleset" Name() <LPAREN> <RPAREN> EOS()
+  "ruleset" nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> <RPAREN> EOS()
 }
 
 
 
 void RuleDef() :
-{}
+{String nm;}
 {
-  "rule" Name() <LPAREN> <RPAREN>
+  "rule" nm=Name(){jjtThis.data.put("Name",nm);jjtThis.data.put("Id","99999");} <LPAREN> <RPAREN>
   ( IfThenElse() )
   <END>
 }
@@ -503,9 +488,9 @@ void RuleDef() :
 
 
 void RuleRef() :
-{}
+{String nm;}
 {
-  "rule" Name() <LPAREN> <RPAREN> EOS()
+  "rule" nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> <RPAREN> EOS()
 }
 
 
@@ -560,7 +545,7 @@ void LogicalOperator() :
   ( t=<AND1>
   | t=<AND2>
   | t=<OR1>
-  | t=<OR2> ) { jjtThis.setText( t.image ); }
+  | t=<OR2> ) { jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -584,19 +569,6 @@ void CompTerm() #EqualityCompute(>1) :
 
 
 
-/*
-void EqualityOperator() :
-{ Token t; }
-{
-  t=<LT> { jjtThis.setText( t.image ); }
-  | t=<GT> { jjtThis.setText( t.image ); }
-  | t=<NEQ1> { jjtThis.setText( t.image ); }
-  | t=<NEQ2> { jjtThis.setText( t.image ); }
-  | t=<EQU> { jjtThis.setText( t.image ); }
-  | t=<LEQ> { jjtThis.setText( t.image ); }
-  | t=<GEQ> { jjtThis.setText( t.image ); }
-}
-*/
 void EqualityOperator() :
 { Token t; }
 {
@@ -606,7 +578,7 @@ void EqualityOperator() :
   | t=<NEQ2>
   | t=<EQU>
   | t=<LEQ>
-  | t=<GEQ> ) { jjtThis.setText( t.image ); }
+  | t=<GEQ> ) { jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -614,26 +586,16 @@ void EqualityOperator() :
 /*
 Operand   --> NUMERIC_CONSTANT
         | STRING_LITERAL
-        | Variable
+        | VarRef
         | LPAREN Compute RPAREN
 
 */
-/*
-ASTOperand Operand() :
-{}
-{
-  ( Constant()
-    | Variable()
-    | Brace()
-  )
-  { return jjtThis; }
-}
-*/
+
 void Operand() #void :
 {}
 {
   ( Constant()
-    | Variable()
+    | VarRef()
     | Brace()
   )
 }
@@ -654,7 +616,7 @@ void Constant() :
 { Token t; }
 {
   ( t=<NUMERIC_CONSTANT>
-  | t=<STRING_LITERAL> ) { jjtThis.setText( t.image ); }
+  | t=<STRING_LITERAL> ) { jjtThis.data.put("value",t.image ); }
 }
 
 
@@ -689,7 +651,7 @@ PlusOperator - This is here so that the tree builds correctly and the
 void PlusOperator() :
 { Token t; }
 {
-  t=<PLUS> {jjtThis.setText( t.image ); }
+  t=<PLUS> {jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -701,7 +663,7 @@ MinusOperator - This is here so that the tree builds correctly and the
 void MinusOperator() :
 { Token t; }
 {
-  t=<MINUS> {jjtThis.setText( t.image ); }
+  t=<MINUS> {jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -723,7 +685,7 @@ MultOperator - This is here so that the tree builds correctly and the
 void MultOperator() :
 { Token t; }
 {
-  t=<MULT> {jjtThis.setText( t.image ); }
+  t=<MULT> {jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -735,7 +697,7 @@ DivOperator - This is here so that the tree builds correctly and the
 void DivOperator() :
 { Token t; }
 {
-  t=<DIV> {jjtThis.setText( t.image ); }
+  t=<DIV> {jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -757,7 +719,7 @@ RaiseToOperator - This is here so that the tree builds correctly and the
 void RaiseToOperator() :
 { Token t; }
 {
-  t=<RAISETO> {jjtThis.setText( t.image ); }
+  t=<RAISETO> {jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -775,7 +737,7 @@ void MathOperand() #void :
 //  ( <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> )
 //  <NUMERIC_CONSTANT>
   MathConstant()
-  | Variable()
+  | VarRef()
   | MathBrace()
   | ( <MINUS>  MathOperand() )
 }
@@ -795,7 +757,7 @@ void MathBrace() #Brace :
 void MathConstant() :
 { Token t; }
 {
-  t=<NUMERIC_CONSTANT> { jjtThis.setText( t.image ); }
+  t=<NUMERIC_CONSTANT> { jjtThis.data.put("value", t.image ); }
 }
 
 
@@ -828,7 +790,7 @@ void Assign() :
 void AssignTo() :
 {}
 {
-  Variable()
+  VarRef()
 }
 
 
@@ -866,20 +828,20 @@ void Exptn() :
 void ExptnType() :
 { Token t;}
 {
-  ( t=<MSG_EXC_ASSETS> | t=<MSG_EXC> ) { jjtThis.setText(t.image); }
+  ( t=<MSG_EXC_ASSETS> | t=<MSG_EXC> ) { jjtThis.data.put("value", t.image); }
 }
 
 void MessageType() :
 { Token t; }
 {
-  ( t=<MSG_FINDINGS> | t=<MSG_OBSERVATION> | t=<MSG_CREDIT> ) { jjtThis.setText(t.image); }
+  ( t=<MSG_FINDINGS> | t=<MSG_OBSERVATION> | t=<MSG_CREDIT> ) { jjtThis.data.put("value", t.image); }
 }
 
 
-void Variable() :
-{}
+void VarRef() :
+{String nm;}
 {
-  Name()
+  nm=Name(){jjtThis.data.put("Name",nm);}
 //  ( VarCast() )? <IDENTIFIER>
 }
 

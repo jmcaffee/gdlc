@@ -1,0 +1,12 @@
+/*
+ * This is to test a missing rule definition
+ *
+ */
+ 
+
+dpm	numeric Rate_1st;
+
+ruleset TestRuleset(true) 
+	rule MissingRuleDefTest ();			// There is no rule definition. This should throw an error.
+end	
+

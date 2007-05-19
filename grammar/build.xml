@@ -1,4 +1,4 @@
-<project name="JavaCC Build File" default="dist" basedir="/net.bd.gdlc">
+<project name="JavaCC Build File" default="dist" basedir="..">
 	<description>Build a JavaCC example</description>
 
 
@@ -70,14 +70,12 @@
 			target="${jjtree.target}"
 			outputdirectory="${parser.src}"
 			javacchome="${javacc.home}"
-			static="true"
 		/>
 
 		<javacc
 			target="${javacc.target}"
 			outputdirectory="${parser.src}"
 			javacchome="${javacc.home}"
-			static="true"
 		/>
 
     </target>

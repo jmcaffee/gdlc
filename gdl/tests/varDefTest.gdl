@@ -1,0 +1,20 @@
+/* **************************************************************************
+ *	File: 
+ *
+ *	Description:
+ *		This is to test variable definition
+ *
+ ************************************************************************* */
+ 
+
+dpm	numeric testDpm1;				// Define some variables
+dpm	text 	testDpm2;
+
+rule VarDefTestRule()				// Define a rule for test purposes.
+	if ( testDpm1 == testDpm1 )
+	then
+	  testDpm2 = "SUCCESS";
+	end
+end
+
+

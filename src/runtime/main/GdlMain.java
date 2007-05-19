@@ -12,66 +12,133 @@ import runtime.parser.*;
  *
  */
 public class GdlMain {
-	static ASTCompilationUnit parseTree;
+	static ASTCompilationUnit 	parseTree;
+	static CompilerContext		compilerContext;
 	
 	  public static void main(String args[]) {
-		  parse(args);
-		  compile();
+		  if(null != (parseTree = parse(args)))
+			  compilerContext = new CompilerContext();
+			  compile(parseTree, compilerContext);
 		  
-	      System.out.println("Guideline Compiler :  Finished.");
+	      Log.status("GDLC:  Finished.");
 	  }
 
-	  public static void parse(String args[]) {
-		    GdlParser parser;
+	  public static ASTCompilationUnit parse(String args[]) {
+		  	GdlParser 			parser;
+		    ASTCompilationUnit	tree;
+		    
 		    if (args.length == 0) {
-		      System.out.println("Guideline Compiler :  Reading from standard input . . .");
+		      Log.status("GDLC:  Reading from standard input . . .");
 		      parser = new GdlParser(System.in);
 		    } else if (args.length == 1) {
-		      System.out.println("Guideline Compiler :  Reading from file " + args[0] + " . . .");
+		      Log.status("GDLC:  Reading from file " + args[0] + " . . .");
 		      try {
 		        parser = new GdlParser(new java.io.FileInputStream(args[0]));
 		      } catch (java.io.FileNotFoundException e) {
-		        System.out.println("Guideline Compiler :  File " + args[0] + " not found.");
-		        return;
+		        Log.error("GDLC:  File not found: " + args[0] + "");
+		        return null;
 		      }
 		    } else {
-		      System.out.println("Guideline Compiler :  Usage is one of:");
+		      System.out.println("GDLC:  Usage is one of:");
 		      System.out.println("         java GdlCompiler < inputfile");
 		      System.out.println("OR");
 		      System.out.println("         java GdlCompiler inputfile");
-		      return;
+		      return null;
 		    }
 		    try {
-		      parseTree = parser.CompilationUnit();
-		      System.out.println("Guideline Compiler :  Guideline parsed successfully.");
-		      parser.dump();
+		    	tree = parser.CompilationUnit();
+		    	Log.status("GDLC:  Guideline parsed successfully.");
+		    	parser.dump();
 		    } catch (ParseException e) {
-		      System.out.println("Guideline Compiler :  Encountered errors during parsing.");
-		      System.out.println(e.toString());
-		      return;
+		      Log.error("GDLC:  Encountered errors during parsing.");
+		      Log.error(e.toString());
+		      return null;
 		    }
+		    
+		    GdlMain.parseTree = tree;		// Store the tree for later retrieval
+		    
+		    return tree;
 	  }
 
-	  public static void compile() {
-	      System.out.println("Guideline Compiler :  Compiling...");
+	  public static ASTCompilationUnit getParseTree(){
+		  return GdlMain.parseTree;
+	  }
+	  
+	  
+	  public static void compile(ASTCompilationUnit tree, CompilerContext ctx) {
+	      Log.status("GDLC:  Compiling...");
 
-	      if(parseTree == null){
-		      System.out.println("Guideline Compiler :  Compile failed: parse tree is empty.");
+	      if(tree == null){
+		      Log.error("GDLC:  Compile failed: parse tree is empty.");
 		      return;
 	      }
 
-	      GdlCompiler compiler = new GdlCompiler(parseTree);
+	      GdlCompiler compiler = new GdlCompiler(tree);
 	      
 	      try {
-	    	  compiler.compile();
+	    	  compiler.compile(ctx);
 
 	      } catch (CompileException e) {
-			      System.out.println("Guideline Compiler :  Encountered errors during compilation.");
-			      System.out.println(e.toString());
+			      Log.error("GDLC:  Encountered errors during compilation.");
+			      Log.error(e.toString());
 			      return;
 	      }
 
+//		dumpContextData(ctx);
+//		
+//		if(ctx.hasWarnings()){
+//			writeWarnings(ctx);
+//		}
+//
+//		if(ctx.hasErrors()){
+//			writeErrors(ctx);
+//		}
+
 	  }
 
+	  static void writeWarnings(CompilerContext ctx){
+		  Log.status("GDLC has completed with warnings:");
+		  ctx.dumpWarnings();
+	  }
+	  
+	  static void writeErrors(CompilerContext ctx){
+		  Log.status("GDLC has completed with errors:");
+		  ctx.dumpErrors();
+	  }
+	  
+	  static void dumpContextData(CompilerContext ctx) {
 
+//		Log.info("");
+//		Log.info("---------- ERRORS ----------");
+//		ctx.dumpErrors();
+//		Log.info("");
+//
+//		Log.info("");
+//		Log.info("---------- WARNINGS ----------");
+//		ctx.dumpWarnings();
+//		Log.info("");
+//
+		Log.info("");
+		Log.info("---------- DPM variables ----------");
+		ctx.dumpDpmVars();
+		Log.info("");
+
+		Log.info("");
+		Log.info("---------- PPM variables ----------");
+		ctx.dumpPpmVars();
+		Log.info("");
+
+		Log.info("");
+		Log.info("---------- Rule Defs ----------");
+		ctx.dumpRules();
+		Log.info("");
+
+		Log.info("");
+		Log.info("---------- Ruleset Defs ----------");
+		ctx.dumpRulesets();
+		Log.info("");
+
+		Log.info("");
+
+	  }
 }

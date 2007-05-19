@@ -1,0 +1,71 @@
+include "r:\sandbox\net.bd.gdlc\gdl\varInc1.gdl";
+
+
+rule G-IncRule1 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end
+
+rule G-IncRule2 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end
+
+rule G-IncRule3 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end
+
+rule G-TestRule1 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+    Rate = Rate_1st;
+  else
+    Rate_1st = 0;
+    Rate = 0;
+  end
+end
+
+rule G-TestRule2 ()
+  if ( Loan_Amount_1st > 100000 &&
+        ( Loan_Amount_1st < 200000 ||
+          Loan_Amount_1st == 1 
+        )
+     )
+  then
+    Rate = Rate_1st;
+  end
+end
+
+  rule G-TestRule3 ()
+    if ( Loan_Amount == Loan_Amount )
+    then
+      Rate_1st = Rate_1st + Rate_Adj-Total; Rate = Rate_1st;
+    end
+  end
+  
+  rule G-TestRule4 ()
+    if ( Loan_Amount_1st > 100000 &&
+          ( (Loan_Amount_1st < 200000) ||
+            Loan_Amount_1st == 1 
+          )
+       )
+    then
+      Rate = Rate_1st;
+    end
+  end
+
+

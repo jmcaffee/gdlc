@@ -19,7 +19,9 @@ public class SimpleNode extends BaseNode implements Node {
     this(i);
     parser = p;
   }
-
+  
+  public int id() {return this.id;}
+  
   public void jjtOpen() {
   }
 
@@ -28,7 +30,20 @@ public class SimpleNode extends BaseNode implements Node {
 
 	public void setText( String text ) {this.text = text;}
 	public String getText() { return this.text; }
-
+	public String getData(String key) {
+		String theData = null;
+		
+		if(this.data.containsKey(key)) {
+			theData = (String)this.data.get(key);
+		}
+		
+		return theData;
+	}
+	
+	public String packData() {
+		return this.data.values().toString();
+	}
+	
   public void jjtSetParent(Node n) { parent = n; }
   public Node jjtGetParent() { return parent; }
 
@@ -106,6 +121,12 @@ public class SimpleNode extends BaseNode implements Node {
 	}
       }
     }
+  }
+  
+  public void replaceChild(int i, SimpleNode newNode){
+	  if(children[i] != null){
+		  children[i] = newNode;
+	  }
   }
 }
 

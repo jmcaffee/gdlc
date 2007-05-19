@@ -1,0 +1,23 @@
+			dpm 	numeric 	G-TestDpm;
+decision 	dpm 	numeric 	testDsm;
+
+			ppm 	app 		appPpm;
+			ppm 	crd 		creditPpm;
+			ppm 	prd			productPpm;
+
+rule G-TestIncludeRule1 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end
+
+ruleset Inc1-RuleRefRuleset(true)
+
+  rule G-TestIncludeRule1 ();
+  
+  rule G-TestRule2 ();
+end
+

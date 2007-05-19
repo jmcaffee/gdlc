@@ -1,0 +1,34 @@
+include "r:\sandbox\net.bd.gdlc\gdl\ruleInc1.gdl";
+
+
+ruleset RSInc1-RefRuleset1(true)
+
+  rule G-IncRule1();
+  
+  rule G-IncRule2();
+  
+  rule G-IncRule3();
+end
+
+ruleset RSInc1-RefRuleset2(true)
+
+  rule G-IncRule3();
+  
+  rule G-IncRule1();
+end
+
+
+ruleset CoolRuleset(true)
+
+  rule G-TestRule3 ();
+  rule G-TestRule4 ();
+end
+
+ruleset RuleRefRuleset(true)
+
+  rule G-TestRule1 ();
+  
+  rule G-TestRule2 ();
+end
+
+

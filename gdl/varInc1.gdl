@@ -1,0 +1,5 @@
+			dpm 	numeric 	Rate_1st;
+decision 	dpm 	numeric 	Rate_Adj-Total;
+			dpm 	numeric 	G-TestDpm;
+decision 	dpm 	numeric 	testDsm;
+			ppm 	app 		appPpm;

@@ -1,0 +1,34 @@
+/* **************************************************************************
+
+	FILE:
+	DESC:
+
+
+************************************************************************** */
+/*
+ * This is to test a missing ruleset definition
+ *
+ */
+ 
+dpm	numeric Rate_1st;
+dpm	numeric Loan_Amount_1st;
+
+rule DefdRuleTest()							// Define the rule.
+	if ( Loan_Amount_1st > 100000 &&		
+		  ( (Rate_1st < 200000) ||			
+			Rate_1st == 1 
+		  )
+	   )
+	then
+	  Rate_1st = Rate_1st;
+	end
+end
+
+ruleset TestRuleset(true) 
+	rule DefdRuleTest ();					// Rule was defined above.
+end	
+
+guideline ("TestGuideline")
+
+	ruleset TestRuleset();					// Ruleset was defined above
+end

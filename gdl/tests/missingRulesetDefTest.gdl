@@ -1,0 +1,10 @@
+/*
+ * This is to test a missing ruleset definition
+ *
+ */
+ 
+
+guideline ("TestGuideline")
+
+	ruleset MissingRulesetDefTest();
+end

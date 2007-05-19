@@ -1,0 +1,19 @@
+/* **************************************************************************
+ *	File: 
+ *
+ *	Description:
+ *		
+ *
+ ************************************************************************* */
+ 
+// Define some variables
+
+			ppm 	app		 	Rate;
+			ppm 	app 		appPpm;
+			ppm		app			Loan_Amount;
+
+			dpm 	numeric 	Rate_1st;
+decision 	dpm 	numeric 	Rate_Adj-Total;
+			dpm 	numeric 	G-TestDpm;
+decision 	dpm 	numeric 	testDsm;
+			dpm		numeric		Loan_Amount_1st;			

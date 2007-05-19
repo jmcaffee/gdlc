@@ -1,0 +1,20 @@
+			dpm 	boolean 	BoolDpm;
+			dpm 	date 		DateDpm;
+			dpm 	money 		MoneyDpm;
+			dpm 	numeric 	NumDpm;
+			dpm 	percentage 	PercDpm;
+			dpm 	text 		TextDpm;
+
+alias (rule, G-TestRule, "G-Test Rule");
+alias (ruleset, G-TestRule, "G-Test Rule");
+alias (dpm, G-TestDpm, "G-Test DPM");
+alias (ppm, G-TestPpm, "G-Test PPM");
+
+rule G-TestIncludeRule2 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end

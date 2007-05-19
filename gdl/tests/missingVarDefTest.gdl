@@ -1,0 +1,21 @@
+/*
+ * This is to test a missing variable definition
+ *
+ */
+ 
+
+dpm	numeric Rate_1st;
+
+ruleset NestedInARuleSet(true) 
+	rule MissingVarDefTest ()
+		if ( Loan_Amount_1st > 100000 &&		// Loan_Amount_1st has not been defined. 
+			  ( (Rate_1st < 200000) ||			// It should throw an error.
+				Rate_1st == 1 
+			  )
+		   )
+		then
+		  Rate_1st = Rate_1st;
+		end
+	end
+end	
+

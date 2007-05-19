@@ -1,0 +1,86 @@
+/* **************************************************************************
+ *	File: 
+ *
+ *	Description:
+ *		
+ *
+ ************************************************************************* */
+ 
+include "r:\sandbox\net.bd.gdlc\gdl\tests\varDefs.inc.gdl";
+
+
+// ========================================================
+//
+//	Rule: Rule1
+//
+// ========================================================
+rule Rule1 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end
+
+// ========================================================
+//
+//	Rule: Rule2
+//
+// ========================================================
+rule Rule2 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end
+
+// ========================================================
+//
+//	Rule: Rule3
+//
+// ========================================================
+rule Rule3 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+  else
+    Rate_1st = 0;
+  end
+end
+
+// ========================================================
+//
+//	Rule: Rule4
+//
+// ========================================================
+rule Rule4 ()
+  if ( Loan_Amount == Loan_Amount )
+  then
+    Rate_1st = Rate_1st + Rate_Adj-Total;
+    Rate = Rate_1st;
+  else
+    Rate_1st = 0;
+    Rate = 0;
+  end
+end
+
+// ========================================================
+//
+//	Rule: Rule5
+//
+// ========================================================
+rule Rule5 ()
+  if ( Loan_Amount_1st > 100000 &&
+        ( Loan_Amount_1st < 200000 ||
+          Loan_Amount_1st == 1 
+        )
+     )
+  then
+    Rate = Rate_1st;
+  end
+end
+
+
