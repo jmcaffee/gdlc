@@ -7,8 +7,20 @@
  ************************************************************************* */
  
 
-dpm	numeric testDpm1;				// Define some variables
-dpm	text 	testDpm2;
+			dpm	numeric testDpm1;				// Define some variables
+			dpm	text 	testDpm2;
+
+			dpm	boolean 	boolDpm1;				// Boolean DPM
+			dpm	date    	dateDpm2;				// Date DPM
+			dpm	money 		moneyDpm3;				// Money DPM
+			dpm	numeric 	numDpm4;				// Numeric DPM
+			dpm	percentage 	percentDpm5;			// Percentage DPM
+			dpm	text    	textDpm6;				// Text DPM
+
+decision 	dpm text 	textDsm;				// Text decision DPM (DSM)
+
+			ppm app		appPpm;					// Application PPM
+			
 
 rule VarDefTestRule()				// Define a rule for test purposes.
 	if ( testDpm1 == testDpm1 )
@@ -17,4 +29,6 @@ rule VarDefTestRule()				// Define a rule for test purposes.
 	end
 end
 
-
+ruleset TestRuleset(true)
+	rule VarDefTestRule();				// Define a ruleset for test purposes.
+end
