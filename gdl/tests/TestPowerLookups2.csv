@@ -1,0 +1,26 @@
+PowerLookup,,,,
+,TestPL1,,,
+,,pTierFlag,testDpm1,testDpm2
+,,PPM,DPM,DPM
+,,==,Assign,Lookup
+,,T1,2.000,TestLookup LK1
+,,T2,3.000,TestLookup LK2
+,,T3,4.000,TestLookup LK3
+
+PowerLookup,,,,
+,TestPL2,,,
+,,pTierFlag,testDpm1,testDpm2
+,,PPM,DPM,DPM
+,,==,Assign,Lookup
+,,T1,2.000,TestLookup LK1
+,,T2,3.000,TestLookup LK2
+,,T3,4.000,TestLookup LK3
+
+PowerLookup,,,,
+,TestPL3,,,
+,,pTierFlag,testDpm1,testDpm2
+,,PPM,DPM,DPM
+,,==,Assign,Lookup
+,,T1,2.000,TestLookup LK1
+,,T2,3.000,TestLookup LK2
+,,T3,4.000,TestLookup LK3
