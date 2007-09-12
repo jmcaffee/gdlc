@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="R:/sandbox/net.bd.gdlc/dist/gdlc/bin/gdlc.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/net.bd.gdlc/gdlc.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" mainClassHandleIdentifier="=net.bd.gdlc/src&lt;runtime.main{GdlMain.java[GdlMain" manifestLocation="/net.bd.gdlc/manifest.mf" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=net.bd.gdlc/grammar\/src"/>
+        <file path="/net.bd.gdlc/manifest.mf"/>
+        <javaElement handleIdentifier="=net.bd.gdlc/src"/>
+    </selectedElements>
+</jardesc>
