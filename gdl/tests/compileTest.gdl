@@ -22,6 +22,13 @@ import(ppm,"c:\some\file\path.dict");
 
 include "r:\sandbox\net.bd.gdlc\gdl\tests\rulesetDefs.inc.gdl";
 
+ppm app Rate;
+
+rule Rule-4()
+	if(Rate == Rate)
+	then
+	end
+end
 
 
 // ========================================================
@@ -32,7 +39,7 @@ include "r:\sandbox\net.bd.gdlc\gdl\tests\rulesetDefs.inc.gdl";
 guideline ("Test Guideline")
 
 	ruleset Ruleset1();
-	rule	Rule4();
+	rule	Rule-4();
 
   rule Rule5()								// This will override an existing rule definition
     if ( Loan_Amount_1st > 100000 &&
