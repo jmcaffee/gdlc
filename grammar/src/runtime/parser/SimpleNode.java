@@ -40,6 +40,29 @@ public class SimpleNode extends BaseNode implements Node {
 		return theData;
 	}
 	
+	public String getName() {
+		String theData = null;
+		
+		if(this.data.containsKey("Name")) {
+			theData = (String)this.data.get("Name");
+		}
+		
+		return theData;
+	}
+	
+	public String getAlias() {
+		String theData = null;
+											// Return the alias if it exists,
+		if(this.data.containsKey("Alias")) {
+			theData = (String)this.data.get("Alias");
+		}
+		else{								// otherwise return the name.
+			theData = this.getName();
+		}
+		
+		return theData;
+	}
+	
 	public String packData() {
 		return this.data.values().toString();
 	}
