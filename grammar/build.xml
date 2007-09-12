@@ -134,9 +134,9 @@
 			<fileset dir="${parser.src}" id="custom.src.set">
 			    <include name="ASTEqualityCompute.java"/>
 			    <include name="ASTLogicalCompute.java"/>
+			    <include name="ASTMathCompute.java"/>
 			    <include name="BaseNode.java"/>
 			    <include name="Compute.java"/>
-			    <include name="DumpVisitor.java"/>
 			    <include name="SimpleNode.java"/>
 			</fileset>
 		</delete>
@@ -145,6 +145,20 @@
     </target>
 
 	<!--
+		<delete>
+			<fileset dir="${parser.src}" id="custom.src.set">
+			    <include name="*.java"/>
+			    <include name="ASTEqualityCompute.java"/>
+			    <include name="ASTLogicalCompute.java"/>
+			    <include name="BaseNode.java"/>
+			    <include name="Compute.java"/>
+			    <include name="SimpleNode.java"/>
+			</fileset>
+		</delete>
+
+
+	+++++
+
 	    	<copy todir="${parser.src}" overwrite="true">
 			<fileset dir="${grammar.src}/runtime/parser">
 			  <include name="**/*.java"/>
@@ -172,7 +186,7 @@
           target: clean              
          ================================= -->
     <target name="clean" 
-    		depends="clean-build, clean-dist, clean-parser-src" 
+    		depends="clean-build, clean-parser-src" 
     		description="--> delete all directories">
     	
     </target>
@@ -187,15 +201,6 @@
     </target>
 
 	
-    <!-- ================================= 
-          target: clean-dist              
-         ================================= -->
-    <target name="clean-dist" 
-    		description="--> delete distribution directory">
-       	<delete dir="${dist.dir}"/>
-    </target>
-
-
     <!-- ================================= 
           target: clean-parser-src
          ================================= -->
