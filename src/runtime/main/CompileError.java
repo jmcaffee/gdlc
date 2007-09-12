@@ -12,11 +12,21 @@ public class CompileError implements IProblem {
 	static public class errors {
 		static public int UNKNOWN = 0;
 		static public int DEFMISSING = 1;
-		static public int LASTERR = 1;
+		static public int DATAMISSING = 2;
+		static public int FILENOTFOUND = 3;
+		static public int UNSUPPORTEDOPERATION = 4;
+		static public int IMPORTERROR = 5;
+		static public int PARSEERROR = 6;
+		static public int LASTERR = 6;
 		
 		static String[] desc = {
 			"Unknown error has occurred",
 			"A reference to an undefined object has occurred",
+			"Data does not exist for this object",
+			"File not found",
+			"Unsupported operation",
+			"Import operation error",
+			"An error has occurred during parsing",
 		};
 
 		static String getErrorDesc(int id){

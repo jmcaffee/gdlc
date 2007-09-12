@@ -4,7 +4,6 @@
 package runtime.main;
 
 import runtime.compiler.*;
-import runtime.parser.*;
 
 
 /**
@@ -12,90 +11,41 @@ import runtime.parser.*;
  *
  */
 public class GdlMain {
-	static ASTCompilationUnit 	parseTree;
-	static CompilerContext		compilerContext;
 	
 	  public static void main(String args[]) {
-		  if(null != (parseTree = parse(args)))
-			  compilerContext = new CompilerContext();
-			  compile(parseTree, compilerContext);
+		  CompilerParameters cp = new CompilerParameters();
 		  
-	      Log.status("GDLC:  Finished.");
+//		  if(args.length == 0){
+//			  cp.usage();
+//			  return;
+//		  }
+		  
+		  cp.process(args);
+		  if(cp.isValid){
+			  CompileMgr mgr = new CompileMgr();
+			  mgr.compile(cp);
+		  }
 	  }
 
-	  public static ASTCompilationUnit parse(String args[]) {
-		  	GdlParser 			parser;
-		    ASTCompilationUnit	tree;
-		    
-		    if (args.length == 0) {
-		      Log.status("GDLC:  Reading from standard input . . .");
-		      parser = new GdlParser(System.in);
-		    } else if (args.length == 1) {
-		      Log.status("GDLC:  Reading from file " + args[0] + " . . .");
-		      try {
-		        parser = new GdlParser(new java.io.FileInputStream(args[0]));
-		      } catch (java.io.FileNotFoundException e) {
-		        Log.error("GDLC:  File not found: " + args[0] + "");
-		        return null;
-		      }
-		    } else {
-		      System.out.println("GDLC:  Usage is one of:");
-		      System.out.println("         java GdlCompiler < inputfile");
-		      System.out.println("OR");
-		      System.out.println("         java GdlCompiler inputfile");
-		      return null;
-		    }
-		    try {
-		    	tree = parser.CompilationUnit();
-		    	Log.status("GDLC:  Guideline parsed successfully.");
-		    	parser.dump();
-		    } catch (ParseException e) {
-		      Log.error("GDLC:  Encountered errors during parsing.");
-		      Log.error(e.toString());
-		      return null;
-		    }
-		    
-		    GdlMain.parseTree = tree;		// Store the tree for later retrieval
-		    
-		    return tree;
-	  }
-
-	  public static ASTCompilationUnit getParseTree(){
-		  return GdlMain.parseTree;
-	  }
-	  
-	  
-	  public static void compile(ASTCompilationUnit tree, CompilerContext ctx) {
-	      Log.status("GDLC:  Compiling...");
-
-	      if(tree == null){
-		      Log.error("GDLC:  Compile failed: parse tree is empty.");
-		      return;
-	      }
-
-	      GdlCompiler compiler = new GdlCompiler(tree);
-	      
-	      try {
-	    	  compiler.compile(ctx);
-
-	      } catch (CompileException e) {
-			      Log.error("GDLC:  Encountered errors during compilation.");
-			      Log.error(e.toString());
-			      return;
-	      }
-
-//		dumpContextData(ctx);
-//		
-//		if(ctx.hasWarnings()){
-//			writeWarnings(ctx);
-//		}
+//	  public static void usage(){
+//		System.out.println();
+//		System.out.println("======================================================================");
+//		System.out.println("GDLC GuideLine Compiler");
+//		System.out.println("Usage:  GDLC inFile [/I]*");
+//		System.out.println();
+//		System.out.println("	inFile    name of file to compile.");
+//		System.out.println();
+//		System.out.println("   --switches--");
+//		System.out.println("	none");
+//		System.out.println();
+//		System.out.println("   --parameters--");
+//		System.out.println("	/Ipath        path to include dir.");
+//		System.out.println();
+//		System.out.println("======================================================================");
+//		System.out.println();
 //
-//		if(ctx.hasErrors()){
-//			writeErrors(ctx);
-//		}
-
-	  }
-
+//	  }
+	  
 	  static void writeWarnings(CompilerContext ctx){
 		  Log.status("GDLC has completed with warnings:");
 		  ctx.dumpWarnings();
@@ -103,7 +53,7 @@ public class GdlMain {
 	  
 	  static void writeErrors(CompilerContext ctx){
 		  Log.status("GDLC has completed with errors:");
-		  ctx.dumpErrors();
+		  Log.error(ctx.dumpErrors());
 	  }
 	  
 	  static void dumpContextData(CompilerContext ctx) {
