@@ -1,0 +1,54 @@
+/* **************************************************************************
+ *	File: aliasTest.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for alias testing.
+ *
+ ************************************************************************* */
+ 
+include ("simple.gdl");
+
+import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
+
+dpm numeric alsDpmVar "Alias DPM Variable";
+ppm app		alsPpmVar "PPM Alias Var";
+
+alias(rule, SimpleAliasRule1, "Alias Rule 1");
+
+rule SimpleAliasRule1()								// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+		dpmVar = lookup("TestLookup LK1", alsPpmVar, alsDpmVar);
+	end
+end
+
+alias(ruleset, SimpleRuleset1, "Simple Ruleset 1");
+
+ruleset SimpleRuleset1(true)
+	rule SimpleAliasRule1();
+end
+
+/*
+rule SimpleAliasRule2()								// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+		dpmVar = lookup("TestLookup LK1", alsPpmVar, dpmVar);
+		dpmVar = lookup("TestLookup LK2", ppmVar, alsDpmVar);
+		dpmVar = lookup("TestLookup LK3", alsPpmVar, dpmVar);
+	end
+end
+*/
+
+guideline ("TestGuideline")
+	rule 			SimpleAliasRule1();
+	ruleset		SimpleRuleset1();
+end
+
+/*
+guideline ("TestGuideline")
+	rule 			SimpleRule1();
+	ruleset 	SimpleRuleset2();
+	rule			SimpleRule2();
+	ruleset 	SimpleRuleset1();
+end
+*/

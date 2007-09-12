@@ -1,0 +1,37 @@
+/* **************************************************************************
+ *	File: operatorTest.gdl
+ *
+ *	Description:
+ *		This is to test XML operator results
+ *
+ ************************************************************************* */
+ 
+
+dpm	money 	pi1st			"PI 1st";
+dpm	numeric LoanBalance-1;
+dpm	numeric	Interest;
+dpm	numeric	loanTerm1st 	"Loan Term 1st";
+ppm	app		pLoanAmount		"Loan Amount";
+
+
+
+rule SimpleAndOrOpTest()							// Define the rule.
+	if ( pLoanAmount == pLoanAmount &&
+		(
+			Interest == Interest ||
+			pi1st != pi1st
+		)
+	)		
+	then
+	  pi1st = 0;
+	end
+end
+
+
+
+/* ----------------------------------------------------------------------- */
+
+guideline("OperatorTest")
+	rule SimpleAndOrOpTest();					// Rule was defined above.
+end	
+

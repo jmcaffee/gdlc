@@ -1,0 +1,22 @@
+/* **************************************************************************
+ *	File: powerLookupTest.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for powerlookup testing.
+ *
+ ************************************************************************* */
+ 
+include ("simple.gdl");
+
+dpm numeric Interest;
+
+import( powerlookup, "TestPowerLookups.csv" );		// Import the powerlookup CSV file
+
+
+
+guideline ("TestPowerLookups")
+	ruleset		TestPowerLookup1();
+	ruleset		TestPowerLookup2();
+	ruleset		TestPowerLookup3();
+end
+

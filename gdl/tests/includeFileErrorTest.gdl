@@ -1,0 +1,38 @@
+/* **************************************************************************
+ *	File: includeFileErrorTest.gdl
+ *
+ *	Description:
+ *		This is to test parser include file errors
+ *
+ ************************************************************************* */
+ 
+include ("badIncludeFile.gdl");
+
+dpm	money 	pi1st			"PI 1st";
+dpm	numeric LoanBalance-1;
+dpm	numeric	Interest;
+dpm	numeric	loanTerm1st 	"Loan Term 1st";
+ppm	app		pLoanAmount		"Loan Amount";
+
+
+
+rule IncludeErrorTest()							// Define the rule.
+	if ( pLoanAmount == pLoanAmount &&
+		(
+			Interest == Interest ||
+			pi1st != pi1st
+		)
+	)		
+	then
+	  pi1st = 0;
+	end
+end
+
+
+
+/* ----------------------------------------------------------------------- */
+
+guideline("IncludeFileErrorTest")
+	rule IncludeErrorTest();					// Rule was defined above.
+end	
+

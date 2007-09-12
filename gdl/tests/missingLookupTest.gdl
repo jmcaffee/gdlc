@@ -1,0 +1,32 @@
+/* **************************************************************************
+ *	File: missingLookupTest.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for testing missing lookups
+ *
+ ************************************************************************* */
+ 
+include ("simple.gdl");
+
+//import( lookup, "TestLookups.csv" );				// Do NOT import the lookup CSV file
+
+rule SimpleLookupRule1()							// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+		dpmVar = lookup("TestLookup LK1", ppmVar, dpmVar);
+	end
+end
+
+
+guideline ("TestGuideline")
+	rule 			SimpleLookupRule1();
+end
+
+/*
+guideline ("TestGuideline")
+	rule 			SimpleRule1();
+	ruleset 	SimpleRuleset2();
+	rule			SimpleRule2();
+	ruleset 	SimpleRuleset1();
+end
+*/

@@ -1,0 +1,28 @@
+/* **************************************************************************
+ *	File: 
+ *
+ *	Description:
+ *		This is to test math expressions
+ *
+ ************************************************************************* */
+ 
+
+dpm	money 	pi1st	"PI 1st";
+dpm	numeric LoanBalance-1;
+dpm	numeric	Interest;
+dpm	numeric	loanTerm1st "Loan Term 1st";
+ppm	app		pLoanAmount	"Loan Amount";
+dpm	numeric	negOne;
+
+rule G-CalcPi1st()							// Define the rule.
+	if ( pLoanAmount == pLoanAmount)		
+	then
+	  negOne = "-1";
+	  pi1st = ((LoanBalance-1 * Interest)/(1 - ((1 + Interest) ^ (negOne * loanTerm1st))));
+	end
+end
+
+guideline("MathGuideline")
+	rule G-CalcPi1st();					// Rule was defined above.
+end	
+

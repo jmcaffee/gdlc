@@ -1,0 +1,62 @@
+/* **************************************************************************
+ *	File: 
+ *
+ *	Description:
+ *		This is to test rule XML conversion results
+ *
+ ************************************************************************* */
+ 
+
+dpm	numeric fPICalcType;
+ppm	app     Loan_Amount;
+
+rule G-SetPICalcType()							// Define the rule.
+	if ( Loan_Amount == Loan_Amount )	
+	then
+	  fPICalcType = 1;
+	end
+end
+
+rule R-ElseAction()							// Define the rule.
+	if ( Loan_Amount == Loan_Amount )	
+	then
+	else
+	  fPICalcType = 1;
+	end
+end
+
+rule R-IfMessageRule()							// Define the rule.
+	if ( Loan_Amount == Loan_Amount )	
+	then
+	  message(exception, exception, "IfMsg exception message.");
+	end
+end
+
+rule R-ElseMessageRule()							// Define the rule.
+	if ( Loan_Amount == Loan_Amount )	
+	then
+	else
+	  message(exception, exception, "ElseMsg exception message.");
+	end
+end
+
+rule R-AllMessages()							// Define the rule.
+	if ( Loan_Amount == Loan_Amount )	
+	then
+	  message(exception, exception, "exception/exception message.");
+	  message(exception, assets, "exception/asset message.");
+	  message(findings, "findings message.");
+	  message(observation, "observation message.");
+	  message(credit, "credit message.");
+	end
+end
+
+ruleset TestRuleset(true) 
+	rule G-SetPICalcType ();					// Rule was defined above.
+end	
+
+guideline ("TestGuideline")
+	rule 			R-IfMessageRule();
+	ruleset 	TestRuleset();
+	rule			R-ElseAction();
+end

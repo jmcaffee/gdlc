@@ -1,0 +1,25 @@
+/* **************************************************************************
+ *	File: LookupTest.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for lookup testing.
+ *
+ ************************************************************************* */
+ 
+//include ("simple.gdl");
+ppm	app     ppmVar;
+
+//import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
+
+rule SimpleConditionRule1()							// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+		condition(asset, docs, "Test condition message.");
+	end
+end
+
+
+guideline ("ConditionTestGuideline")
+	rule 			SimpleConditionRule1();
+end
+

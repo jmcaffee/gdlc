@@ -1,0 +1,12 @@
+/* **************************************************************************
+ *	File: badIncludeFile.gdl
+ *
+ *	Description:
+ *		This is to test parser include file errors
+ *
+ ************************************************************************* */
+ 
+ppm	BAD		pLoanAmount		"Loan Amount";		// 'BAD' is an error!
+
+
+

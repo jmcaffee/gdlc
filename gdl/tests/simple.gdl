@@ -1,0 +1,83 @@
+/* **************************************************************************
+ *	File: simple.gdl
+ *
+ *	Description:
+ *		These are simple rules and rulesets for testing.
+ *
+ ************************************************************************* */
+ 
+
+dpm	numeric dpmVar;
+dpm	numeric testDpm1;
+dpm	numeric testDpm2;
+dpm	numeric testDpm3;
+
+ppm	app     ppmVar;
+
+rule SimpleRule1()							// Define the rule.
+	if ( dpmVar == 1 )	
+	then
+	end
+end
+
+rule SimpleRule2()							// Define the rule.
+	if ( dpmVar == 2 )	
+	then
+	end
+end
+
+rule SimpleIfRule()							// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+	  dpmVar = 1;
+	end
+end
+
+rule SimpleElseRule()						// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+	else
+	  dpmVar = 1;
+	end
+end
+
+rule SimpleExceptionIfMsgRule()				// Define the rule.
+	if ( dpmVar == 1 )	
+	then
+	  message(exception, exception, "Simple exception if-message");
+	end
+end
+
+rule SimpleExceptionElseMsgRule()			// Define the rule.
+	if ( dpmVar == 1 )	
+	then
+	else
+	  message(exception, exception, "Simple exception else-message");
+	end
+end
+
+rule SimpleAllMsgsRule()					// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+	  message(exception, exception, "exception/exception message.");
+	  message(exception, assets, "exception/asset message.");
+	  message(findings, "findings message.");
+	  message(observation, "observation message.");
+	  message(credit, "credit message.");
+	end
+end
+
+ruleset SimpleRuleset1(true)
+	rule SimpleRule1();						// Rule was defined above.
+end	
+
+ruleset SimpleRuleset2(true)
+	rule SimpleRule1();						// Rules have been defined above.
+	rule SimpleRule2();						
+	rule SimpleIfRule();						
+	rule SimpleElseRule();						
+	rule SimpleExceptionIfMsgRule();						
+	rule SimpleExceptionElseMsgRule();						
+	rule SimpleAllMsgsRule();						
+end	
+

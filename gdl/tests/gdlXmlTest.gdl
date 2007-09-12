@@ -1,0 +1,22 @@
+/* **************************************************************************
+ *	File: gdlXmlTest.gdl
+ *
+ *	Description:
+ *		These are guideline definition for testing.
+ *
+ ************************************************************************* */
+ 
+include ("simple.gdl");
+
+guideline ("TestGuideline")
+	rule 			SimpleRule1();
+end
+
+/*
+guideline ("TestGuideline")
+	rule 			SimpleRule1();
+	ruleset 	SimpleRuleset2();
+	rule			SimpleRule2();
+	ruleset 	SimpleRuleset1();
+end
+*/

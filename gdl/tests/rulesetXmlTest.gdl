@@ -1,0 +1,31 @@
+/* **************************************************************************
+ *	File: 
+ *
+ *	Description:
+ *		This is to test ruleset XML conversion results
+ *
+ ************************************************************************* */
+ 
+
+dpm	numeric fPICalcType;
+ppm	app     Loan_Amount;
+
+rule G-SetPICalcType()							// Define the rule.
+	if ( Loan_Amount == Loan_Amount )	
+	then
+	  fPICalcType = 1;
+	end
+end
+
+rule G-AnotherRule()							// Define the rule.
+	if ( Loan_Amount == Loan_Amount )	
+	then
+	  fPICalcType = 1;
+	end
+end
+
+ruleset TestRuleset(true) 
+	rule G-SetPICalcType ();					// Rule was defined above.
+	rule G-AnotherRule ();						// Rule was defined above.
+end	
+
