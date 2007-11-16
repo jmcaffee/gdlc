@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import runtime.compiler.PowerLookupData.VarOp;
 import runtime.main.CompileError;
+import runtime.main.Log;
 import runtime.parser.ASTLookupDef;
 import runtime.parser.SimpleNode;
 
@@ -48,6 +49,7 @@ public class PowerLookupRulesetBuilder {
 		alias.append( generateRuleName(name, ruleNum) ).append(", ");
 		alias.append("\"" + generateRuleAlias(name, ruleNum) ).append("\");");
 		
+		Log.info(alias.toString());
 		return alias;
 	}
 	
@@ -87,6 +89,8 @@ public class PowerLookupRulesetBuilder {
 			rule.append("end ");
 
 		rule.append("end ");
+		
+		Log.info(rule.toString());
 		return rule;
 	}
 
