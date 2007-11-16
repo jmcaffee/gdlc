@@ -6,11 +6,14 @@
 #
 #############################################################################
 
+require 'ZipFile.rb'
+
 DEV       = "/sandbox/net.bd.gdlc"
 BINDIR    = "dist/gdlc/bin"
 BUILDDIR  = "build"
 MISCDIR   = "misc"
 JARDIR    = "jars"
+DOCSDIR   = "docs"
 GDLJAR    = "gdlc.jar"
 
 
@@ -18,7 +21,7 @@ GDLJAR    = "gdlc.jar"
 
 desc "- Create GDLC distribution"
 
-task :dist => [:createDirs, :jar, :copyToBin, :copyToRoot, :docs] do
+task :dist => [:createDirs, :jar, :copyToBin, :copyToRoot, :docs, :zip] do
   puts "dist created"
 end
 
@@ -51,6 +54,11 @@ task :createDirsBAD do
 end
 
 
+#######################################
+
+task :zip => ['gdlc.zip'] do
+  puts "Files archived"
+end
 
 #######################################
 
@@ -73,7 +81,7 @@ end
 
 #######################################
 
-task :copyToRoot => ['dist/gdlc/gdlc.rb', 'dist/gdlc/gdlc.cmd'] do
+task :copyToRoot => ['dist/gdlc/install.rb'] do
   puts "files copied to root"
 end
 
@@ -130,17 +138,11 @@ end
 
 #######################################
 
-file 'dist/gdlc/gdlc.rb' => 'misc/gdlc.rb' do |t|
-  cp("#{MISCDIR}/gdlc.rb", t.name )
+file 'dist/gdlc/install.rb' => 'misc/install.rb' do |t|
+  cp("#{MISCDIR}/install.rb", t.name )
 end
 
 
-
-#######################################
-
-file 'dist/gdlc/gdlc.cmd' => 'misc/gdlc.cmd' do |t|
-  cp(t.prerequisites[0], t.name )
-end
 
 #######################################
 
@@ -148,10 +150,32 @@ file 'dist/gdlc/docs/GdlGrammar.html' => ['dist/gdlc/docs/GdlGrammar.jj', :gramm
   
 end
 
+
 #######################################
 
 file 'dist/gdlc/docs/GdlGrammar.jj'  => 'build/runtime/parser/GdlGrammar.jj' do |t|
   cp(t.prerequisites[0], t.name )
+end
+
+#######################################
+
+file 'dist/gdlc/docs/userManual.html' => ['docs/userManual.html'] do |t|
+  cp(t.prerequisites[0], t.name )
+#  cp ("#{DOCSDIR}/userManual.html" t.name) 
+end
+
+#######################################
+
+file 'dist/gdlc/docs/style.css' => ['docs/style.css'] do |t|
+  cp(t.prerequisites[0], t.name )
+end
+
+#######################################
+
+file 'gdlc.zip' do |t|
+  zip = ZipFile.new(t.name)
+  puts "Zipper created for archive [#{t.name}]"
+  zip.addToArchive("dist", "gdlc")
 end
 
 #######################################
@@ -198,21 +222,21 @@ desc "- Deploy GDLC to tools dir"
 task :deploy => [:dist] do
   distSrc = "dist/gdlc"
   dest    = "C:/tools"
-  batDest = "C:/batch"
+#  batDest = "C:/batch"
   
-  scriptSrc  = "#{dest}/gdlc/gdlc.cmd"
-  scriptDest = "#{batDest}/gdlc.cmd"
+#  scriptSrc  = "#{dest}/gdlc/gdlc.cmd"
+#  scriptDest = "#{batDest}/gdlc.cmd"
   
   
   cp_r distSrc, dest
-  cp scriptSrc, scriptDest
+  #cp scriptSrc, scriptDest
 end
 
 #######################################
 
 desc "- Create compiler documentation"
 
-task :docs => [:createDirs, 'dist/gdlc/docs/GdlGrammar.html'] do
+task :docs => [:createDirs, 'dist/gdlc/docs/GdlGrammar.html', 'dist/gdlc/docs/userManual.html','dist/gdlc/docs/style.css'] do
   puts "Documents created"
 end
 
