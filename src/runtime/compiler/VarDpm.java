@@ -44,5 +44,35 @@ public class VarDpm extends VarBase implements IVariable {
 		this.productType = type;
 	}
 
+	public String getDataType() {
+		if(null != this.dataType){
+			return this.dataType;
+		} else
+		{
+			return this.getDataTypeFromProductType();
+		}
+	}
+
+	protected String getDataTypeFromProductType(){
+		if(this.productType.equals("1")){
+			return new String("Boolean");
+		}
+
+		if(this.productType.equals("2")){
+			return new String("Date");
+		}
+		if(this.productType.equals("3")){
+			return new String("Money");
+		}
+		if(this.productType.equals("4")){
+			return new String("Numeric");
+		}
+		if(this.productType.equals("5")){
+			return new String("Percentage");
+		}
+
+		return new String("Text");
+	}
+
 
 }

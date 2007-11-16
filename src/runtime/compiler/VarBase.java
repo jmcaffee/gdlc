@@ -8,6 +8,7 @@ public class VarBase {
 	protected String name = new String();
 	protected String alias = new String();
 	protected String type = new String();
+	protected String dataType = new String();
 
 	public VarBase(ASTVarDef node) {
 		super();
@@ -17,6 +18,8 @@ public class VarBase {
 		this.type = node.getData("Type");
 
 		this.alias = node.getAlias();
+		
+		this.dataType = node.getData("DataType");
 }
 
 	public VarBase(String varName) {
@@ -43,6 +46,14 @@ public class VarBase {
 
 	public String getType() {
 		return this.type;
+	}
+
+	public String getDataType() {
+		return this.dataType;
+	}
+
+	public void setDataType(String type) {
+		this.dataType = type;
 	}
 
 	public void setName(String name) {
