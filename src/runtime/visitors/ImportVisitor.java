@@ -6,7 +6,6 @@ import java.io.IOException;
 import runtime.compiler.CompileException;
 import runtime.compiler.CompilerContext;
 import runtime.main.CompileError;
-import runtime.main.Log;
 import runtime.parser.ASTImport;
 import runtime.reader.CsvLookupFile;
 
@@ -39,11 +38,22 @@ public class ImportVisitor extends DepthFirstVisitor {
 		String filepath = ctx.findIncludePath(filename);
 
 		try{
+
+			
 			lk.parse(filepath);
+			lk.extractLookupsTo(ctx.getLookupData());
+		
+		
 		}
 		catch(FileNotFoundException e){
+			ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
+					new String("An error occurred while importing [ " + filename + " ].")));
 			ctx.addError(new CompileError(CompileError.errors.FILENOTFOUND,
 					new String("File [" + filepath + "] not found.")));
+			if(filepath.length() < 1){
+				ctx.addError(new CompileError(CompileError.errors.INCLUDEDIRPATH,
+						new String("[ " + filename + " ] was not found in any INCLUDE dir.")));
+			}
 			return;
 		}
 		catch(IOException e){
@@ -51,14 +61,18 @@ public class ImportVisitor extends DepthFirstVisitor {
 					new String("There was an problem reading the lookup file [" + filepath + "].")));
 			return;
 		}
-		
-		try{
-			lk.extractLookupsTo(ctx.getLookupData());
-		}
 		catch(CompileException e){
 			ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
 					new String("[" + filepath +"] Errors have occured while importing lookups: " + e.getMessage())));
 		}
+		
+//		try{
+//			lk.extractLookupsTo(ctx.getLookupData());
+//		}
+//		catch(CompileException e){
+//			ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
+//					new String("[" + filepath +"] Errors have occured while importing lookups: " + e.getMessage())));
+//		}
 		// lk.dumpData();
 		
 	}

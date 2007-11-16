@@ -6,6 +6,9 @@ import runtime.compiler.VarDpm;
 import runtime.compiler.VarPpm;
 import runtime.compiler.LookupData.MinMax;
 import runtime.elements.XmlElem;
+import runtime.main.CompileError;
+import runtime.main.CompileMgr;
+import runtime.main.CompileWarning;
 import runtime.main.Log;
 import runtime.parser.ASTLookupDef;
 import runtime.parser.ASTVarRef;
@@ -39,7 +42,16 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 		
 		// Handle lookup data
 		LookupData lkData = this.ctx.getLookupData(node.getName());
-		formatLookupData(lkData, me);
+		try{
+			formatLookupData(lkData, me);
+		}catch(IndexOutOfBoundsException e){
+			ctx.addError(new CompileError(CompileError.errors.OUTPUTERROR,
+					new String("Index out of bounds error occurred while outputting lookup data [" + node.getAlias() + "]")));
+			ctx.addWarning(new CompileWarning(CompileWarning.warnings.CSVLINELENGTH,
+					new String("The line length format is incorrect for lookup [" + node.getAlias() + "]")));
+//			System.out.println("*** Corrupted Lookup CSV data ***");
+//			System.out.println("    Index out of bounds error occurred while outputting lookup data [" + node.getAlias() + "]");
+		}
 		
 		// Add xml data to the parent element
 		elem.appendXml(me.toXml());
@@ -58,12 +70,19 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 			me.setIsShortTag(true);
 
 			me.putAttribute("Name", dpm.getAlias());
+			me.putAttribute("DataType", dpm.getDataType());
 			me.putAttribute("Type", dpm.getType());
 			me.putAttribute("Order", dpm.getOrder());
 			me.putAttribute("ProductType", dpm.getProductType());
 			
-			String[] attOrder = {"Name", "Type", "Order", "ProductType"};
-			me.setAttributeOrder(attOrder);
+			if(true == (CompileMgr.getConfig().outputDpmDataTypeInLookups)){
+				String[] attOrder = {"Name", "DataType", "Type", "Order", "ProductType"};
+				me.setAttributeOrder(attOrder);
+			}else{
+				String[] attOrder = {"Name", "Type", "Order", "ProductType"};
+				me.setAttributeOrder(attOrder);
+			}
+
 		} 
 		else {
 			VarPpm ppm = (VarPpm)this.ctx.getVar(new VarPpm(varName));
@@ -71,10 +90,17 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 			me.setIsShortTag(true);
 
 			me.putAttribute("Name", ppm.getAlias());
+			me.putAttribute("DataType", ppm.getDataType());
 			me.putAttribute("Type", ppm.getType());
 			
-			String[] attOrder = {"Name", "Type"};
-			me.setAttributeOrder(attOrder);
+			if(true == (CompileMgr.getConfig().outputPpmDataTypeInLookups)){
+				String[] attOrder = {"Name", "DataType", "Type"};
+				me.setAttributeOrder(attOrder);
+			}else{
+				String[] attOrder = {"Name", "Type"};
+				me.setAttributeOrder(attOrder);
+			}
+
 		}
 		
 		if(null == me){

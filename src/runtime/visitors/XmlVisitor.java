@@ -3,11 +3,12 @@ package runtime.visitors;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import runtime.compiler.IProgramContext;
+import runtime.compiler.CompilerContext;
 import runtime.compiler.IRuleset;
 import runtime.compiler.VarDpm;
 import runtime.compiler.VarPpm;
 import runtime.elements.XmlElem;
+import runtime.main.CompileMgr;
 import runtime.main.Log;
 import runtime.parser.ASTAndOperator;
 import runtime.parser.ASTAssign;
@@ -27,6 +28,7 @@ import runtime.parser.ASTExptn;
 import runtime.parser.ASTExptnType;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTIfActions;
+import runtime.parser.ASTInsertPricing;
 import runtime.parser.ASTLogicalCompute;
 import runtime.parser.ASTLogicalOperator;
 import runtime.parser.ASTLookupDef;
@@ -49,12 +51,17 @@ import runtime.parser.ASTVarRef;
 import runtime.parser.SimpleNode;
 
 public class XmlVisitor extends DepthFirstVisitor {
-	IProgramContext ctx = null;
+	CompilerContext ctx = null;
 	boolean 		parseMsgs = false;		// Set this to true if Message element XML should
 											// be returned as well.
 	
-	public XmlVisitor(IProgramContext ctx){ this.ctx = ctx;}
+	public XmlVisitor(CompilerContext ctx){ this.ctx = ctx;}
 	
+				// TODO Remove code. This is now handled by static config object.
+//	public	void generateDpmDataType(boolean flag){ this.applyDpmDataTypeAttrib = flag;}
+//	
+//	public	void generatePpmDataType(boolean flag){ this.applyPpmDataTypeAttrib = flag;}
+
 	public void parseMessages(boolean parseMsgs){ this.parseMsgs = parseMsgs;}
 	
 	public Object visit(ASTGuidelineDef node, Object data) {
@@ -131,7 +138,7 @@ public class XmlVisitor extends DepthFirstVisitor {
 		XmlElem me = new XmlElem("Rule");
 		me.setAttributeOrder(attribs);
 		
-		me.putAttribute("Id", "99999");
+		me.putAttribute("Id", node.getData("Id"));
 		me.putAttribute("Name", node.getAlias());
 		
 		XmlElem ifMsgs = new XmlElem("IfMessages");
@@ -364,7 +371,7 @@ public class XmlVisitor extends DepthFirstVisitor {
 		String[] attribs = {"ID", "Name"};
 		me.setAttributeOrder(attribs);
 
-		me.putAttribute("ID", "99999");
+		me.putAttribute("ID", node.getData("Id"));
 		me.putAttribute("Name", node.getAlias());
 		
 		elem.appendXml(me.toXml());
@@ -510,7 +517,10 @@ public class XmlVisitor extends DepthFirstVisitor {
 		me.setAttributeOrder(attribs);
 		
 		me.putAttribute("Type", "Condition");
-		me.putAttribute("Id", "99999");
+		// The engine will assume that all conditions are the same if they have
+		// the same ID within the same guideline. This results in the engine only
+		// outputting one condition when it should output more than one.
+		me.putAttribute("Id", Integer.toString(ctx.getNextConditionId()));
 		me.putAttribute("Responsible", "Broker");
 		me.putAttribute("WhoCanClear", "Underwriter");
 		me.putAttribute("Critical", "No");
@@ -591,12 +601,18 @@ public class XmlVisitor extends DepthFirstVisitor {
 			me.setIsShortTag(true);
 
 			me.putAttribute("Name", dpm.getAlias());
+			me.putAttribute("DataType", dpm.getDataType());
 			me.putAttribute("Type", dpm.getType());
 			me.putAttribute("Order", dpm.getOrder());
 			me.putAttribute("ProductType", dpm.getProductType());
 			
-			String[] attOrder = {"Name", "Type", "Order", "ProductType"};
-			me.setAttributeOrder(attOrder);
+			if(true == (CompileMgr.getConfig().applyDpmDataType)){
+				String[] attOrder = {"Name", "DataType", "Type", "Order", "ProductType"};
+				me.setAttributeOrder(attOrder);
+			}else{
+				String[] attOrder = {"Name", "Type", "Order", "ProductType"};
+				me.setAttributeOrder(attOrder);
+			}
 		} 
 		else {
 			VarPpm ppm = (VarPpm)this.ctx.getVar(new VarPpm(varName));
@@ -604,10 +620,16 @@ public class XmlVisitor extends DepthFirstVisitor {
 			me.setIsShortTag(true);
 
 			me.putAttribute("Name", ppm.getAlias());
+			me.putAttribute("DataType", ppm.getDataType());
 			me.putAttribute("Type", ppm.getType());
 			
-			String[] attOrder = {"Name", "Type"};
-			me.setAttributeOrder(attOrder);
+			if(true == (CompileMgr.getConfig().applyPpmDataType)){
+				String[] attOrder = {"Name", "DataType", "Type"};
+				me.setAttributeOrder(attOrder);
+			}else{
+				String[] attOrder = {"Name", "Type"};
+				me.setAttributeOrder(attOrder);
+			}
 		}
 		
 		if(null == me){
@@ -637,6 +659,26 @@ public class XmlVisitor extends DepthFirstVisitor {
 		me.appendXml(node.getData("value"));
 
 		elem.appendXml(me.toXml());
+		return elem;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTInsertPricing, java.lang.Object)
+	 */
+	public Object visit(ASTInsertPricing node, Object data){
+		XmlElem elem = (XmlElem)data;
+		String[] attribs = {"Id", "Name"};
+		XmlElem me = new XmlElem("Rule");
+		me.setAttributeOrder(attribs);
+		
+		me.putAttribute("Id", "0");
+		me.putAttribute("Name", "Insert Pricing Guideline Rule");
+		
+		me.setIsShortTag(false);
+		node.childrenAccept(this, me);
+		
+		elem.appendXml(me.toXml());
+		
 		return elem;
 	}
 

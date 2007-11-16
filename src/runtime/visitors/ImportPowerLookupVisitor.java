@@ -9,11 +9,11 @@ import java.util.HashMap;
 import runtime.compiler.CompileException;
 import runtime.compiler.CompilerContext;
 import runtime.compiler.GdlCompiler;
-import runtime.compiler.IProgramContext;
 import runtime.compiler.PowerLookupData;
 import runtime.compiler.PowerLookupRulesetBuilder;
 import runtime.main.CompileError;
 import runtime.main.Log;
+import runtime.main.ParseMgr;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTImport;
 import runtime.parser.GdlParser;
@@ -92,23 +92,32 @@ public class ImportPowerLookupVisitor extends DepthFirstVisitor {
 		StringBuffer 				pl 			= new StringBuffer();
 		PowerLookupRulesetBuilder 	plBuilder 	= new PowerLookupRulesetBuilder(ctx);
 		ASTCompilationUnit 			tree 		= null;
-		GdlParser 					parser 		= null;
+		ParseMgr 					parseMgr	= new ParseMgr();
+		
+		parseMgr.configureDefaultPlugins();
 		
 		for(String plName : this.plData.keySet()){
 			pl.setLength(0);
 			pl.append(plBuilder.build(this.plData.get(plName)));
 											// Parse pl buffer.
-			parser = new GdlParser(inputStreamFromStringBuffer(pl));
-		    try {
-		    	tree = parser.CompilationUnit();
-		    } catch (ParseException e) {
+			tree = parseMgr.parseBuffer(pl, ctx);
+			if(null == tree){
 				ctx.addError(new CompileError(CompileError.errors.PARSEERROR,
-						new String("Parsing failed while parsing powerlookup ruleset: " + e.toString())));
-				continue;		// Try the next powerlookup.
-		    }
+				new String("Parsing failed while parsing powerlookup ruleset: " + plName)));
+			}
+					
+
+////			parser = new GdlParser(inputStreamFromStringBuffer(pl));
+////		    try {
+//		    	tree = parser.CompilationUnit();
+//		    } catch (ParseException e) {
+//				ctx.addError(new CompileError(CompileError.errors.PARSEERROR,
+//						new String("Parsing failed while parsing powerlookup ruleset: " + e.toString())));
+//				continue;		// Try the next powerlookup.
+//		    }
 		    
 											// Compile generated, parsed source.
-			compileParseTree(tree, ctx);
+			compileParseTree(ctx, tree);
 			tree = null;
 		}
 	}
@@ -128,24 +137,38 @@ public class ImportPowerLookupVisitor extends DepthFirstVisitor {
 
 	/**
 	 * compileParseTree Compile a parse tree
-	 * @param tree object to parse
 	 * @param ctx CompilerContext
+	 * @param tree object to parse
 	 */
-	protected void compileParseTree(ASTCompilationUnit tree, IProgramContext ctx) {
-	      Log.status("GDLC:  Compiling...");
+	protected void compileParseTree(CompilerContext ctx, ASTCompilationUnit tree) {
+	      Log.status("Compiling...");
 
 	      if(tree == null){
-		      Log.error("GDLC:  Compile failed: parse tree is empty.");
+		      Log.error("Compile failed: parse tree is empty.");
 		      return;
 	      }
 
-	      GdlCompiler compiler = new GdlCompiler(tree);
-	      
+	      GdlCompiler compiler = new GdlCompiler();
+	      compiler.configureDefaultPlugins();
+
+//	      ArrayList<IGdlcPlugin> compilePlugins = new ArrayList<IGdlcPlugin>(); 
+//	      compilePlugins.add(new VariablesPlugin());
+//	      compilePlugins.add(new LookupImportsPlugin());
+//	      compilePlugins.add(new LookupsPlugin());
+//	      compilePlugins.add(new PowerLookupImportsPlugin()); //
+//	      compilePlugins.add(new RuleDefsPlugin());
+//	      compilePlugins.add(new RulesetDefsPlugin());
+//	      compilePlugins.add(new RefResolverPlugin());
+//	      compilePlugins.add(new GuidelinesPlugin());
+//	      compilePlugins.add(new AliasesPlugin());
+//
+//	      compiler.configurePlugins("compile", compilePlugins);
+
 	      try {
-	    	  compiler.compile(ctx);
+	    	  compiler.compile(ctx, tree);
 
 	      } catch (CompileException e) {
-			      Log.error("GDLC:  Encountered errors during compilation.");
+			      Log.error("Encountered errors during compilation.");
 			      Log.error(e.toString());
 			      return;
 	      }

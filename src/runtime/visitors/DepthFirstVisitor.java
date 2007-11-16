@@ -6,6 +6,7 @@ import runtime.parser.ASTAssign;
 import runtime.parser.ASTAssignTo;
 import runtime.parser.ASTAssignValue;
 import runtime.parser.ASTBrace;
+import runtime.parser.ASTCodeBlock;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTCondType;
 import runtime.parser.ASTCondition;
@@ -18,12 +19,17 @@ import runtime.parser.ASTEqualityOperator;
 import runtime.parser.ASTExpression;
 import runtime.parser.ASTExptn;
 import runtime.parser.ASTExptnType;
-import runtime.parser.ASTFuncRefParam;
+import runtime.parser.ASTFunctionDef;
+import runtime.parser.ASTFunctionDefArg;
+import runtime.parser.ASTFunctionDefArgList;
 import runtime.parser.ASTFunctionRef;
+import runtime.parser.ASTFunctionRefArg;
+import runtime.parser.ASTFunctionRefArgList;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTIfActions;
 import runtime.parser.ASTImport;
 import runtime.parser.ASTInclude;
+import runtime.parser.ASTInsertPricing;
 import runtime.parser.ASTLogicalCompute;
 import runtime.parser.ASTLogicalOperator;
 import runtime.parser.ASTLookupDef;
@@ -216,6 +222,22 @@ public class DepthFirstVisitor implements GdlParserVisitor {
 		data = node.childrenAccept(this, data);
 		return data;
 	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTLogicalBrace, java.lang.Object)
+	 */
+//	public Object visit(ASTLogicalBrace node, Object data) {
+//		data = node.childrenAccept(this, data);
+//		return data;
+//	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTEqualityBrace, java.lang.Object)
+	 */
+//	public Object visit(ASTEqualityBrace node, Object data) {
+//		data = node.childrenAccept(this, data);
+//		return data;
+//	}
 
 	/* (non-Javadoc)
 	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTConstant, java.lang.Object)
@@ -436,9 +458,62 @@ public class DepthFirstVisitor implements GdlParserVisitor {
 	/* (non-Javadoc)
 	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFuncRefParam, java.lang.Object)
 	 */
-	public Object visit(ASTFuncRefParam node, Object data){
+	public Object visit(ASTFunctionRefArg node, Object data){
 		data = node.childrenAccept(this, data);
 		return data;
 	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTInsertPricing, java.lang.Object)
+	 */
+	public Object visit(ASTInsertPricing node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTCodeBlock, java.lang.Object)
+	 */
+	public Object visit(ASTCodeBlock node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionDef, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionDef node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionDefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionDefArgList node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionDefArg, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionDefArg node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionRefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionRefArgList node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+
 
 }

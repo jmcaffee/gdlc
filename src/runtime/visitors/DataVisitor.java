@@ -8,6 +8,7 @@ import runtime.parser.ASTAssign;
 import runtime.parser.ASTAssignTo;
 import runtime.parser.ASTAssignValue;
 import runtime.parser.ASTBrace;
+import runtime.parser.ASTCodeBlock;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTCondType;
 import runtime.parser.ASTCondition;
@@ -20,12 +21,17 @@ import runtime.parser.ASTEqualityOperator;
 import runtime.parser.ASTExpression;
 import runtime.parser.ASTExptn;
 import runtime.parser.ASTExptnType;
-import runtime.parser.ASTFuncRefParam;
+import runtime.parser.ASTFunctionDef;
+import runtime.parser.ASTFunctionDefArg;
+import runtime.parser.ASTFunctionDefArgList;
 import runtime.parser.ASTFunctionRef;
+import runtime.parser.ASTFunctionRefArg;
+import runtime.parser.ASTFunctionRefArgList;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTIfActions;
 import runtime.parser.ASTImport;
 import runtime.parser.ASTInclude;
+import runtime.parser.ASTInsertPricing;
 import runtime.parser.ASTLogicalCompute;
 import runtime.parser.ASTLogicalOperator;
 import runtime.parser.ASTLookupDef;
@@ -65,6 +71,19 @@ public class DataVisitor implements GdlParserVisitor {
 		return buf.toString();
 	}
 	
+	public Object dumpNodeInfo(SimpleNode node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
 	public Object visit(SimpleNode node, Object data) {
 		// Dump node info
 		Log.info("SimpleNode");
@@ -300,6 +319,32 @@ public class DataVisitor implements GdlParserVisitor {
 		ctx.setTabCount(cnt);
 		return ctx;
 	}
+
+//	public Object visit(ASTLogicalBrace node, Object data) {
+//		// Dump node info
+//		CompilerContext ctx = (CompilerContext)data;
+//		int cnt = ctx.getTabCount();
+//
+//		Log.info(tabify(cnt,node.toString()));
+//		
+//		ctx.setTabCount(cnt+1);
+//		node.childrenAccept(this, data);
+//		ctx.setTabCount(cnt);
+//		return ctx;
+//	}
+
+//	public Object visit(ASTEqualityBrace node, Object data) {
+//		// Dump node info
+//		CompilerContext ctx = (CompilerContext)data;
+//		int cnt = ctx.getTabCount();
+//
+//		Log.info(tabify(cnt,node.toString()));
+//		
+//		ctx.setTabCount(cnt+1);
+//		node.childrenAccept(this, data);
+//		ctx.setTabCount(cnt);
+//		return ctx;
+//	}
 
 	public Object visit(ASTConstant node, Object data) {
 		// Dump node info
@@ -667,7 +712,7 @@ public class DataVisitor implements GdlParserVisitor {
 	/* (non-Javadoc)
 	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFuncRefParam, java.lang.Object)
 	 */
-	public Object visit(ASTFuncRefParam node, Object data){
+	public Object visit(ASTFunctionRefArg node, Object data){
 		// Dump node info
 		CompilerContext ctx = (CompilerContext)data;
 		int cnt = ctx.getTabCount();
@@ -680,4 +725,69 @@ public class DataVisitor implements GdlParserVisitor {
 		return ctx;
 	}
 
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTInsertPricing, java.lang.Object)
+	 */
+	public Object visit(ASTInsertPricing node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTCodeBlock, java.lang.Object)
+	 */
+	public Object visit(ASTCodeBlock node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionDef, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionDef node, Object data){
+		return dumpNodeInfo(node, data);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionDefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionDefArgList node, Object data){
+		return dumpNodeInfo(node, data);
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionDefArg, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionDefArg node, Object data){
+		return dumpNodeInfo(node, data);
+	}
+
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTFunctionRefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTFunctionRefArgList node, Object data){
+		return dumpNodeInfo(node, data);
+	}
+
+
+	
 }
