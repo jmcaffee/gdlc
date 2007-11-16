@@ -88,7 +88,7 @@ public class XmlElem extends BaseElem {
 		}
 		
 		if(true == this.isShortTag && (this.content.length() < 1)){
-			xml.append(" />");
+			xml.append("/>");
 		}
 		else {
 			xml.append(">");
