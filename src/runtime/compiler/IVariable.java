@@ -13,6 +13,10 @@ public interface IVariable {
 
 	abstract public void setVarType(String type);
 
+	abstract public String getDataType();
+
+	abstract public void setDataType(String type);
+
 	abstract public String getName();
 	
 	abstract public void setName(String name);
