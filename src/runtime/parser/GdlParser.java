@@ -2,8 +2,9 @@
 package runtime.parser;
 
 import runtime.main.Log;
-import runtime.parser.DumpVisitor;
+import runtime.visitors.DataVisitor;
 
+@SuppressWarnings("unchecked")
 public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlParserConstants {/*@bgen(jjtree)*/
   protected JJTGdlParserState jjtree = new JJTGdlParserState();
   public static void main(String args[]) {
@@ -42,11 +43,9 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
   }
 
   public static void dump(ASTCompilationUnit cu) {
-        DumpVisitor v=new DumpVisitor();
+        DataVisitor v=new DataVisitor();
 
-        System.out.print(cu.jjtAccept(v,null));
-  //        ((SimpleNode)jjtree.rootNode()).dump(">");
-
+        System.out.println(cu.jjtAccept(v,null));
     }
 
 /* CompilationUnit */
@@ -64,8 +63,10 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
         case IMPORT:
         case DPM:
         case PPM:
+        case LOOKUP:
         case RULESET:
         case RULE:
+        case IDENTIFIER:
           ;
           break;
         default:
@@ -77,6 +78,10 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
         case PPM:
           VarDef();
           break;
+        case LOOKUP:
+          LookupDef();
+          EOS();
+          break;
         case ALIAS:
           Alias();
           break;
@@ -86,16 +91,27 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
         case INCLUDE:
           Include();
           break;
-        case RULE:
-          RuleDef();
-          break;
-        case RULESET:
-          RulesetDef();
-          break;
         default:
           jj_la1[1] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
+          if (jj_2_1(3)) {
+            FunctionDef();
+          } else {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case IDENTIFIER:
+              FunctionRef();
+              break;
+            case RULE:
+              RuleDef();
+              break;
+            case RULESET:
+              RulesetDef();
+              break;
+            default:
+              jj_la1[2] = jj_gen;
+              jj_consume_token(-1);
+              throw new ParseException();
+            }
+          }
         }
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -103,7 +119,7 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
         GuidelineDef();
         break;
       default:
-        jj_la1[2] = jj_gen;
+        jj_la1[3] = jj_gen;
         ;
       }
       jj_consume_token(0);
@@ -134,29 +150,57 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
 
   final public void VarDef() throws ParseException {
  /*@bgen(jjtree) VarDef */
- ASTVarDef jjtn000 = new ASTVarDef(JJTVARDEF);
- boolean jjtc000 = true;
- jjtree.openNodeScope(jjtn000);String nm,typ;
+        ASTVarDef jjtn000 = new ASTVarDef(JJTVARDEF);
+        boolean jjtc000 = true;
+        jjtree.openNodeScope(jjtn000);String nm,dtyp,typ,als;
+        Token t;
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case DPM:
-        jj_consume_token(DPM);
+        t = jj_consume_token(DPM);
         typ = VarType();
-                        jjtn000.data.put("ProductType",typ);jjtn000.data.put("Type","DPM");jjtn000.data.put("varType","DPM");
+                        jjtn000.data.put("ProductType",typ);
+                        if( null != t.specialToken ){
+                                jjtn000.data.put("Type","DSM");
+                        } else {
+                                jjtn000.data.put("Type","DPM");
+                        }
+                        jjtn000.data.put("varType","DPM");
         nm = Name();
-                                                                                                                                         jjtn000.data.put("Name",nm);
+                        jjtn000.data.put("Name",nm);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case STRING_LITERAL:
+          als = AliasOf();
+                               jjtn000.data.put("Alias",als);
+          break;
+        default:
+          jj_la1[4] = jj_gen;
+          ;
+        }
         EOS();
         break;
       case PPM:
         jj_consume_token(PPM);
+        dtyp = VarDataType();
+                        jjtn000.data.put("DataType",dtyp);
         typ = PpmVarType();
-                             jjtn000.data.put("Type",typ);jjtn000.data.put("varType","PPM");
+                        jjtn000.data.put("Type",typ);
+                        jjtn000.data.put("varType","PPM");
         nm = Name();
-                                                                                                        jjtn000.data.put("Name",nm);
+                        jjtn000.data.put("Name",nm);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case STRING_LITERAL:
+          als = AliasOf();
+                               jjtn000.data.put("Alias",als);
+          break;
+        default:
+          jj_la1[5] = jj_gen;
+          ;
+        }
         EOS();
         break;
       default:
-        jj_la1[3] = jj_gen;
+        jj_la1[6] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -208,7 +252,41 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
                     {if (true) return new String("6");}
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[7] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String VarDataType() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case BOOLEAN:
+      jj_consume_token(BOOLEAN);
+                    {if (true) return new String("Boolean");}
+      break;
+    case DATE:
+      jj_consume_token(DATE);
+                    {if (true) return new String("Date");}
+      break;
+    case MONEY:
+      jj_consume_token(MONEY);
+                    {if (true) return new String("Money");}
+      break;
+    case NUMERIC:
+      jj_consume_token(NUMERIC);
+                    {if (true) return new String("Numeric");}
+      break;
+    case PERCENTAGE:
+      jj_consume_token(PERCENTAGE);
+                    {if (true) return new String("Percentage");}
+      break;
+    case TEXT:
+      jj_consume_token(TEXT);
+                    {if (true) return new String("Text");}
+      break;
+    default:
+      jj_la1[8] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -219,7 +297,7 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case APPLICATION:
       jj_consume_token(APPLICATION);
-                          {if (true) return new String("APP");}
+                          {if (true) return new String("APM");}
       break;
     case CREDIT:
       jj_consume_token(CREDIT);
@@ -230,7 +308,7 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
                           {if (true) return new String("PRD");}
       break;
     default:
-      jj_la1[5] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -241,16 +319,18 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
  /*@bgen(jjtree) Alias */
  ASTAlias jjtn000 = new ASTAlias(JJTALIAS);
  boolean jjtc000 = true;
- jjtree.openNodeScope(jjtn000);String nm;
+ jjtree.openNodeScope(jjtn000);String nm, alsTyp, als;
     try {
       jj_consume_token(ALIAS);
       jj_consume_token(LPAREN);
-      AliasType();
+      alsTyp = AliasType();
+                                      jjtn000.data.put("AliasType",alsTyp);
       jj_consume_token(COMMA);
       nm = Name();
-                                             jjtn000.data.put("Name",nm);
+                                                                                           jjtn000.data.put("Name",nm);
       jj_consume_token(COMMA);
-      AliasOf();
+      als = AliasOf();
+                                                                                                                                           jjtn000.data.put("Alias",als);
       jj_consume_token(RPAREN);
       EOS();
     } catch (Throwable jjte000) {
@@ -274,75 +354,31 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
     }
   }
 
-  final public void AliasType() throws ParseException {
- /*@bgen(jjtree) AliasType */
-  ASTAliasType jjtn000 = new ASTAliasType(JJTALIASTYPE);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);Token t;
-    try {
-      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-      case RULE:
-        t = jj_consume_token(RULE);
-                    jjtree.closeNodeScope(jjtn000, true);
-                    jjtc000 = false;
-                    jjtn000.data.put("value",token.image);
-        break;
-      case RULESET:
-        t = jj_consume_token(RULESET);
-                    jjtree.closeNodeScope(jjtn000, true);
-                    jjtc000 = false;
-                    jjtn000.data.put("value",token.image);
-        break;
-      case DPM:
-        t = jj_consume_token(DPM);
-                    jjtree.closeNodeScope(jjtn000, true);
-                    jjtc000 = false;
-                    jjtn000.data.put("value",token.image);
-        break;
-      case PPM:
-        t = jj_consume_token(PPM);
-                    jjtree.closeNodeScope(jjtn000, true);
-                    jjtc000 = false;
-                    jjtn000.data.put("value",token.image);
-        break;
-      default:
-        jj_la1[6] = jj_gen;
-        jj_consume_token(-1);
-        throw new ParseException();
-      }
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
+  final public String AliasType() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case RULE:
+      jj_consume_token(RULE);
+      break;
+    case RULESET:
+      jj_consume_token(RULESET);
+      break;
+    case LOOKUP:
+      jj_consume_token(LOOKUP);
+      break;
+    default:
+      jj_la1[10] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
     }
-    }
+                   {if (true) return token.image;}
+    throw new Error("Missing return statement in function");
   }
 
-  final public void AliasOf() throws ParseException {
- /*@bgen(jjtree) AliasOf */
-  ASTAliasOf jjtn000 = new ASTAliasOf(JJTALIASOF);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
-    try {
-      StringLiteral();
-    } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
-    } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
-    }
+  final public String AliasOf() throws ParseException {
+  String str;
+    str = StringLiteral();
+                      {if (true) return str;}
+    throw new Error("Missing return statement in function");
   }
 
   final public void EOS() throws ParseException {
@@ -386,8 +422,9 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
   }
 
   final public String Filename() throws ParseException {
-    jj_consume_token(FILENAME_LITERAL);
-                       {if (true) return token.image;}
+ String str;
+    str = StringLiteral();
+                        {if (true) return str;}
     throw new Error("Missing return statement in function");
   }
 
@@ -399,8 +436,14 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
     case PPM:
       jj_consume_token(PPM);
       break;
+    case LOOKUP:
+      jj_consume_token(LOOKUP);
+      break;
+    case POWERLOOKUP:
+      jj_consume_token(POWERLOOKUP);
+      break;
     default:
-      jj_la1[7] = jj_gen;
+      jj_la1[11] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -447,11 +490,11 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
       fn = Filename();
       jj_consume_token(RPAREN);
       break;
-    case FILENAME_LITERAL:
+    case STRING_LITERAL:
       fn = Filename();
       break;
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[12] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -471,7 +514,7 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
       str = StringLiteral();
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[13] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -493,8 +536,14 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
       label_2:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INSERT_PRICING_GUIDELINE:
+          InsertPricing();
+          break;
+        case IDENTIFIER:
+          FunctionRef();
+          break;
         case RULESET:
-          if (jj_2_1(4)) {
+          if (jj_2_2(4)) {
             RulesetDef();
           } else {
             switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -502,14 +551,14 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
               RulesetRef();
               break;
             default:
-              jj_la1[10] = jj_gen;
+              jj_la1[14] = jj_gen;
               jj_consume_token(-1);
               throw new ParseException();
             }
           }
           break;
         case RULE:
-          if (jj_2_2(5)) {
+          if (jj_2_3(5)) {
             RuleRef();
           } else {
             switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -517,24 +566,26 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
               RuleDef();
               break;
             default:
-              jj_la1[11] = jj_gen;
+              jj_la1[15] = jj_gen;
               jj_consume_token(-1);
               throw new ParseException();
             }
           }
           break;
         default:
-          jj_la1[12] = jj_gen;
+          jj_la1[16] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INSERT_PRICING_GUIDELINE:
         case RULESET:
         case RULE:
+        case IDENTIFIER:
           ;
           break;
         default:
-          jj_la1[13] = jj_gen;
+          jj_la1[17] = jj_gen;
           break label_2;
         }
       }
@@ -560,15 +611,313 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
     }
   }
 
+  final public void InsertPricing() throws ParseException {
+ /*@bgen(jjtree) InsertPricing */
+  ASTInsertPricing jjtn000 = new ASTInsertPricing(JJTINSERTPRICING);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      jj_consume_token(INSERT_PRICING_GUIDELINE);
+      jj_consume_token(LPAREN);
+      jj_consume_token(RPAREN);
+      EOS();
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
+  }
+
   final public String StringLiteral() throws ParseException {
     jj_consume_token(STRING_LITERAL);
-                      {if (true) return token.image;}
+                      {if (true) return token.image.substring(1,(token.image.length()-1));}
     throw new Error("Missing return statement in function");
   }
 
   final public String Name() throws ParseException {
     jj_consume_token(IDENTIFIER);
                   {if (true) return token.image;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void FunctionRef() throws ParseException {
+ /*@bgen(jjtree) FunctionRef */
+ ASTFunctionRef jjtn000 = new ASTFunctionRef(JJTFUNCTIONREF);
+ boolean jjtc000 = true;
+ jjtree.openNodeScope(jjtn000);String nm;
+    try {
+      nm = Name();
+            jjtn000.data.put("Name",nm);
+      jj_consume_token(LPAREN);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case NUMERIC_CONSTANT:
+      case CHARACTER_LITERAL:
+      case STRING_LITERAL:
+      case IDENTIFIER:
+        FunctionRefArgList();
+        break;
+      default:
+        jj_la1[18] = jj_gen;
+        ;
+      }
+      jj_consume_token(RPAREN);
+      EOS();
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+    }
+  }
+
+  final public void FunctionRefArgList() throws ParseException {
+ /*@bgen(jjtree) FunctionRefArgList */
+  ASTFunctionRefArgList jjtn000 = new ASTFunctionRefArgList(JJTFUNCTIONREFARGLIST);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      FunctionRefArg();
+      label_3:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMA:
+          ;
+          break;
+        default:
+          jj_la1[19] = jj_gen;
+          break label_3;
+        }
+        jj_consume_token(COMMA);
+        FunctionRefArg();
+      }
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
+  }
+
+  final public void FunctionRefArg() throws ParseException {
+ /*@bgen(jjtree) FunctionRefArg */
+  ASTFunctionRefArg jjtn000 = new ASTFunctionRefArg(JJTFUNCTIONREFARG);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);Token t; String str;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case NUMERIC_CONSTANT:
+      case CHARACTER_LITERAL:
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NUMERIC_CONSTANT:
+          t = jj_consume_token(NUMERIC_CONSTANT);
+          break;
+        case CHARACTER_LITERAL:
+          t = jj_consume_token(CHARACTER_LITERAL);
+          break;
+        default:
+          jj_la1[20] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+                                  jjtree.closeNodeScope(jjtn000, true);
+                                  jjtc000 = false;
+                              jjtn000.data.put("value",t.image );
+        break;
+      case STRING_LITERAL:
+        str = StringLiteral();
+                                  jjtree.closeNodeScope(jjtn000, true);
+                                  jjtc000 = false;
+                                  jjtn000.data.put("value",str );
+        break;
+      case IDENTIFIER:
+        str = Name();
+                                                  jjtree.closeNodeScope(jjtn000, true);
+                                                  jjtc000 = false;
+                                          jjtn000.data.put("value",str );
+        break;
+      default:
+        jj_la1[21] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+    }
+  }
+
+  final public void FunctionDef() throws ParseException {
+ /*@bgen(jjtree) FunctionDef */
+ ASTFunctionDef jjtn000 = new ASTFunctionDef(JJTFUNCTIONDEF);
+ boolean jjtc000 = true;
+ jjtree.openNodeScope(jjtn000);String nm, codeBlock;
+    try {
+      nm = Name();
+            jjtn000.data.put("Name",nm);
+      jj_consume_token(LPAREN);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case STRING:
+        FunctionDefArgList();
+        break;
+      default:
+        jj_la1[22] = jj_gen;
+        ;
+      }
+      jj_consume_token(RPAREN);
+      codeBlock = CodeBlock();
+                         jjtree.closeNodeScope(jjtn000, true);
+                         jjtc000 = false;
+                        jjtn000.data.put("codeBlock", codeBlock);
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+    }
+  }
+
+  final public void FunctionDefArgList() throws ParseException {
+ /*@bgen(jjtree) FunctionDefArgList */
+  ASTFunctionDefArgList jjtn000 = new ASTFunctionDefArgList(JJTFUNCTIONDEFARGLIST);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      FunctionDefArg();
+      label_4:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case COMMA:
+          ;
+          break;
+        default:
+          jj_la1[23] = jj_gen;
+          break label_4;
+        }
+        jj_consume_token(COMMA);
+        FunctionDefArg();
+      }
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
+  }
+
+  final public void FunctionDefArg() throws ParseException {
+ /*@bgen(jjtree) FunctionDefArg */
+ ASTFunctionDefArg jjtn000 = new ASTFunctionDefArg(JJTFUNCTIONDEFARG);
+ boolean jjtc000 = true;
+ jjtree.openNodeScope(jjtn000);Token t;
+    try {
+      jj_consume_token(STRING);
+      t = jj_consume_token(IDENTIFIER);
+                                jjtree.closeNodeScope(jjtn000, true);
+                                jjtc000 = false;
+                               jjtn000.data.put("value", "$" + t.image);
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
+  }
+
+  final public String CodeBlock() throws ParseException {
+ /*@bgen(jjtree) CodeBlock */
+ ASTCodeBlock jjtn000 = new ASTCodeBlock(JJTCODEBLOCK);
+ boolean jjtc000 = true;
+ jjtree.openNodeScope(jjtn000);Token t;
+    try {
+      t = jj_consume_token(CODE_BLOCK);
+                         jjtree.closeNodeScope(jjtn000, true);
+                         jjtc000 = false;
+                        {if (true) return t.image.substring(1,(t.image.length()-1));}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
     throw new Error("Missing return statement in function");
   }
 
@@ -588,15 +937,16 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
       case COMMA:
         jj_consume_token(COMMA);
         jj_consume_token(PL);
+                                                                                                                                                                                               jjtn000.data.put("Type","1");
         break;
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[24] = jj_gen;
         ;
       }
       jj_consume_token(RPAREN);
-      label_3:
+      label_5:
       while (true) {
-        if (jj_2_3(5)) {
+        if (jj_2_4(5)) {
           RuleDef();
         } else {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -604,7 +954,7 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
             RuleRef();
             break;
           default:
-            jj_la1[15] = jj_gen;
+            jj_la1[25] = jj_gen;
             jj_consume_token(-1);
             throw new ParseException();
           }
@@ -614,8 +964,8 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
           ;
           break;
         default:
-          jj_la1[16] = jj_gen;
-          break label_3;
+          jj_la1[26] = jj_gen;
+          break label_5;
         }
       }
       jj_consume_token(END);
@@ -655,7 +1005,7 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
                   {if (true) return new String("3");}
       break;
     default:
-      jj_la1[17] = jj_gen;
+      jj_la1[27] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -775,7 +1125,7 @@ public class GdlParser/*@bgen(jjtree)*/implements GdlParserTreeConstants, GdlPar
       ElseActions();
       break;
     default:
-      jj_la1[18] = jj_gen;
+      jj_la1[28] = jj_gen;
       ;
     }
     jj_consume_token(END);
@@ -823,39 +1173,36 @@ Expression  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 Co
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      Compute();
+      LogExpr();
     } catch (Throwable jjte000) {
-    if (jjtc000) {
-      jjtree.clearNodeScope(jjtn000);
-      jjtc000 = false;
-    } else {
-      jjtree.popNode();
-    }
-    if (jjte000 instanceof RuntimeException) {
-      {if (true) throw (RuntimeException)jjte000;}
-    }
-    if (jjte000 instanceof ParseException) {
-      {if (true) throw (ParseException)jjte000;}
-    }
-    {if (true) throw (Error)jjte000;}
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
     } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
     }
   }
 
-/*
-Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompTerm )*
-*/
-  final public void Compute() throws ParseException {
+  final public void LogExpr() throws ParseException {
  /*@bgen(jjtree) #LogicalCompute(> 1) */
   ASTLogicalCompute jjtn000 = new ASTLogicalCompute(JJTLOGICALCOMPUTE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      CompTerm();
-      label_4:
+      LogTerm();
+      label_6:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case AND1:
@@ -865,12 +1212,143 @@ Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompT
           ;
           break;
         default:
-          jj_la1[19] = jj_gen;
-          break label_4;
+          jj_la1[29] = jj_gen;
+          break label_6;
         }
         LogicalOperator();
-        CompTerm();
+        LogTerm();
       }
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
+          }
+    }
+  }
+
+  final public void LogTerm() throws ParseException {
+    if (jj_2_5(2)) {
+      EqExpr();
+    } else if (jj_2_6(2147483647)) {
+      Brace();
+    } else {
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public void BraceLookAhead() throws ParseException {
+    jj_consume_token(LPAREN);
+    LogTerm();
+    LogicalOperator();
+  }
+
+  final public void EqExpr() throws ParseException {
+ /*@bgen(jjtree) #EqualityCompute(> 1) */
+  ASTEqualityCompute jjtn000 = new ASTEqualityCompute(JJTEQUALITYCOMPUTE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case NUMERIC_CONSTANT:
+      case STRING_LITERAL:
+      case IDENTIFIER:
+        CompTerm();
+        label_7:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case EQU:
+          case NEQ1:
+          case NEQ2:
+          case LT:
+          case GT:
+          case LEQ:
+          case GEQ:
+            ;
+            break;
+          default:
+            jj_la1[30] = jj_gen;
+            break label_7;
+          }
+          EqualityOperator();
+          CompTerm();
+        }
+        break;
+      case LPAREN:
+        jj_consume_token(LPAREN);
+        CompTerm();
+        label_8:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case EQU:
+          case NEQ1:
+          case NEQ2:
+          case LT:
+          case GT:
+          case LEQ:
+          case GEQ:
+            ;
+            break;
+          default:
+            jj_la1[31] = jj_gen;
+            break label_8;
+          }
+          EqualityOperator();
+          CompTerm();
+        }
+        jj_consume_token(RPAREN);
+        break;
+      default:
+        jj_la1[32] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
+          }
+    }
+  }
+
+/*
+Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompTerm )*
+*/
+  final public void Compute() throws ParseException {
+ /*@bgen(jjtree) #LogicalCompute( 3) */
+  ASTLogicalCompute jjtn000 = new ASTLogicalCompute(JJTLOGICALCOMPUTE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      CompTerm();
+      LogicalOperator();
+      CompTerm();
     } catch (Throwable jjte000) {
     if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -887,7 +1365,7 @@ Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompT
     {if (true) throw (Error)jjte000;}
     } finally {
     if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
+      jjtree.closeNodeScope(jjtn000,  3);
     }
     }
   }
@@ -901,24 +1379,33 @@ Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompT
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case AND1:
         t = jj_consume_token(AND1);
+                          jjtree.closeNodeScope(jjtn000, true);
+                          jjtc000 = false;
+                  jjtn000.data.put("value", new String("AND"));
         break;
       case AND2:
         t = jj_consume_token(AND2);
+                  jjtree.closeNodeScope(jjtn000, true);
+                  jjtc000 = false;
+               jjtn000.data.put("value", new String("AND"));
         break;
       case OR1:
         t = jj_consume_token(OR1);
+                          jjtree.closeNodeScope(jjtn000, true);
+                          jjtc000 = false;
+                  jjtn000.data.put("value", new String("OR"));
         break;
       case OR2:
         t = jj_consume_token(OR2);
+                  jjtree.closeNodeScope(jjtn000, true);
+                  jjtc000 = false;
+                  jjtn000.data.put("value", new String("OR"));
         break;
       default:
-        jj_la1[20] = jj_gen;
+        jj_la1[33] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-                jjtree.closeNodeScope(jjtn000, true);
-                jjtc000 = false;
-                jjtn000.data.put("value", t.image );
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -942,25 +1429,22 @@ CompTerm  --> Primary ( LT Primary
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      Operand();
-      label_5:
-      while (true) {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case EQU:
-        case NEQ1:
-        case NEQ2:
-        case LT:
-        case GT:
-        case LEQ:
-        case GEQ:
-          ;
-          break;
-        default:
-          jj_la1[21] = jj_gen;
-          break label_5;
-        }
+      if (jj_2_7(2)) {
+        LhOperand();
         EqualityOperator();
         Operand();
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case NUMERIC_CONSTANT:
+        case STRING_LITERAL:
+        case IDENTIFIER:
+          Operand();
+          break;
+        default:
+          jj_la1[34] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
       }
     } catch (Throwable jjte000) {
     if (jjtc000) {
@@ -992,33 +1476,51 @@ CompTerm  --> Primary ( LT Primary
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case LT:
         t = jj_consume_token(LT);
+                          jjtree.closeNodeScope(jjtn000, true);
+                          jjtc000 = false;
+                          jjtn000.data.put("value", new String("&lt;") );
         break;
       case GT:
         t = jj_consume_token(GT);
+                          jjtree.closeNodeScope(jjtn000, true);
+                          jjtc000 = false;
+                  jjtn000.data.put("value", new String("&gt;") );
         break;
       case NEQ1:
         t = jj_consume_token(NEQ1);
+                  jjtree.closeNodeScope(jjtn000, true);
+                  jjtc000 = false;
+               jjtn000.data.put("value", new String("&lt;&gt;") );
         break;
       case NEQ2:
         t = jj_consume_token(NEQ2);
+                  jjtree.closeNodeScope(jjtn000, true);
+                  jjtc000 = false;
+               jjtn000.data.put("value", new String("&lt;&gt;") );
         break;
       case EQU:
         t = jj_consume_token(EQU);
+                          jjtree.closeNodeScope(jjtn000, true);
+                          jjtc000 = false;
+                  jjtn000.data.put("value", new String("==") );
         break;
       case LEQ:
         t = jj_consume_token(LEQ);
+                          jjtree.closeNodeScope(jjtn000, true);
+                          jjtc000 = false;
+                  jjtn000.data.put("value", new String("&lt;=") );
         break;
       case GEQ:
         t = jj_consume_token(GEQ);
+                  jjtree.closeNodeScope(jjtn000, true);
+                  jjtc000 = false;
+                  jjtn000.data.put("value", new String("&gt;=") );
         break;
       default:
-        jj_la1[22] = jj_gen;
+        jj_la1[35] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-                jjtree.closeNodeScope(jjtn000, true);
-                jjtc000 = false;
-                jjtn000.data.put("value", t.image );
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -1033,26 +1535,57 @@ Operand   --> NUMERIC_CONSTANT
         | LPAREN Compute RPAREN
 
 */
+  final public void LhOperand() throws ParseException {
+    VarRef();
+  }
+
   final public void Operand() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case IDENTIFIER:
+      VarRef();
+      break;
     case NUMERIC_CONSTANT:
     case STRING_LITERAL:
       Constant();
       break;
-    case IDENTIFIER:
-      VarRef();
-      break;
-    case LPAREN:
-      Brace();
-      break;
     default:
-      jj_la1[23] = jj_gen;
+      jj_la1[36] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
   }
 
   final public void Brace() throws ParseException {
+ /*@bgen(jjtree) Brace */
+  ASTBrace jjtn000 = new ASTBrace(JJTBRACE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      jj_consume_token(LPAREN);
+      LogExpr();
+      jj_consume_token(RPAREN);
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
+  }
+
+  final public void LogicalBrace() throws ParseException {
  /*@bgen(jjtree) Brace */
   ASTBrace jjtn000 = new ASTBrace(JJTBRACE);
   boolean jjtc000 = true;
@@ -1082,31 +1615,54 @@ Operand   --> NUMERIC_CONSTANT
     }
   }
 
+  final public void EqualityBrace() throws ParseException {
+    jj_consume_token(LPAREN);
+    CompTerm();
+    jj_consume_token(RPAREN);
+  }
+
   final public void Constant() throws ParseException {
  /*@bgen(jjtree) Constant */
   ASTConstant jjtn000 = new ASTConstant(JJTCONSTANT);
   boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);Token t;
+  jjtree.openNodeScope(jjtn000);Token t; String str;
     try {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case NUMERIC_CONSTANT:
         t = jj_consume_token(NUMERIC_CONSTANT);
+                                  jjtree.closeNodeScope(jjtn000, true);
+                                  jjtc000 = false;
+                                  jjtn000.data.put("value",t.image );
         break;
       case STRING_LITERAL:
-        t = jj_consume_token(STRING_LITERAL);
+        str = StringLiteral();
+                                  jjtree.closeNodeScope(jjtn000, true);
+                                  jjtc000 = false;
+                                  jjtn000.data.put("value",str);
         break;
       default:
-        jj_la1[24] = jj_gen;
+        jj_la1[37] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
-                           jjtree.closeNodeScope(jjtn000, true);
-                           jjtc000 = false;
-                           jjtn000.data.put("value",t.image );
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
     } finally {
-    if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000, true);
-    }
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
     }
   }
 
@@ -1153,7 +1709,7 @@ MCompute  --> MathTerm ( PLUS MathTerm | MINUS MathTerm )*
   jjtree.openNodeScope(jjtn000);
     try {
       MathCompute();
-      label_6:
+      label_9:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case PLUS:
@@ -1161,8 +1717,8 @@ MCompute  --> MathTerm ( PLUS MathTerm | MINUS MathTerm )*
           ;
           break;
         default:
-          jj_la1[25] = jj_gen;
-          break label_6;
+          jj_la1[38] = jj_gen;
+          break label_9;
         }
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case PLUS:
@@ -1174,7 +1730,7 @@ MCompute  --> MathTerm ( PLUS MathTerm | MINUS MathTerm )*
           MathCompute();
           break;
         default:
-          jj_la1[26] = jj_gen;
+          jj_la1[39] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -1252,7 +1808,7 @@ MathCompute    --> MTerm ( MULT MTerm | DIV MTerm )*
   jjtree.openNodeScope(jjtn000);
     try {
       MultTerm();
-      label_7:
+      label_10:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case MULT:
@@ -1260,8 +1816,8 @@ MathCompute    --> MTerm ( MULT MTerm | DIV MTerm )*
           ;
           break;
         default:
-          jj_la1[27] = jj_gen;
-          break label_7;
+          jj_la1[40] = jj_gen;
+          break label_10;
         }
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case MULT:
@@ -1273,7 +1829,7 @@ MathCompute    --> MTerm ( MULT MTerm | DIV MTerm )*
           MultTerm();
           break;
         default:
-          jj_la1[28] = jj_gen;
+          jj_la1[41] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -1351,15 +1907,15 @@ MultTerm     --> MathOperand ( RAISETO MathOperand )*
   jjtree.openNodeScope(jjtn000);
     try {
       MathOperand();
-      label_8:
+      label_11:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case RAISETO:
           ;
           break;
         default:
-          jj_la1[29] = jj_gen;
-          break label_8;
+          jj_la1[42] = jj_gen;
+          break label_11;
         }
         RaiseToOperator();
         MathOperand();
@@ -1429,7 +1985,7 @@ MathOperand   --> NUMERIC_CONSTANT
       MathOperand();
       break;
     default:
-      jj_la1[30] = jj_gen;
+      jj_la1[43] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1488,16 +2044,17 @@ MathOperand   --> NUMERIC_CONSTANT
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      label_9:
+      label_12:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case MESSAGE:
+        case CONDITION:
         case IDENTIFIER:
           ;
           break;
         default:
-          jj_la1[31] = jj_gen;
-          break label_9;
+          jj_la1[44] = jj_gen;
+          break label_12;
         }
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case IDENTIFIER:
@@ -1506,8 +2063,11 @@ MathOperand   --> NUMERIC_CONSTANT
         case MESSAGE:
           Message();
           break;
+        case CONDITION:
+          ConditionMsg();
+          break;
         default:
-          jj_la1[32] = jj_gen;
+          jj_la1[45] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -1539,16 +2099,17 @@ MathOperand   --> NUMERIC_CONSTANT
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      label_10:
+      label_13:
       while (true) {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case MESSAGE:
+        case CONDITION:
         case IDENTIFIER:
           ;
           break;
         default:
-          jj_la1[33] = jj_gen;
-          break label_10;
+          jj_la1[46] = jj_gen;
+          break label_13;
         }
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case IDENTIFIER:
@@ -1557,8 +2118,11 @@ MathOperand   --> NUMERIC_CONSTANT
         case MESSAGE:
           Message();
           break;
+        case CONDITION:
+          ConditionMsg();
+          break;
         default:
-          jj_la1[34] = jj_gen;
+          jj_la1[47] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -1649,7 +2213,7 @@ MathOperand   --> NUMERIC_CONSTANT
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
-      if (jj_2_4(2)) {
+      if (jj_2_8(2)) {
         MathExpression();
       } else {
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -1657,8 +2221,11 @@ MathOperand   --> NUMERIC_CONSTANT
         case STRING_LITERAL:
           ConstantExpression();
           break;
+        case LOOKUP:
+          LookupDef();
+          break;
         default:
-          jj_la1[35] = jj_gen;
+          jj_la1[48] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
@@ -1712,11 +2279,47 @@ MathOperand   --> NUMERIC_CONSTANT
     }
   }
 
+  final public void LookupDef() throws ParseException {
+ /*@bgen(jjtree) LookupDef */
+ ASTLookupDef jjtn000 = new ASTLookupDef(JJTLOOKUPDEF);
+ boolean jjtc000 = true;
+ jjtree.openNodeScope(jjtn000);String nm;
+    try {
+      jj_consume_token(LOOKUP);
+      jj_consume_token(LPAREN);
+      nm = StringLiteral();
+                                       jjtn000.data.put("Name",nm);jjtn000.data.put("Id","1");
+      jj_consume_token(COMMA);
+      VarRef();
+      jj_consume_token(COMMA);
+      VarRef();
+      jj_consume_token(RPAREN);
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+    }
+  }
+
   final public void Message() throws ParseException {
  /*@bgen(jjtree) Message */
   ASTMessage jjtn000 = new ASTMessage(JJTMESSAGE);
   boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+  jjtree.openNodeScope(jjtn000);String msg;
     try {
       jj_consume_token(MESSAGE);
       jj_consume_token(LPAREN);
@@ -1732,12 +2335,13 @@ MathOperand   --> NUMERIC_CONSTANT
         MessageType();
         break;
       default:
-        jj_la1[36] = jj_gen;
+        jj_la1[49] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
       jj_consume_token(COMMA);
-      StringLiteral();
+      msg = StringLiteral();
+                                                                                             jjtn000.data.put("value",msg);
       jj_consume_token(RPAREN);
       EOS();
     } catch (Throwable jjte000) {
@@ -1789,7 +2393,7 @@ MathOperand   --> NUMERIC_CONSTANT
         t = jj_consume_token(MSG_EXC);
         break;
       default:
-        jj_la1[37] = jj_gen;
+        jj_la1[50] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1820,13 +2424,121 @@ MathOperand   --> NUMERIC_CONSTANT
         t = jj_consume_token(MSG_CREDIT);
         break;
       default:
-        jj_la1[38] = jj_gen;
+        jj_la1[51] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
                                                                 jjtree.closeNodeScope(jjtn000, true);
                                                                 jjtc000 = false;
                                                                 jjtn000.data.put("value", t.image);
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+    }
+  }
+
+  final public void ConditionMsg() throws ParseException {
+ /*@bgen(jjtree) ConditionMsg */
+  ASTConditionMsg jjtn000 = new ASTConditionMsg(JJTCONDITIONMSG);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);String msg;
+    try {
+      jj_consume_token(CONDITION);
+      jj_consume_token(LPAREN);
+      CondType();
+      jj_consume_token(COMMA);
+      PriorTo();
+      jj_consume_token(COMMA);
+      msg = StringLiteral();
+                                                                        jjtn000.data.put("value",msg);
+      jj_consume_token(RPAREN);
+      EOS();
+    } catch (Throwable jjte000) {
+    if (jjtc000) {
+      jjtree.clearNodeScope(jjtn000);
+      jjtc000 = false;
+    } else {
+      jjtree.popNode();
+    }
+    if (jjte000 instanceof RuntimeException) {
+      {if (true) throw (RuntimeException)jjte000;}
+    }
+    if (jjte000 instanceof ParseException) {
+      {if (true) throw (ParseException)jjte000;}
+    }
+    {if (true) throw (Error)jjte000;}
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+    }
+  }
+
+  final public void CondType() throws ParseException {
+ /*@bgen(jjtree) CondType */
+  ASTCondType jjtn000 = new ASTCondType(JJTCONDTYPE);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);Token t;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CONDTYPE_ASSET:
+        t = jj_consume_token(CONDTYPE_ASSET);
+        break;
+      case MSG_CREDIT:
+        t = jj_consume_token(MSG_CREDIT);
+        break;
+      case CONDTYPE_INCOME:
+        t = jj_consume_token(CONDTYPE_INCOME);
+        break;
+      case CONDTYPE_PROPERTY:
+        t = jj_consume_token(CONDTYPE_PROPERTY);
+        break;
+      case CONDTYPE_PURCHASE:
+        t = jj_consume_token(CONDTYPE_PURCHASE);
+        break;
+      case CONDTYPE_TITLE:
+        t = jj_consume_token(CONDTYPE_TITLE);
+        break;
+      default:
+        jj_la1[52] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+                                                                                                                                       jjtree.closeNodeScope(jjtn000, true);
+                                                                                                                                       jjtc000 = false;
+                                                                                                                                       jjtn000.data.put("value", t.image);
+    } finally {
+    if (jjtc000) {
+      jjtree.closeNodeScope(jjtn000, true);
+    }
+    }
+  }
+
+  final public void PriorTo() throws ParseException {
+ /*@bgen(jjtree) PriorTo */
+  ASTPriorTo jjtn000 = new ASTPriorTo(JJTPRIORTO);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);Token t;
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case CONDPRIORTO_DOCS:
+        t = jj_consume_token(CONDPRIORTO_DOCS);
+        break;
+      case CONDPRIORTO_FUNDING:
+        t = jj_consume_token(CONDPRIORTO_FUNDING);
+        break;
+      case CONDPRIORTO_APPROVAL:
+        t = jj_consume_token(CONDPRIORTO_APPROVAL);
+        break;
+      default:
+        jj_la1[53] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+                                                                                  jjtree.closeNodeScope(jjtn000, true);
+                                                                                  jjtc000 = false;
+                                                                                  jjtn000.data.put("value", t.image);
     } finally {
     if (jjtc000) {
       jjtree.closeNodeScope(jjtn000, true);
@@ -1912,7 +2624,7 @@ MathOperand   --> NUMERIC_CONSTANT
         jj_consume_token(PPM);
         break;
       default:
-        jj_la1[39] = jj_gen;
+        jj_la1[54] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1937,7 +2649,7 @@ MathOperand   --> NUMERIC_CONSTANT
         jj_consume_token(AND2);
         break;
       default:
-        jj_la1[40] = jj_gen;
+        jj_la1[55] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1962,7 +2674,7 @@ MathOperand   --> NUMERIC_CONSTANT
         jj_consume_token(OR2);
         break;
       default:
-        jj_la1[41] = jj_gen;
+        jj_la1[56] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -2001,245 +2713,570 @@ MathOperand   --> NUMERIC_CONSTANT
     finally { jj_save(3, xla); }
   }
 
-  final private boolean jj_3R_21() {
-    if (jj_scan_token(CONTINUE)) return true;
+  final private boolean jj_2_5(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_5(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(4, xla); }
+  }
+
+  final private boolean jj_2_6(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_6(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(5, xla); }
+  }
+
+  final private boolean jj_2_7(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_7(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(6, xla); }
+  }
+
+  final private boolean jj_2_8(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_8(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(7, xla); }
+  }
+
+  final private boolean jj_3R_40() {
+    if (jj_3R_53()) return true;
     return false;
   }
 
-  final private boolean jj_3R_23() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_26()) {
-    jj_scanpos = xsp;
-    if (jj_3R_27()) return true;
-    }
+  final private boolean jj_3R_80() {
+    if (jj_scan_token(NUMERIC_CONSTANT)) return true;
     return false;
   }
 
-  final private boolean jj_3R_26() {
-    if (jj_3R_32()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_20() {
-    if (jj_scan_token(FALSE)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_43() {
-    if (jj_scan_token(LPAREN)) return true;
-    if (jj_3R_18()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_19() {
-    if (jj_scan_token(TRUE)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_16() {
-    Token xsp;
-    xsp = jj_scanpos;
-    if (jj_3R_19()) {
-    jj_scanpos = xsp;
-    if (jj_3R_20()) {
-    jj_scanpos = xsp;
-    if (jj_3R_21()) return true;
-    }
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_42() {
-    if (jj_3R_15()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_32() {
-    if (jj_scan_token(PLUS)) return true;
+  final private boolean jj_3R_38() {
+    if (jj_scan_token(GEQ)) return true;
     return false;
   }
 
   final private boolean jj_3R_37() {
-    if (jj_scan_token(MINUS)) return true;
-    if (jj_3R_28()) return true;
+    if (jj_scan_token(LEQ)) return true;
     return false;
   }
 
   final private boolean jj_3R_36() {
-    if (jj_3R_43()) return true;
+    if (jj_scan_token(EQU)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_81() {
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_3R_39()) return true;
     return false;
   }
 
   final private boolean jj_3R_35() {
-    if (jj_3R_42()) return true;
+    if (jj_scan_token(NEQ2)) return true;
     return false;
   }
 
-  final private boolean jj_3_3() {
-    if (jj_3R_13()) return true;
+  final private boolean jj_3R_34() {
+    if (jj_scan_token(NEQ1)) return true;
     return false;
   }
 
-  final private boolean jj_3R_11() {
-    if (jj_scan_token(RULESET)) return true;
-    if (jj_3R_15()) return true;
+  final private boolean jj_3R_33() {
+    if (jj_scan_token(GT)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_14() {
+    if (jj_3R_23()) return true;
     if (jj_scan_token(LPAREN)) return true;
-    if (jj_3R_16()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_28() {
     Token xsp;
     xsp = jj_scanpos;
+    if (jj_3R_24()) jj_scanpos = xsp;
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_32() {
+    if (jj_scan_token(LT)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_21() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_32()) {
+    jj_scanpos = xsp;
+    if (jj_3R_33()) {
+    jj_scanpos = xsp;
     if (jj_3R_34()) {
     jj_scanpos = xsp;
     if (jj_3R_35()) {
     jj_scanpos = xsp;
     if (jj_3R_36()) {
     jj_scanpos = xsp;
-    if (jj_3R_37()) return true;
-    }
-    }
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_34() {
-    if (jj_3R_41()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_18() {
-    if (jj_3R_22()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_23()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  final private boolean jj_3R_15() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_14() {
-    if (jj_3R_18()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_29() {
+    if (jj_3R_37()) {
+    jj_scanpos = xsp;
     if (jj_3R_38()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
     return false;
   }
 
-  final private boolean jj_3R_38() {
+  final private boolean jj_3R_75() {
+    if (jj_scan_token(MINUS)) return true;
+    if (jj_3R_62()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_74() {
+    if (jj_3R_81()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_73() {
+    if (jj_3R_31()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_62() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_72()) {
+    jj_scanpos = xsp;
+    if (jj_3R_73()) {
+    jj_scanpos = xsp;
+    if (jj_3R_74()) {
+    jj_scanpos = xsp;
+    if (jj_3R_75()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_72() {
+    if (jj_3R_80()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_54() {
+    if (jj_3R_60()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_7() {
+    if (jj_3R_20()) return true;
+    if (jj_3R_21()) return true;
+    if (jj_3R_60()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_44() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_7()) {
+    jj_scanpos = xsp;
+    if (jj_3R_54()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_63() {
+    if (jj_3R_76()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_76() {
     if (jj_scan_token(RAISETO)) return true;
     return false;
   }
 
-  final private boolean jj_3_2() {
-    if (jj_3R_12()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_31() {
-    if (jj_3R_40()) return true;
-    return false;
-  }
-
   final private boolean jj_3_1() {
-    if (jj_3R_11()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_24() {
-    if (jj_3R_28()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_29()) { jj_scanpos = xsp; break; }
-    }
-    return false;
-  }
-
-  final private boolean jj_3_4() {
     if (jj_3R_14()) return true;
     return false;
   }
 
-  final private boolean jj_3R_40() {
+  final private boolean jj_3R_65() {
+    if (jj_3R_78()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_50() {
+    if (jj_scan_token(OR2)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_23() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_49() {
+    if (jj_scan_token(OR1)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_48() {
+    if (jj_scan_token(AND2)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_70() {
+    if (jj_3R_21()) return true;
+    if (jj_3R_44()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_30() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_47()) {
+    jj_scanpos = xsp;
+    if (jj_3R_48()) {
+    jj_scanpos = xsp;
+    if (jj_3R_49()) {
+    jj_scanpos = xsp;
+    if (jj_3R_50()) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_47() {
+    if (jj_scan_token(AND1)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_56() {
+    if (jj_3R_62()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_63()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_84() {
+    if (jj_scan_token(STRING_LITERAL)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_45() {
+    if (jj_3R_21()) return true;
+    if (jj_3R_44()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_3() {
+    if (jj_3R_16()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_2() {
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_78() {
     if (jj_scan_token(DIV)) return true;
     return false;
   }
 
-  final private boolean jj_3R_17() {
+  final private boolean jj_3R_28() {
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_3R_44()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_70()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_27() {
+    if (jj_3R_44()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_45()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_18() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_27()) {
+    jj_scanpos = xsp;
+    if (jj_3R_28()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3_6() {
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_19() {
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_3R_29()) return true;
+    if (jj_3R_30()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_57() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_64()) {
+    jj_scanpos = xsp;
+    if (jj_3R_65()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_59() {
+    if (jj_3R_67()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_64() {
+    if (jj_3R_77()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_77() {
+    if (jj_scan_token(MULT)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_71() {
+    if (jj_3R_30()) return true;
+    if (jj_3R_29()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_46() {
+    if (jj_3R_55()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_31() {
+    if (jj_3R_23()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_29() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_5()) {
+    jj_scanpos = xsp;
+    if (jj_3R_46()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3_5() {
+    if (jj_3R_18()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_51() {
+    if (jj_3R_56()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_57()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_61() {
+    if (jj_3R_29()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_71()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_67() {
+    if (jj_scan_token(MINUS)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_52() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_58()) {
+    jj_scanpos = xsp;
+    if (jj_3R_59()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_58() {
+    if (jj_3R_66()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_66() {
+    if (jj_scan_token(PLUS)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_39() {
+    if (jj_3R_51()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_52()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_26() {
     if (jj_scan_token(IF)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_22() {
+    if (jj_3R_39()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_16() {
+    if (jj_scan_token(RULE)) return true;
+    if (jj_3R_23()) return true;
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_scan_token(RPAREN)) return true;
+    if (jj_scan_token(67)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_83() {
+    if (jj_3R_84()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_82() {
+    if (jj_scan_token(NUMERIC_CONSTANT)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_79() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_82()) {
+    jj_scanpos = xsp;
+    if (jj_3R_83()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_17() {
+    if (jj_scan_token(RULE)) return true;
+    if (jj_3R_23()) return true;
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_scan_token(RPAREN)) return true;
+    if (jj_3R_26()) return true;
+    return false;
+  }
+
+  final private boolean jj_3_8() {
+    if (jj_3R_22()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_24() {
+    if (jj_3R_40()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_43() {
+    if (jj_scan_token(CONTINUE)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_42() {
+    if (jj_scan_token(FALSE)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_55() {
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_3R_61()) return true;
+    if (jj_scan_token(RPAREN)) return true;
     return false;
   }
 
   final private boolean jj_3R_25() {
     Token xsp;
     xsp = jj_scanpos;
-    if (jj_3R_30()) {
+    if (jj_3R_41()) {
     jj_scanpos = xsp;
-    if (jj_3R_31()) return true;
+    if (jj_3R_42()) {
+    jj_scanpos = xsp;
+    if (jj_3R_43()) return true;
     }
-    return false;
-  }
-
-  final private boolean jj_3R_27() {
-    if (jj_3R_33()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_30() {
-    if (jj_3R_39()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_39() {
-    if (jj_scan_token(MULT)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_12() {
-    if (jj_scan_token(RULE)) return true;
-    if (jj_3R_15()) return true;
-    if (jj_scan_token(LPAREN)) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    if (jj_scan_token(55)) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_22() {
-    if (jj_3R_24()) return true;
-    Token xsp;
-    while (true) {
-      xsp = jj_scanpos;
-      if (jj_3R_25()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  final private boolean jj_3R_13() {
-    if (jj_scan_token(RULE)) return true;
-    if (jj_3R_15()) return true;
-    if (jj_scan_token(LPAREN)) return true;
-    if (jj_scan_token(RPAREN)) return true;
-    if (jj_3R_17()) return true;
-    return false;
-  }
-
-  final private boolean jj_3R_33() {
-    if (jj_scan_token(MINUS)) return true;
     return false;
   }
 
   final private boolean jj_3R_41() {
-    if (jj_scan_token(NUMERIC_CONSTANT)) return true;
+    if (jj_scan_token(TRUE)) return true;
+    return false;
+  }
+
+  final private boolean jj_3_4() {
+    if (jj_3R_17()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_60() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_68()) {
+    jj_scanpos = xsp;
+    if (jj_3R_69()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_68() {
+    if (jj_3R_31()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_69() {
+    if (jj_3R_79()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_15() {
+    if (jj_scan_token(RULESET)) return true;
+    if (jj_3R_23()) return true;
+    if (jj_scan_token(LPAREN)) return true;
+    if (jj_3R_25()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_20() {
+    if (jj_3R_31()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_53() {
+    if (jj_scan_token(STRING)) return true;
     return false;
   }
 
@@ -2252,7 +3289,7 @@ MathOperand   --> NUMERIC_CONSTANT
   public boolean lookingAhead = false;
   private boolean jj_semLA;
   private int jj_gen;
-  final private int[] jj_la1 = new int[42];
+  final private int[] jj_la1 = new int[57];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -2262,15 +3299,15 @@ MathOperand   --> NUMERIC_CONSTANT
       jj_la1_2();
    }
    private static void jj_la1_0() {
-      jj_la1_0 = new int[] {0x3001780,0x3001780,0x800000,0x1400,0xfc000,0x700000,0x3001400,0x1400,0x0,0x0,0x1000000,0x2000000,0x3000000,0x3000000,0x0,0x2000000,0x2000000,0x80000000,0x20000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x4000000,0x4000000,0x4000000,0x4000000,0x0,0x0,0x0,0x0,0x1c00,0x0,0x0,};
+      jj_la1_0 = new int[] {0x18003780,0x3780,0x18000000,0x2000000,0x0,0x0,0x1400,0x3f0000,0x3f0000,0x1c00000,0x18002000,0x7400,0x0,0x0,0x8000000,0x10000000,0x1c000000,0x1c000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10000000,0x10000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x60000000,0x60000000,0x60000000,0x60000000,0x2000,0x0,0x0,0x0,0x0,0x0,0x1c00,0x0,0x0,};
    }
    private static void jj_la1_1() {
-      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x30000,0x28000,0x0,0x0,0x0,0x0,0x1000000,0x0,0x0,0x3,0x0,0x0,0x0,0x0,0x0,0x28080,0x8080,0xc0000000,0xc0000000,0x0,0x0,0x0,0x80020080,0x0,0x0,0x0,0x0,0x8080,0x74,0xc,0x70,0x0,0x0,0x0,};
+      jj_la1_1 = new int[] {0x0,0x0,0x0,0x0,0x8000000,0x8000000,0x0,0x0,0x0,0x0,0x0,0x0,0x28000000,0x28000000,0x0,0x0,0x0,0x0,0xc080000,0x0,0x4080000,0xc080000,0x0,0x0,0x0,0x0,0x0,0x38,0x2,0x0,0x0,0x0,0x28080000,0x0,0x8080000,0x0,0x8080000,0x8080000,0x0,0x0,0x0,0x0,0x0,0x20080000,0x0,0x0,0x0,0x0,0x8080000,0x740,0xc0,0x700,0xfc00,0x70000,0x0,0x0,0x0,};
    }
    private static void jj_la1_2() {
-      jj_la1_2 = new int[] {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3c00,0x3c00,0x3f8,0x3f8,0x4000,0x0,0x0,0x0,0x3,0x3,0x4,0x4000,0x4000,0x4000,0x4000,0x4000,0x0,0x0,0x0,0x0,0x0,0xc00,0x3000,};
+      jj_la1_2 = new int[] {0x8000000,0x0,0x8000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8000000,0x8000000,0x8000000,0x10,0x0,0x8000000,0x4000000,0x10,0x10,0x0,0x0,0x0,0x0,0x3c00000,0x3f8000,0x3f8000,0x8000000,0x3c00000,0x8000000,0x3f8000,0x8000000,0x0,0xc00,0xc00,0x3000,0x3000,0x4000,0x8000800,0x8000000,0x8000000,0x8000000,0x8000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc00000,0x3000000,};
    }
-  final private JJCalls[] jj_2_rtns = new JJCalls[4];
+  final private JJCalls[] jj_2_rtns = new JJCalls[8];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
@@ -2283,7 +3320,7 @@ MathOperand   --> NUMERIC_CONSTANT
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 42; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 57; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2297,7 +3334,7 @@ MathOperand   --> NUMERIC_CONSTANT
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 42; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 57; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2307,7 +3344,7 @@ MathOperand   --> NUMERIC_CONSTANT
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 42; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 57; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2318,7 +3355,7 @@ MathOperand   --> NUMERIC_CONSTANT
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 42; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 57; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2327,7 +3364,7 @@ MathOperand   --> NUMERIC_CONSTANT
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 42; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 57; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2337,7 +3374,7 @@ MathOperand   --> NUMERIC_CONSTANT
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 42; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 57; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -2448,15 +3485,15 @@ MathOperand   --> NUMERIC_CONSTANT
 
   public ParseException generateParseException() {
     jj_expentries.removeAllElements();
-    boolean[] la1tokens = new boolean[81];
-    for (int i = 0; i < 81; i++) {
+    boolean[] la1tokens = new boolean[94];
+    for (int i = 0; i < 94; i++) {
       la1tokens[i] = false;
     }
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 42; i++) {
+    for (int i = 0; i < 57; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -2471,7 +3508,7 @@ MathOperand   --> NUMERIC_CONSTANT
         }
       }
     }
-    for (int i = 0; i < 81; i++) {
+    for (int i = 0; i < 94; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
@@ -2496,7 +3533,7 @@ MathOperand   --> NUMERIC_CONSTANT
 
   final private void jj_rescan_token() {
     jj_rescan = true;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 8; i++) {
     try {
       JJCalls p = jj_2_rtns[i];
       do {
@@ -2507,6 +3544,10 @@ MathOperand   --> NUMERIC_CONSTANT
             case 1: jj_3_2(); break;
             case 2: jj_3_3(); break;
             case 3: jj_3_4(); break;
+            case 4: jj_3_5(); break;
+            case 5: jj_3_6(); break;
+            case 6: jj_3_7(); break;
+            case 7: jj_3_8(); break;
           }
         }
         p = p.next;

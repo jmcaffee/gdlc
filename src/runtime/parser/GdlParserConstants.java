@@ -10,74 +10,87 @@ public interface GdlParserConstants {
   int DPM = 10;
   int DSM = 11;
   int PPM = 12;
-  int DECISION = 13;
-  int BOOLEAN = 14;
-  int DATE = 15;
-  int MONEY = 16;
-  int NUMERIC = 17;
-  int PERCENTAGE = 18;
-  int TEXT = 19;
-  int APPLICATION = 20;
-  int CREDIT = 21;
-  int PRODUCT = 22;
-  int GUIDELINE = 23;
-  int RULESET = 24;
-  int RULE = 25;
-  int MESSAGE = 26;
-  int IF = 27;
-  int THEN = 28;
-  int ELSE = 29;
-  int END = 30;
-  int TRUE = 31;
-  int FALSE = 32;
-  int CONTINUE = 33;
-  int MSG_EXC = 34;
-  int MSG_EXC_ASSETS = 35;
-  int MSG_FINDINGS = 36;
-  int MSG_OBSERVATION = 37;
-  int MSG_CREDIT = 38;
-  int NUMERIC_CONSTANT = 39;
-  int INTEGER_LITERAL = 40;
-  int DECIMAL_LITERAL = 41;
-  int HEX_LITERAL = 42;
-  int OCTAL_LITERAL = 43;
-  int FLOATING_POINT_LITERAL = 44;
-  int EXPONENT = 45;
-  int CHARACTER_LITERAL = 46;
-  int STRING_LITERAL = 47;
-  int FILENAME_LITERAL = 48;
-  int LPAREN = 49;
-  int RPAREN = 50;
-  int LBRACE = 51;
-  int RBRACE = 52;
-  int LBRACKET = 53;
-  int RBRACKET = 54;
-  int SEMICOLON = 55;
-  int COMMA = 56;
-  int DOT = 57;
-  int PL = 58;
-  int ASSIGN = 59;
-  int QUOTE = 60;
-  int DQUOTE = 61;
-  int PLUS = 62;
-  int MINUS = 63;
-  int MULT = 64;
-  int DIV = 65;
-  int RAISETO = 66;
-  int EQU = 67;
-  int NEQ1 = 68;
-  int NEQ2 = 69;
-  int LT = 70;
-  int GT = 71;
-  int LEQ = 72;
-  int GEQ = 73;
-  int AND1 = 74;
-  int AND2 = 75;
-  int OR1 = 76;
-  int OR2 = 77;
-  int IDENTIFIER = 78;
-  int LETTER = 79;
-  int DIGIT = 80;
+  int LOOKUP = 13;
+  int POWERLOOKUP = 14;
+  int DECISION = 15;
+  int BOOLEAN = 16;
+  int DATE = 17;
+  int MONEY = 18;
+  int NUMERIC = 19;
+  int PERCENTAGE = 20;
+  int TEXT = 21;
+  int APPLICATION = 22;
+  int CREDIT = 23;
+  int PRODUCT = 24;
+  int GUIDELINE = 25;
+  int INSERT_PRICING_GUIDELINE = 26;
+  int RULESET = 27;
+  int RULE = 28;
+  int MESSAGE = 29;
+  int CONDITION = 30;
+  int IF = 31;
+  int THEN = 32;
+  int ELSE = 33;
+  int END = 34;
+  int TRUE = 35;
+  int FALSE = 36;
+  int CONTINUE = 37;
+  int MSG_EXC = 38;
+  int MSG_EXC_ASSETS = 39;
+  int MSG_FINDINGS = 40;
+  int MSG_OBSERVATION = 41;
+  int MSG_CREDIT = 42;
+  int CONDTYPE_ASSET = 43;
+  int CONDTYPE_INCOME = 44;
+  int CONDTYPE_PROPERTY = 45;
+  int CONDTYPE_PURCHASE = 46;
+  int CONDTYPE_TITLE = 47;
+  int CONDPRIORTO_DOCS = 48;
+  int CONDPRIORTO_FUNDING = 49;
+  int CONDPRIORTO_APPROVAL = 50;
+  int NUMERIC_CONSTANT = 51;
+  int INTEGER_LITERAL = 52;
+  int DECIMAL_LITERAL = 53;
+  int HEX_LITERAL = 54;
+  int OCTAL_LITERAL = 55;
+  int FLOATING_POINT_LITERAL = 56;
+  int EXPONENT = 57;
+  int CHARACTER_LITERAL = 58;
+  int STRING_LITERAL = 59;
+  int CODE_BLOCK = 60;
+  int LPAREN = 61;
+  int RPAREN = 62;
+  int LBRACE = 63;
+  int RBRACE = 64;
+  int LBRACKET = 65;
+  int RBRACKET = 66;
+  int SEMICOLON = 67;
+  int COMMA = 68;
+  int DOT = 69;
+  int PL = 70;
+  int ASSIGN = 71;
+  int QUOTE = 72;
+  int DQUOTE = 73;
+  int PLUS = 74;
+  int MINUS = 75;
+  int MULT = 76;
+  int DIV = 77;
+  int RAISETO = 78;
+  int EQU = 79;
+  int NEQ1 = 80;
+  int NEQ2 = 81;
+  int LT = 82;
+  int GT = 83;
+  int LEQ = 84;
+  int GEQ = 85;
+  int AND1 = 86;
+  int AND2 = 87;
+  int OR1 = 88;
+  int OR2 = 89;
+  int STRING = 90;
+  int IDENTIFIER = 91;
+  int LETTER = 92;
+  int DIGIT = 93;
 
   int DEFAULT = 0;
 
@@ -95,6 +108,8 @@ public interface GdlParserConstants {
     "\"dpm\"",
     "\"dsm\"",
     "\"ppm\"",
+    "\"lookup\"",
+    "\"powerlookup\"",
     "\"decision\"",
     "\"boolean\"",
     "\"date\"",
@@ -106,9 +121,11 @@ public interface GdlParserConstants {
     "\"crd\"",
     "\"prd\"",
     "\"guideline\"",
+    "\"InsertPricingGuideline\"",
     "\"ruleset\"",
     "\"rule\"",
     "\"message\"",
+    "\"condition\"",
     "\"if\"",
     "\"then\"",
     "\"else\"",
@@ -121,6 +138,14 @@ public interface GdlParserConstants {
     "\"findings\"",
     "\"observation\"",
     "\"credit\"",
+    "\"asset\"",
+    "\"income\"",
+    "\"property\"",
+    "\"purchase\"",
+    "\"title\"",
+    "\"docs\"",
+    "\"funding\"",
+    "\"approval\"",
     "<NUMERIC_CONSTANT>",
     "<INTEGER_LITERAL>",
     "<DECIMAL_LITERAL>",
@@ -130,7 +155,7 @@ public interface GdlParserConstants {
     "<EXPONENT>",
     "<CHARACTER_LITERAL>",
     "<STRING_LITERAL>",
-    "<FILENAME_LITERAL>",
+    "<CODE_BLOCK>",
     "\"(\"",
     "\")\"",
     "\"{\"",
@@ -160,6 +185,7 @@ public interface GdlParserConstants {
     "\"and\"",
     "\"||\"",
     "\"or\"",
+    "\"$\"",
     "<IDENTIFIER>",
     "<LETTER>",
     "<DIGIT>",

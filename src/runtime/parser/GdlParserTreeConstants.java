@@ -8,45 +8,55 @@ public interface GdlParserTreeConstants
   public int JJTVARDEF = 1;
   public int JJTVOID = 2;
   public int JJTALIAS = 3;
-  public int JJTALIASTYPE = 4;
-  public int JJTALIASOF = 5;
-  public int JJTIMPORT = 6;
-  public int JJTINCLUDE = 7;
-  public int JJTGUIDELINEDEF = 8;
-  public int JJTRULESETDEF = 9;
-  public int JJTRULESETREF = 10;
-  public int JJTRULEDEF = 11;
-  public int JJTRULEREF = 12;
-  public int JJTCONDITION = 13;
-  public int JJTEXPRESSION = 14;
-  public int JJTLOGICALCOMPUTE = 15;
-  public int JJTLOGICALOPERATOR = 16;
-  public int JJTEQUALITYCOMPUTE = 17;
-  public int JJTEQUALITYOPERATOR = 18;
-  public int JJTBRACE = 19;
-  public int JJTCONSTANT = 20;
-  public int JJTMATHEXPRESSION = 21;
-  public int JJTMATHCOMPUTE = 22;
-  public int JJTPLUSOPERATOR = 23;
-  public int JJTMINUSOPERATOR = 24;
-  public int JJTMULTOPERATOR = 25;
-  public int JJTDIVOPERATOR = 26;
-  public int JJTRAISETOOPERATOR = 27;
-  public int JJTMATHCONSTANT = 28;
-  public int JJTIFACTIONS = 29;
-  public int JJTELSEACTIONS = 30;
-  public int JJTASSIGN = 31;
-  public int JJTASSIGNTO = 32;
-  public int JJTASSIGNVALUE = 33;
-  public int JJTMESSAGE = 34;
-  public int JJTEXPTN = 35;
-  public int JJTEXPTNTYPE = 36;
-  public int JJTMESSAGETYPE = 37;
-  public int JJTVARREF = 38;
-  public int JJTVARCAST = 39;
-  public int JJTVARIABLETYPE = 40;
-  public int JJTANDOPERATOR = 41;
-  public int JJTOROPERATOR = 42;
+  public int JJTIMPORT = 4;
+  public int JJTINCLUDE = 5;
+  public int JJTGUIDELINEDEF = 6;
+  public int JJTINSERTPRICING = 7;
+  public int JJTFUNCTIONREF = 8;
+  public int JJTFUNCTIONREFARGLIST = 9;
+  public int JJTFUNCTIONREFARG = 10;
+  public int JJTFUNCTIONDEF = 11;
+  public int JJTFUNCTIONDEFARGLIST = 12;
+  public int JJTFUNCTIONDEFARG = 13;
+  public int JJTCODEBLOCK = 14;
+  public int JJTRULESETDEF = 15;
+  public int JJTRULESETREF = 16;
+  public int JJTRULEDEF = 17;
+  public int JJTRULEREF = 18;
+  public int JJTCONDITION = 19;
+  public int JJTEXPRESSION = 20;
+  public int JJTLOGICALCOMPUTE = 21;
+  public int JJTEQUALITYCOMPUTE = 22;
+  public int JJTLOGICALOPERATOR = 23;
+  public int JJTEQUALITYOPERATOR = 24;
+  public int JJTBRACE = 25;
+  public int JJTCONSTANT = 26;
+  public int JJTMATHEXPRESSION = 27;
+  public int JJTMATHCOMPUTE = 28;
+  public int JJTPLUSOPERATOR = 29;
+  public int JJTMINUSOPERATOR = 30;
+  public int JJTMULTOPERATOR = 31;
+  public int JJTDIVOPERATOR = 32;
+  public int JJTRAISETOOPERATOR = 33;
+  public int JJTMATHCONSTANT = 34;
+  public int JJTIFACTIONS = 35;
+  public int JJTELSEACTIONS = 36;
+  public int JJTASSIGN = 37;
+  public int JJTASSIGNTO = 38;
+  public int JJTASSIGNVALUE = 39;
+  public int JJTLOOKUPDEF = 40;
+  public int JJTMESSAGE = 41;
+  public int JJTEXPTN = 42;
+  public int JJTEXPTNTYPE = 43;
+  public int JJTMESSAGETYPE = 44;
+  public int JJTCONDITIONMSG = 45;
+  public int JJTCONDTYPE = 46;
+  public int JJTPRIORTO = 47;
+  public int JJTVARREF = 48;
+  public int JJTVARCAST = 49;
+  public int JJTVARIABLETYPE = 50;
+  public int JJTANDOPERATOR = 51;
+  public int JJTOROPERATOR = 52;
 
 
   public String[] jjtNodeName = {
@@ -54,11 +64,17 @@ public interface GdlParserTreeConstants
     "VarDef",
     "void",
     "Alias",
-    "AliasType",
-    "AliasOf",
     "Import",
     "Include",
     "GuidelineDef",
+    "InsertPricing",
+    "FunctionRef",
+    "FunctionRefArgList",
+    "FunctionRefArg",
+    "FunctionDef",
+    "FunctionDefArgList",
+    "FunctionDefArg",
+    "CodeBlock",
     "RulesetDef",
     "RulesetRef",
     "RuleDef",
@@ -66,8 +82,8 @@ public interface GdlParserTreeConstants
     "Condition",
     "Expression",
     "LogicalCompute",
-    "LogicalOperator",
     "EqualityCompute",
+    "LogicalOperator",
     "EqualityOperator",
     "Brace",
     "Constant",
@@ -84,10 +100,14 @@ public interface GdlParserTreeConstants
     "Assign",
     "AssignTo",
     "AssignValue",
+    "LookupDef",
     "Message",
     "Exptn",
     "ExptnType",
     "MessageType",
+    "ConditionMsg",
+    "CondType",
+    "PriorTo",
     "VarRef",
     "VarCast",
     "VariableType",
