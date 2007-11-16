@@ -1,0 +1,24 @@
+/* **************************************************************************
+ *	File: LookupTest.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for lookup testing.
+ *
+ ************************************************************************* */
+ 
+include ("simple.gdl");
+
+import( lookup, "CQDS-FNMA-Pricing.csv" );				// Import the lookup CSV file
+
+rule TestLookupRule1()							// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+		dpmVar = lookup("FNMA-Rate1st-Fxd30-15Day BRO LK1", ppmVar, dpmVar);
+	end
+end
+
+
+guideline ("TestGuideline")
+	rule 			TestLookupRule1();
+end
+

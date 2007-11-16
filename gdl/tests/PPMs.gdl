@@ -1,0 +1,275 @@
+/* **************************************************************************
+ * PPMs.gdl
+ *
+ * Primary parameter variable definitions.
+ *
+ *
+ * *************************************************************************/
+
+// General Info
+ppm numeric prd     pLienNumber                     "Lien Number";
+ppm text    prd     pProgramName                    "Program Name";
+ppm text    app     pTierFlag                       "TierFlag";
+ppm text    app     pIsManualProcess                "IsManualProcess";
+ppm text    app     pApplicationSource              "Application Source";
+ppm text    app     pManualCredit                   "Manual Credit";
+ppm numeric app     pDTI                            "DTI";
+
+ppm text    app     pUserType                       "User Type";
+ppm money   app     pLoanAmount                     "Loan Amount";
+ppm numeric app     pOtherLoanAmount                "Other Loan Amount";
+ppm numeric app     pOtherFinancing                 "Other Financing";
+
+
+// Credit Score PPMs
+ppm numeric app     pAlternateCreditScore           "AlternateCreditScore";
+ppm numeric app     pLowestMidScore                 "LowestMidScore";
+ppm numeric app     pDULowestMidScore               "DULowestMidScore";
+
+
+// UI Flags
+ppm text    app     pWaiveEscrow                    "Waive Escrow";                     // Returns text: Y/N
+ppm numeric app     pFTHB                           "FTHB";
+ppm numeric app     pCombo                          "Combo";
+ppm text    app     pNoMI                           "No MI";                            // Returns text: Y/N
+
+
+ppm numeric app     pPrepayTerm-Loan                "Prepay Term-Loan";
+ppm text    app     pOtherPrepayTerm                "Other Prepayment Term";
+ppm text    app     pOtherAmortizationType          "Other Amortization Type";
+ppm numeric app     pSubFinancing                   "Sub Financing";                    // Returns $ amount
+ppm text    app     pSubFinancingType               "SubordinateFinancingProviderType"; // Returns text: SellerCarry,
+ppm text    app     pPurposeOfLoan                  "Purpose of Loan";
+ppm text    app     pRefinanceType                  "RefinanceType";
+ppm text    app     pOtherRefinanceType             "OtherRefinanceType";
+
+ppm text    app     pDocumentType                   "Document Type";
+
+ppm numeric prd     pLoanTerm                       "Loan Term";
+ppm text    crd     pOtherLoanTerm                  "Other Loan Duration";
+
+ppm text    prd     pAmortizationType               "Amortization Type-PDT";
+ppm text    app     pOtherAmortizationType          "Other Amortization Type";
+
+
+// Pricing specific info
+ppm numeric app     pPrice                          "Price";
+ppm text    crd     pOtherPrice                     "Other Price";
+ppm text    crd     pLockPeriod                     "Lock Period";
+ppm text    crd     pOtherLockPeriod                "Other Lock Period";
+ppm text    prd     pRateSheetDate1                 "RateSheetDate1";
+ppm text    prd     pRateSheetDate2                 "RateSheetDate2";
+ppm text    app     pExtensionRequest               "ExtensionRequest";
+ppm numeric app     pExtensionPeriod1st             "ExtensionPeriod1st";
+ppm numeric app     pExtensionPeriod2nd             "ExtensionPeriod2nd";
+ppm text    app     pExtensionDate1st               "ExtensionDate1st";
+ppm text    app     pExtensionDate2nd               "ExtensionDate2nd";
+ppm numeric app     pRequestedExtensionPeriod       "RequestedExtensionPeriod";
+ppm numeric app     pConfirmedExtensions            "ConfirmedExtensions";
+ppm text    app     pRelockVersionDate              "RelockVersionDate";
+ppm text    app     pLockRequest                    "LockRequest";
+ppm numeric app     pLockedVersionRate              "LockedVersionRate";
+ppm numeric app     pLockedVersionMargin            "LockedVersionMargin";
+ppm numeric app     pPreviousLockPeriod             "PreviousLockPeriod";
+ppm money   app     pLockedDate                     "Locked Date";                  // TODO fix PPM xml definition. Money HAS to be wrong!
+ppm numeric app     pRate                           "IR";
+ppm text    app     pOtherRate                      "Other Rate";
+
+
+// Product specific info
+ppm text    prd     pIndexType                      "Index Type";
+ppm text    crd     pOtherIndexType                 "Other Index Type";
+ppm text    prd     pFirstAdjTerm                   "First Adjustment Term-PDT";
+ppm numeric app     pOtherFirstAdjTerm              "Other First Adjustment Term";
+ppm text    prd     pAUSSource                      "AUSSource";
+ppm text    prd     pRiskLevel                      "RiskLevel";
+
+
+// Borrower IDs
+ppm numeric app     pBorr1ID                        "Borr # 1 ID";
+ppm numeric app     pBorr2ID                        "Borr # 2 ID";
+ppm numeric app     pBorr3ID                        "Borr # 3 ID";
+ppm numeric app     pBorr4ID                        "Borr # 4 ID";
+ppm numeric app     pBorr5ID                        "Borr # 5 ID";
+
+
+// Property Info
+ppm money   app     pAppraisalValue                 "Appraisal Value";
+ppm money   app     pReviewValue                    "ReviewValue";                  // XPath: sum(//COLLATERALS/COLLATERAL/@Value)
+ppm numeric app     pPropertyOwnedDuration          "Prop Acqd Duration";
+ppm text    app     pPropertyType                   "Property Type";
+ppm money   app     pPurchasePrice                  "Purchase Price";
+ppm text    app     pCountyName                     "CountyName";                   // XPath: //COLLATERALS/COLLATERAL/@CountyName
+ppm text    app     pSubjectPropertyState           "State of the Subject Property";
+ppm text    app     pSubjectPropertyZipcode         "SubjectPropertyZipcode";
+ppm numeric app     pNumberOfUnits                  "No. of Units";
+ppm text    app     pOccupancy                      "Occupancy";
+ppm money   app     pAlterations                    "Alterations";
+ppm text    app     pNonWarrantableCondo            "Non Warrantable Condo";
+ppm text    app     pEstateHeld                     "Estate Held";                  // Returns text: FeeSimple, Leasehold
+ppm text    app     pHudRepo                        "HUD Repo";                     // Returns Y/N
+
+// Loan Info
+ppm money   app     pSellersContributionToClosingCost   "Sellers Contribution to Closing Cost";
+ppm money   app     pSellerCredit                   "Seller Credit";
+ppm money   app     pLenderCredit                   "Lender Credit";
+ppm money   app     pRelocationFunds                "Relocation Funds";
+ppm money   app     pLeasePurchaseFund              "Lease Purchase Fund";
+ppm money   app     pCashDeposit                    "Cash Deposit";
+ppm money   app     pOtherCredit                    "Other Credit";
+ppm money   app     pEmployerAssistedHousing        "Employer Assisted Housing";
+ppm text    app     pPmiMipFundingFeeFinanced       "PMI MIP Funding Fee Financed";
+ppm money   app     pLandValue                      "Land Value";
+ppm money   app     pEstimatedClosingCosts          "Estimated Closing Costs";
+ppm money   app     pEstimatedPrepaidItems          "Estimated Prepaid Items";
+ppm money   app     pPmiMipFundingFee               "PMI MIP Funding Fee";
+ppm money   app     pDiscount                       "Discount";
+
+
+// Present Expenses
+ppm numeric app     pPresentMonthlyRent             "Present Monthly Rent";
+ppm numeric app     pPresentHazardInsurance         "Present Hazard Insurance";
+ppm numeric app     pPresentRealEstateTaxes         "Present Real Estate Taxes";
+ppm numeric app     pPresentHoaDues                 "Present Homeowner Assn. Dues";
+ppm numeric app     pPresentMtgInsurance            "Present Mortgage Insurance";
+ppm numeric app     pPresentOtherHousingExpenses    "Present Other Housing Expenses";
+ppm numeric app     pPresentFirstMortgagePI         "Present First Mortgage P and I";
+ppm numeric app     pPresentOtherFinancingPI        "Present Other Financing P and I";
+
+
+// Proposed Expenses
+ppm numeric app     pProposedHazardInsurance        "Proposed Hazard Insurance";
+ppm numeric app     pProposedRealEstateTaxes        "Proposed Real Estate Taxes";
+ppm numeric app     pProposedHoaDues                "Proposed Homeowner Assn. Dues";
+ppm numeric app     pProposedMtgInsurance           "Proposed Mortgage Insurance";
+ppm numeric app     pProposedOtherHousingExpenses   "Proposed Other Housing Expenses";
+ppm numeric app     pProposedFloodInsurance         "Proposed Flood insurance";
+ppm numeric app     pProposedSubjectPropertyPayment "Proposed SubProp Mo Payment";
+ppm numeric app     pSubFinancingPayment            "Sub Fin Mo Payments";
+ppm numeric app     pSubjectPropertyNetRent75       "Sub Prop Net Rent REO-75";
+ppm numeric app     pNetMtgDebtRent75               "Recurring Net Mtg Debt-75";
+ppm numeric app     pNonPrimaryNetMtgDebtRent75     "Recurring Net Mtg Debt Not Primary-75";
+ppm numeric app     pProposedResidentialPayment     "Proposed Residential Mo Payment";
+ppm numeric crd     pProposedPrimaryResidencePI     "Proposed P and I on Primary Residence";
+ppm numeric crd     pMtgDebtNonREO                  "Mort Debt No REO Assoc";
+ppm numeric crd     pProposedInstallmentDebt        "Proposed Installment Debt";
+ppm numeric crd     pProposedOtherDebt              "Proposed Other Debt (5%)";
+
+
+// Assets
+ppm numeric app     pAssetCashDeposits              "Cash Deposits-Assets";
+ppm money   app     pAssetStocksBondsMfundsAmt      "Asset-Stocks Bonds Mfunds Amt";
+ppm money   app     pAssetBankAcctsAmt              "Asset-Bank Accts Amt";
+ppm money   app     pAssetGiftNotDepositedAmt       "Asset-Gift Not Deposited Amt";
+ppm money   app     pAssetTrustFundsAmt             "Asset-Trust Funds Amt";
+ppm numeric app     pAssetNetEquityAmt              "Asset-Net Equity Amt";
+ppm money   app     pAssetOtherLiquidAmt            "Asset-Other Liquid Amt";
+ppm money   app     pAssetOtherNonLiquid            "Other Non Liquid Assets";
+ppm money   app     pAssetRetirementFundsAmt        "Asset-Retiremt Funds Amt";
+ppm money   app     pAssetCD                        "Asset-Certificate of Deposit";
+ppm money   app     pAssetNetWorthOfBusinessOwned   "Asset-Net Worth of Business Owned";
+
+// Borrower Citizenship
+ppm text    app     pCitizenshipOfPrimaryApplicant  "Citizenship of Primary Applicant";
+ppm text    app     pCitizenshipCoBorr1             "Citizenship Co-Borr #1";
+ppm text    app     pCitizenshipCoBorr2             "Citizenship Co-Borr #2";
+ppm text    app     pCitizenshipCoBorr3             "Citizenship Co-Borr #3";
+ppm text    app     pCitizenshipCoBorr4             "Citizenship Co-Borr #4";
+ppm text    app     pCitizenshipBorr1               "Citizenship Borr #1";
+ppm text    app     pCitizenshipBorr2               "Citizenship Borr #2";
+ppm text    app     pCitizenshipBorr3               "Citizenship Borr #3";
+ppm text    app     pCitizenshipBorr4               "Citizenship Borr #4";
+ppm text    app     pCitizenshipBorr5               "Citizenship Borr #5";
+
+
+// Application Declarations
+ppm numeric app     pDeclAlimony                    "Decl-Alimony";
+ppm numeric app     pDeclBankruptcy                 "Decl-Bankruptcy";
+ppm numeric app     pDeclBorrowedDownPmt            "Decl-Borrowed Down Pmt";
+ppm numeric app     pDeclComaker                    "Decl-Co-maker";
+ppm numeric app     pDeclJudgment                   "Decl-Judgment";
+ppm numeric app     pDeclLawSuit                    "Decl-LawSuit";
+ppm numeric app     pDeclDelinquency                "Decl-Delinquency";
+ppm text    app     pDeclBorr1AppNonOccupancy       "Decl-Borr1 App Non-Occupancy";
+ppm text    app     pDeclBorr2AppNonOccupancy       "Decl-Borr2 App Non-Occupancy";
+ppm text    app     pDeclBorr3AppNonOccupancy       "Decl-Borr3 App Non-Occupancy";
+ppm text    app     pDeclBorr4AppNonOccupancy       "Decl-Borr4 App Non-Occupancy";
+ppm text    app     pDeclBorr5AppNonOccupancy       "Decl-Borr5 App Non-Occupancy";
+ppm numeric app     pDeclObligatedLoanForeclosed    "Decl-Obligated Loan Foreclosed";
+ppm numeric app     pDeclPermResident               "Decl-Perm Resident";
+ppm numeric app     pDeclForeclosureDeedInLieu      "Decl-ForeclosureDeedInLieu";
+
+
+// Applicant Income
+ppm money   app     pTotalIncome                    "Total Income";
+ppm money   app     pTrailingSpouseIncome           "Trailing Spouse Inc-All App";
+
+
+// Payoffs
+ppm money   crd     pMortgagePayoffs                "Mortgage Payoffs";
+ppm money   crd     pConsumerPayoffs                "Consumer Payoffs";
+
+
+ppm numeric crd     pOutsideFinancing               "Outside Financing";
+
+
+// FHA specific PPMs
+
+ppm numeric app         pMIPRefund                  "MIPRefund";                        // XPath: //LOAN/FHA_LOAN/@MIPRefund
+ppm text    app         pBorrowerPaidClosingCosts   "BorrowerPaidClosingCosts";         // BorrowerPaidClosingCosts comes from the UI.
+ppm numeric app         pRequiredAdjustments        "RequiredAdjustments";              // XPath: //LOAN/FHA_LOAN/@RequiredAdjustments
+ppm numeric app         pAdditionalAdjustments      "AddlAdjustmentToMortgageAmount";   // XPath: //LOAN/FHA_LOAN/@AddlAdjustmentToMortgageAmount
+ppm text    app         pGovRefiType                "GovernmentRefinanceType";          // XPath: //LOAN/FHA_LOAN/@GovernmentRefinanceType
+
+ppm text    app         pSolveFor                   "SolveFor";                         // XPath: //LOAN/FHA_LOAN/@SolveFor
+
+
+
+// Exception Pricing PPMs
+ppm numeric app         pOverrideMaxPrice-Loan1     "OverrideMaxPrice-Loan1";
+ppm numeric app         pOverrideMaxPrice-Loan2     "OverrideMaxPrice-Loan2";
+
+ppm numeric prd         pPriceAdjName1-PGM1         "PriceAdjName1-PGM1";
+ppm numeric prd         pPriceAdjValue1-PGM1        "PriceAdjValue1-PGM1";
+ppm numeric prd         pPriceAdjName2-PGM1         "PriceAdjName2-PGM1";
+ppm numeric prd         pPriceAdjValue2-PGM1        "PriceAdjValue2-PGM1";
+ppm numeric prd         pPriceAdjName3-PGM1         "PriceAdjName3-PGM1";
+ppm numeric prd         pPriceAdjValue3-PGM1        "PriceAdjValue3-PGM1";
+
+ppm numeric prd         pPriceAdjName1-PGM2         "PriceAdjName1-PGM2";
+ppm numeric prd         pPriceAdjValue1-PGM2        "PriceAdjValue1-PGM2";
+ppm numeric prd         pPriceAdjName2-PGM2         "PriceAdjName2-PGM2";
+ppm numeric prd         pPriceAdjValue2-PGM2        "PriceAdjValue2-PGM2";
+ppm numeric prd         pPriceAdjName3-PGM2         "PriceAdjName3-PGM2";
+ppm numeric prd         pPriceAdjValue3-PGM2        "PriceAdjValue3-PGM2";
+
+ppm numeric prd         pPriceAdjName1-PDT1         "PriceAdjName1-PDT1";
+ppm numeric prd         pPriceAdjValue1-PDT1        "PriceAdjValue1-PDT1";
+ppm numeric prd         pPriceAdjName2-PDT1         "PriceAdjName2-PDT1";
+ppm numeric prd         pPriceAdjValue2-PDT1        "PriceAdjValue2-PDT1";
+ppm numeric prd         pPriceAdjName3-PDT1         "PriceAdjName3-PDT1";
+ppm numeric prd         pPriceAdjValue3-PDT1        "PriceAdjValue3-PDT1";
+
+ppm numeric prd         pPriceAdjName1-PDT2         "PriceAdjName1-PDT2";
+ppm numeric prd         pPriceAdjValue1-PDT2        "PriceAdjValue1-PDT2";
+ppm numeric prd         pPriceAdjName2-PDT2         "PriceAdjName2-PDT2";
+ppm numeric prd         pPriceAdjValue2-PDT2        "PriceAdjValue2-PDT2";
+ppm numeric prd         pPriceAdjName3-PDT2         "PriceAdjName3-PDT2";
+ppm numeric prd         pPriceAdjValue3-PDT2        "PriceAdjValue3-PDT2";
+
+ppm numeric app         pPriceAdjName1-Loan1        "PriceAdjName1-Loan1";
+ppm numeric app         pPriceAdjValue1-Loan1       "PriceAdjValue1-Loan1";
+ppm numeric app         pPriceAdjName2-Loan1        "PriceAdjName2-Loan1";
+ppm numeric app         pPriceAdjValue2-Loan1       "PriceAdjValue2-Loan1";
+ppm numeric app         pPriceAdjName3-Loan1        "PriceAdjName3-Loan1";
+ppm numeric app         pPriceAdjValue3-Loan1       "PriceAdjValue3-Loan1";
+
+ppm numeric app         pPriceAdjName1-Loan2        "PriceAdjName1-Loan2";
+ppm numeric app         pPriceAdjValue1-Loan2       "PriceAdjValue1-Loan2";
+ppm numeric app         pPriceAdjName2-Loan2        "PriceAdjName2-Loan2";
+ppm numeric app         pPriceAdjValue2-Loan2       "PriceAdjValue2-Loan2";
+ppm numeric app         pPriceAdjName3-Loan2        "PriceAdjName3-Loan2";
+ppm numeric app         pPriceAdjValue3-Loan2       "PriceAdjValue3-Loan2";
+
+
+

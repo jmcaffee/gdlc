@@ -1,0 +1,44 @@
+/* **************************************************************************
+ *	File: missingFunctionDefTest.gdl
+ *
+ *	Description:
+ *		This is to test parsing function definition signatures
+ *
+ ************************************************************************* */
+ 
+
+dpm	money 	pi1st			"PI 1st";
+dpm	numeric LoanBalance-1;
+dpm	numeric	Interest;
+dpm	numeric	loanTerm1st 	"Loan Term 1st";
+ppm	money	app		pLoanAmount		"Loan Amount";
+
+simpleFunction($arg1, $arg2, $arg3){
+
+	rule FunctionRule()							// Define the rule.
+		if ( $arg1 == $arg1)		
+		then
+		  $arg2 = $arg3;
+		end
+	end
+
+}
+
+rule SimpleFunctionTest()							// Define the rule.
+	if ( pLoanAmount == pLoanAmount)		
+	then
+	  pi1st = 0;
+	end
+end
+
+
+
+/* ----------------------------------------------------------------------- */
+
+guideline("FunctionDefTest")
+	rule SimpleFunctionTest();					// Rule was defined above.
+	
+												// Function reference to non-existing function.
+	missingFunction( pLoanAmount, pi1st, loanTerm1st);
+end	
+

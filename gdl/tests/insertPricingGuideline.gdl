@@ -1,0 +1,20 @@
+/* **************************************************************************
+ *	File: insertPricingGuideline.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for 'Insert Pricing Guideline Rule' testing..
+ *
+ ************************************************************************* */
+ 
+include ("simple.gdl");
+
+dpm numeric Interest;
+ppm	text	app		pTierFlag	"TierFlag";
+
+
+guideline ("InsertPricingGuideline")
+	rule SimpleRule1();
+	InsertPricingGuideline();
+	rule SimpleRule1();
+end
+

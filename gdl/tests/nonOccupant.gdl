@@ -1,0 +1,47 @@
+
+include("PPMs.gdl");
+include("DSMs.gdl");
+
+dpm text    hasCoBorrNonOccupant;
+
+
+ruleset AltA-IneligibleNonOccupancy(continue)
+    rule SetNonOccCoBorrowerFlag()
+        if(
+               (
+                   (
+                        (pBorr2ID > 0)  &&
+                        (pDeclBorr2AppNonOccupancy == "N")
+                   ) ||
+                   (
+                        (pBorr3ID > 0)  &&
+                        (pDeclBorr3AppNonOccupancy == "N")
+                   ) ||
+                   (
+                        (pBorr4ID > 0)  &&
+                        (pDeclBorr4AppNonOccupancy == "N")
+                   ) ||
+                   (
+                        (pBorr5ID > 0)  &&
+                        (pDeclBorr5AppNonOccupancy == "N")
+                   )
+               )
+        )
+        then
+            hasCoBorrNonOccupant = 'true';
+        end
+    end
+
+    rule AltA-IneligibleOccupancyRule3()
+        if(hasCoBorrNonOccupant == 'true')
+        then
+            Decision = 'Referred';
+            message(exception, exception, "Non-occupand co-borrowers are ineligible.");
+        end
+    end
+end
+
+
+guideline("NonOccupantCoBorrowers")
+    ruleset AltA-IneligibleNonOccupancy();
+end

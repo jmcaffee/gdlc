@@ -1,0 +1,36 @@
+
+include("PPMs.gdl");
+
+dpm text    testFlag;
+
+
+rule DeepComputeRule()
+	if(
+		   (
+				(pBorr2ID > 0)  &&
+				(pDeclBorr2AppNonOccupancy == "N")
+		   ) ||
+		   (
+				(pBorr3ID > 0)  &&
+				(pDeclBorr3AppNonOccupancy == "N")
+		   ) ||
+		   (
+				(pBorr4ID > 0)  &&
+				(pDeclBorr4AppNonOccupancy == "N")
+		   ) ||
+		   (
+				(pBorr5ID > 0)  &&
+				(pDeclBorr5AppNonOccupancy == "N")
+		   )
+	)
+	then
+		testFlag = 'true';
+	else
+		testFlag = 'false';
+	end
+end
+
+
+guideline("DeepComputeTest")
+    rule DeepComputeRule();
+end

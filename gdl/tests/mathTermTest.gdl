@@ -1,0 +1,29 @@
+/* **************************************************************************
+ *	File: mathTermTest.gdl
+ *
+ *	Description:
+ *		Test for scenarios with more than 2 math terms..
+ *
+ ************************************************************************* */
+ 
+
+dpm	numeric a;
+dpm	numeric b;
+dpm	numeric c;
+dpm	numeric d;
+
+ppm	numeric	app     ppmVar;
+
+rule MathRule1()							// Define the rule.
+	if ( ppmVar == 1 )	
+	then
+		a = (b + 10) * 20;
+		b = a - 5 * (c + d);
+		c = a + b + d + 1 + 2 + 3;
+	end
+end
+
+guideline("mathTermXmlOutput")
+	rule MathRule1();
+end
+

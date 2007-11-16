@@ -1,0 +1,109 @@
+/* **************************************************************************
+ *	File: functionDefTest.gdl
+ *
+ *	Description:
+ *		This is to test parsing function definition signatures
+ *
+ ************************************************************************* */
+ 
+
+dpm	money 	pi1st			"PI 1st";
+dpm	numeric LoanBalance-1;
+dpm	numeric	Interest;
+dpm	numeric	loanTerm1st 	"Loan Term 1st";
+ppm	money	app		pLoanAmount		"Loan Amount";
+
+simpleFunction($arg1, $arg2, $arg3){
+
+	rule FunctionRule()							// Define the rule.
+		if ( $arg1 == $arg1)		
+		then
+		  $arg2 = $arg3;
+		end
+	end
+
+}
+
+advancedFunction($namePrefix, $arg1, $arg2){
+
+	rule $namePrefix-FunctionRule()							// Define the rule.
+		if ( pLoanAmount == pLoanAmount)		
+		then
+		  $arg1 = $arg2;
+		end
+	end
+
+}
+
+
+anotherFunction(){
+
+	rule Another-FunctionRule()							// Define the rule.
+		if ( pLoanAmount == pLoanAmount)		
+		then
+		  loanTerm1st = 360;
+		end
+	end
+
+}
+
+
+simpleFunctio2n(){
+
+	rule FunctionRule()							// Define the rule.
+		if ( $arg1 == $arg1)		
+		then
+		  $arg2 = $arg3;
+		end
+	end
+
+}
+
+rule SimpleFunctionTest()							// Define the rule.
+	if ( pLoanAmount == pLoanAmount)		
+	then
+	  pi1st = 0;
+	end
+end
+
+rule SimpleFunctionTest1()							// Define the rule.
+	if ( pLoanAmount == pLoanAmount)		
+	then
+	  pi1st = 0;
+	end
+end
+
+rule SimpleFunctionTest2()							// Define the rule.
+	if ( pLoanAmount == pLoanAmount)		
+	then
+	  pi1st = 0;
+	end
+end
+
+simpleFunction2(){
+
+	rule SimpleFunctionTest();
+	rule SimpleFunctionTest1();
+	rule SimpleFunctionTest2();
+
+}
+
+
+
+/* ----------------------------------------------------------------------- */
+
+guideline("FunctionDefTest")
+	rule SimpleFunctionTest();					// Rule was defined above.
+	
+												// Function reference
+	simpleFunction( pLoanAmount, pi1st, loanTerm1st);
+
+												// Function reference
+	advancedFunction( TEST1, pi1st, 0);
+	advancedFunction( TEST2, pi1st, 1);
+	advancedFunction( TEST3, pi1st, 2);
+	anotherFunction();
+	
+	simpleFunction2();
+end	
+

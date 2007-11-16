@@ -1,0 +1,40 @@
+/* **************************************************************************
+ *	File: LookupTest3-1.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for powerlookup testing.
+ *		These power lookups have more than 2 comparisons..
+ *
+ ************************************************************************* */
+ 
+
+ppm	text	app		pUserType;
+ppm	text	app		pTierFlag;
+
+dpm	text	amortType1st;
+dpm	numeric	lockPeriod1st;
+dpm	numeric	rate1st;
+
+rule LookupTest3-1()
+	if(pUserType == "Retention" && amortType1st == "Fxd30" && lockPeriod1st == "15" && pTierFlag == "T1")
+	then
+		rate1st = "TESTTEXT";
+	end
+end
+
+guideline("LookupTest3-1")
+	rule LookupTest3-1();
+end
+
+
+/*
+alias(rule, LookupTest3-1, "LookupTest3.1");
+rule LookupTest3-1() 
+	if(pUserType == "Retention"  && amortType1st == "Fxd30"  && lockPeriod1st == "15"  && pTierFlag == "T1" ) 
+	then 
+		rate1st = "TESTTEXT";
+	end 
+end 
+
+
+*/
