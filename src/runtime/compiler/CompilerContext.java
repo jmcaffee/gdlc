@@ -7,18 +7,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import runtime.compiler.FunctionMgr.Function;
 import runtime.main.CompileWarning;
 import runtime.main.IProblem;
 import runtime.main.Log;
 import runtime.parser.ASTCompilationUnit;
+import runtime.parser.ASTFunctionDef;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTLookupDef;
 import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTVarRef;
 
-public class CompilerContext implements IProgramContext, ILookups {
+public class CompilerContext implements IProgramContext, ILookups, IFunctionContext {
+	
 	int 							tabCnt 		= 0;
-	ASTCompilationUnit				rootNode;
+	ASTCompilationUnit				rootNode	= null;
 	
 	HashMap<String,LookupData>		lookupData	= new HashMap<String,LookupData>();
 	HashMap<String,ASTLookupDef>	lookups		= new HashMap<String,ASTLookupDef>();
@@ -28,15 +31,25 @@ public class CompilerContext implements IProgramContext, ILookups {
 	HashMap<String,IRuleset>		rulesets 	= new HashMap<String,IRuleset>();
 //	HashMap<String,ASTGuidelineDef>	guidelines	= new HashMap<String,ASTGuidelineDef>();
 	ASTGuidelineDef					guideline	= null;
-	
+	IFunctionContext				functions	= new FunctionMgr();
 	ArrayList<IProblem> 			warnings	= new ArrayList<IProblem>();
 	ArrayList<IProblem> 			errors		= new ArrayList<IProblem>();
 	
 	ArrayList<String>				includeDirs	= new ArrayList<String>();
 	
+	int								ruleId		= 1;
+	int								rulesetId 	= 1;
+	int								lookupId	= 1;
+	int								conditionId	= 1;
+	
 	public int getTabCount() { return tabCnt; }
 	public void incTabCount() { this.tabCnt++; }
 	public void setTabCount(int cnt) {this.tabCnt = cnt;}
+	
+	int	getNextRuleId() 	{ int id = ruleId; ruleId += 1; return id; }
+	int	getNextRulesetId() 	{ int id = rulesetId; rulesetId += 1; return id; }
+	int	getNextLookupId() 	{ int id = lookupId; lookupId += 1; return id; }
+	public int getNextConditionId(){ int id = conditionId; conditionId += 1; return id;}
 	
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#setRootNode(runtime.parser.ASTCompilationUnit)
@@ -65,9 +78,25 @@ public class CompilerContext implements IProgramContext, ILookups {
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addRule(java.lang.String, runtime.parser.ASTRuleDef)
 	 */
-	public void addRule(String key, ASTRuleDef rule){rules.put(key, rule);}
-
-	/* (non-Javadoc)
+	public void addRule(String key, ASTRuleDef rule){
+		String ruleId = "";
+		if(this.containsRule(key)){
+			this.addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
+							"A rule has been redefined 1 or more times. [ " + key + " ]"));
+			ASTRuleDef existingRule = this.getRule(key);
+			ruleId = existingRule.getData("Id");
+		}
+		else {
+			if(rule.getData("Id") == "99999"){
+				ruleId = Integer.toString(this.getNextRuleId());
+			}
+		}
+		
+		rule.data.put("Id", ruleId);
+		rules.put(key, rule);
+	}
+	
+/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#getRule(java.lang.String)
 	 */
 	public ASTRuleDef getRule(String key){return rules.get(key);}
@@ -80,7 +109,24 @@ public class CompilerContext implements IProgramContext, ILookups {
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addRuleset(java.lang.String, runtime.parser.ASTRulesetDef)
 	 */
-	public void addRuleset(String key, IRuleset ruleset){rulesets.put(key, ruleset);}
+	public void addRuleset(String key, IRuleset ruleset){
+		String rulesetId = "";
+		if(this.containsRuleset(key)){
+			this.addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
+							"A ruleset has been redefined 1 or more times. [ " + key + " ]"));
+			IRuleset existingRuleset = this.getRuleset(key);
+			rulesetId = existingRuleset.getId();
+		}
+		else {
+			if(ruleset.getId() == "99999"){
+				rulesetId = Integer.toString(this.getNextRulesetId());
+			}
+		}
+		
+		ruleset.setId(rulesetId);
+	
+		rulesets.put(key, ruleset);
+	}
 
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#getRuleset(java.lang.String)
@@ -92,6 +138,21 @@ public class CompilerContext implements IProgramContext, ILookups {
 	 */
 	public boolean containsRuleset(String key) { return rulesets.containsKey(key);}
 
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#addFunction(java.lang.String, runtime.parser.ASTFunctionDef)
+	 */
+	public void addFunction(String key, ASTFunctionDef rule){functions.addFunction(key, rule);}
+
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#getFunction(java.lang.String)
+	 */
+	public Function getFunction(String key){return functions.getFunction(key);}
+
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#containsFunction(java.lang.String)
+	 */
+	public boolean containsFunction(String key) { return functions.containsFunction(key);}
+	
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addGuideline(java.lang.String, runtime.parser.ASTGuidelineDef)
 	 */
@@ -169,10 +230,10 @@ public class CompilerContext implements IProgramContext, ILookups {
 	}
 	
 	public void dumpWarnings() {
-		Log.error("Warnings: " + warnings.size());
+		Log.warning("Warnings: " + warnings.size());
 		if(hasWarnings()){
 			for(IProblem me : warnings) {
-				Log.error("Warning (W" + me.getId() + "): " + me.getDesc() + ". " + me.getMsg());
+				Log.warning("Warning (W" + me.getId() + "): " + me.getDesc() + ". " + me.getMsg());
 			}
 		} 
 	}
@@ -185,13 +246,10 @@ public class CompilerContext implements IProgramContext, ILookups {
 		String newLine = new String("\n");
 		
 		errs.append("Errors: " + errors.size() + newLine);
-		//Log.error("Errors: " + errors.size());
 		if(hasErrors()){
 			for(IProblem me : errors) {
 				errs.append("Error (E" + me.getId() + "): " + me.getDesc() + ". " + newLine);
-				//Log.error("Error (E" + me.getId() + "): " + me.getDesc() + ". ");
 				errs.append(me.getMsg()+ newLine + newLine);
-				//Log.error(me.getMsg());
 			}
 		} 
 		
@@ -219,8 +277,10 @@ public class CompilerContext implements IProgramContext, ILookups {
 	    if(dir.isDirectory() ){
 	    	this.includeDirs.add(dir.getAbsolutePath());
 	    }
-	    for(File file : files){
-	    	this.includeDirs.add(file.getAbsolutePath());
+	    if(null != files){					// If there are subdirectories...
+		    for(File file : files){
+		    	this.includeDirs.add(file.getAbsolutePath());
+		    }
 	    }
 	}
 
@@ -244,11 +304,17 @@ public class CompilerContext implements IProgramContext, ILookups {
 	}
 	
 	public void addLookup(String key, ASTLookupDef lk){
+		String lkupId = "";
 		if(isRedefining(key, lk)){
 				addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
 					new String("Lookup [" + key + "] is being redefined. One or both delta variables are different.")));
+				lkupId = this.getLookup(key).getData("Id");
 		}
-	
+		else {
+			lkupId = Integer.toString(this.getNextLookupId());
+		}
+		
+		lk.data.put("Id", lkupId);
 		this.lookups.put(key, lk);
 	}
 
