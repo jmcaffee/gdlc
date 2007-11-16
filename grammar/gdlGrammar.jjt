@@ -129,6 +129,7 @@ TOKEN :  /* PPM Variable Types */
 TOKEN :  /* Guideline Keywords */
 {
   < GUIDELINE:  "guideline">
+| < INSERT_PRICING_GUIDELINE:    "InsertPricingGuideline">
 | < RULESET:    "ruleset">
 | < RULE:       "rule">
 | < MESSAGE:    "message">
@@ -298,6 +299,13 @@ TOKEN :  /* Boolean Operators */
   
 
 
+TOKEN :  /* Misc Symbols*/
+{
+  < STRING:   "$" >
+}
+  
+
+
 /* IDENTIFIERS */
 
 TOKEN :
@@ -323,6 +331,7 @@ ASTCompilationUnit CompilationUnit() :
   | Alias() 
   | Import() 
   | Include()
+  | LOOKAHEAD(3)FunctionDef()
   | FunctionRef() 
   | RuleDef() 
   | RulesetDef() )* 
@@ -332,10 +341,9 @@ ASTCompilationUnit CompilationUnit() :
 }
 
 
-
 void VarDef() :
 {
-	String nm,typ,als;
+	String nm,dtyp,typ,als;
 	Token t;
 }
 {
@@ -351,7 +359,9 @@ void VarDef() :
 	  		jjtThis.data.put("Name",nm);
 	  	} 
 		(als=AliasOf(){jjtThis.data.put("Alias",als);})? EOS() )
-  | ( <PPM> typ=PpmVarType(){
+  | ( <PPM> dtyp=VarDataType(){
+	  		jjtThis.data.put("DataType",dtyp);
+  		} typ=PpmVarType(){
 	  		jjtThis.data.put("Type",typ);
 	  		jjtThis.data.put("varType","PPM");
 	  	} nm=Name(){
@@ -369,6 +379,18 @@ String VarType() #void :
   | <NUMERIC>     { return new String("4");}
   | <PERCENTAGE>  { return new String("5");}
   | <TEXT>        { return new String("6");}
+} 
+
+
+String VarDataType() #void :
+{}
+{
+  <BOOLEAN>       { return new String("Boolean");}
+  | <DATE>        { return new String("Date");}
+  | <MONEY>       { return new String("Money");}
+  | <NUMERIC>     { return new String("Numeric");}
+  | <PERCENTAGE>  { return new String("Percentage");}
+  | <TEXT>        { return new String("Text");}
 } 
 
 
@@ -463,18 +485,31 @@ void GuidelineDef() :
 {String nm;} 
 {
   <GUIDELINE> ( <LPAREN> nm=ParenStringLiteral() <RPAREN> ){jjtThis.data.put("Name",nm);jjtThis.data.put("GuidelineID","1");jjtThis.data.put("Version","1");jjtThis.data.put("StartDate","");}   
-  ( ( LOOKAHEAD(4)
-    RulesetDef() 
-  | RulesetRef()  )
-  | ( LOOKAHEAD(5)
-    RuleRef() 
-  | RuleDef() ) )+ 
-
+  ( 
+  	(
+  		InsertPricing()
+  		|
+  		FunctionRef()
+  		|
+	   	( LOOKAHEAD(4)
+	    		RulesetDef() 
+	  		| 	RulesetRef()  )
+	  	| 
+	  	( LOOKAHEAD(5)
+	    		RuleRef() 
+	  		| 	RuleDef() ) 
+	)+ 
+  )
+	
   <END> 
 }
 
 
-
+void InsertPricing() :
+{}
+{
+	<INSERT_PRICING_GUIDELINE> <LPAREN><RPAREN> EOS()
+}
 
 String StringLiteral() #void : 
 {}
@@ -491,15 +526,56 @@ String Name() #void :
 void FunctionRef() :
 {String nm;}
 {
-  nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> ( FuncRefParam() ) ( "," FuncRefParam() )? <RPAREN> EOS()
+  nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> (FunctionRefArgList() )? <RPAREN> EOS()
 }
 
-void FuncRefParam() :
+
+void FunctionRefArgList() :
+{}
+{
+	FunctionRefArg() ( "," FunctionRefArg() )*
+}
+
+
+
+void FunctionRefArg() :
 { Token t; String str;}
 {
   ( t=<NUMERIC_CONSTANT>
   | t=<CHARACTER_LITERAL> )	{ jjtThis.data.put("value",t.image ); }
-  | str=StringLiteral()		{ jjtThis.data.put("value",str ); } 		 
+  | str=StringLiteral()		{ jjtThis.data.put("value",str ); }
+  |	str=Name()				{ jjtThis.data.put("value",str ); } 		 
+}
+
+
+void FunctionDef() :
+{String nm, codeBlock;}
+{
+  nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> ( FunctionDefArgList() )? <RPAREN> 
+  codeBlock=CodeBlock(){jjtThis.data.put("codeBlock", codeBlock);}
+}
+
+
+void FunctionDefArgList() :
+{}
+{
+	FunctionDefArg() ("," FunctionDefArg())*
+}
+
+
+
+void FunctionDefArg() :
+{Token t;}
+{
+	<STRING>t=<IDENTIFIER>{jjtThis.data.put("value", "$" + t.image);}
+}
+
+
+
+String CodeBlock() :
+{Token t;}
+{							
+	t=<CODE_BLOCK> {return t.image.substring(1,(t.image.length()-1));}
 }
 
 
@@ -580,16 +656,50 @@ Expression  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 Co
 void Expression() :
 {}  
 {
-  Compute()
+	LogExpr()
 }
+
+void LogExpr() #LogicalCompute(>1) :
+{}
+{
+	LogTerm() (LogicalOperator() LogTerm())*
+}
+
+
+void LogTerm() #void :
+{}
+{
+	LOOKAHEAD(2)
+	EqExpr()
+	|
+	LOOKAHEAD(BraceLookAhead())
+	Brace()
+	
+}
+
+void BraceLookAhead() #void :
+{}
+{
+	<LPAREN> LogTerm() LogicalOperator()
+}
+
+void EqExpr() #EqualityCompute(>1) :
+{}
+{
+	CompTerm() (EqualityOperator() CompTerm())*
+	|
+	"(" CompTerm() (EqualityOperator() CompTerm())* ")"
+}
+
+
 
 /*
 Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompTerm )*
 */
-void Compute() #LogicalCompute(>1) :
+void Compute() #LogicalCompute(3) :
 {}
 {
-  CompTerm() ( LogicalOperator() CompTerm() )*
+  CompTerm() (LogicalOperator() CompTerm())
 }
 
 
@@ -618,7 +728,10 @@ CompTerm  --> Primary ( LT Primary
 void CompTerm() #EqualityCompute(>1) :
 {}
 {
-  Operand() ( EqualityOperator() Operand() )*
+  LOOKAHEAD(2)
+  LhOperand() (EqualityOperator() Operand())
+|
+  Operand()
  
 }
 
@@ -646,19 +759,30 @@ Operand   --> NUMERIC_CONSTANT
 
 */
 
-void Operand() #void :
+void LhOperand() #void :
 {}
 {
-  ( Constant()
-    | VarRef()
-    | Brace()
-  )
+	VarRef()
 }
 
 
+void Operand() #void :
+{}
+{
+	LOOKAHEAD(1)
+	VarRef() 
+    | 
+    Constant()
+}
 
 
 void Brace() :
+{}
+{
+	<LPAREN> LogExpr() <RPAREN>
+}
+
+void LogicalBrace() #Brace :
 {}
 {
   <LPAREN> Compute() <RPAREN>
@@ -667,11 +791,21 @@ void Brace() :
 
 
 
+void EqualityBrace() #void :
+{}
+{
+  <LPAREN> CompTerm() <RPAREN>
+}
+
+
+
+
 void Constant() :
 { Token t; String str; }
 {
-    t=<NUMERIC_CONSTANT> 	{ jjtThis.data.put("value",t.image ); }
-  | str=StringLiteral()  	{ jjtThis.data.put("value",str); }
+	t=<NUMERIC_CONSTANT> 	{ jjtThis.data.put("value",t.image ); }
+  	| 
+  	str=StringLiteral()  	{ jjtThis.data.put("value",str); }
 }
 
 

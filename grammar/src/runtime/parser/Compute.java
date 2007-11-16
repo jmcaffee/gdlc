@@ -11,15 +11,24 @@ public class Compute extends SimpleNode {
   }
 
 	public Node getLhs() {
-		return jjtGetChild(0);
+		if(this.jjtGetNumChildren() > 0)
+			return jjtGetChild(0);
+		
+		return null;
 	}
 
 	public Node getOperator() {
-		return jjtGetChild(1);
+		if(this.jjtGetNumChildren() > 1)
+			return jjtGetChild(1);
+		
+		return null;
 	}
 
 	public Node getRhs() {
+		if(this.jjtGetNumChildren() > 2)
 		return jjtGetChild(2);
+		
+		return null;
 	}
 
   //public String toString() { return GdlParserTreeConstants.jjtNodeName[id] + ( null != getLhs()? " [LHS: " + lhs.toString()+"]":"") + ( null != getRhs()? " [RHS: " + rhs.toString()+"]":""); }

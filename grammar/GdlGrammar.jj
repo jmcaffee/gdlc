@@ -328,7 +328,9 @@ ASTCompilationUnit CompilationUnit() :
 }
 
 
-
+/* VarDef: Variable Definition.
+  Variables must be defined prior to referencing them in any objects (rules, lookup definitions, etc.).
+  TEST-TEST-TEST */
 void VarDef() :
 {/*@bgen(jjtree) VarDef */
   ASTVarDef jjtn000 = new ASTVarDef(JJTVARDEF);

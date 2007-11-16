@@ -81,6 +81,27 @@ public class SimpleNode extends BaseNode implements Node {
     children[i] = n;
   }
 
+  public Node jjtRemoveChild(int i) {
+	    Node n = null;
+	    if (children == null) {
+		      return null;
+	    }
+	    if(i >= children.length){
+	    	return null;
+	    }
+	    if(i < 0){
+	    	return null;
+	    }
+	    n = children[i];
+	    Node c[] = new Node[children.length - 1];
+	    System.arraycopy(children, i+1, children, i, ((children.length - 1) - i));
+	    System.arraycopy(children, 0, c, 0, children.length - 1);
+	    
+	    children = c;
+	    
+	    return n;
+	  }
+
   public Node jjtGetChild(int i) {
     return children[i];
   }
@@ -145,11 +166,6 @@ public class SimpleNode extends BaseNode implements Node {
       }
     }
   }
-  
-  public void replaceChild(int i, SimpleNode newNode){
-	  if(children[i] != null){
-		  children[i] = newNode;
-	  }
-  }
-}
+
+}	// End SimpleNode
 
