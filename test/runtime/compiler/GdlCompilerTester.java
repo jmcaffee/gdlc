@@ -9,20 +9,22 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import runtime.main.GdlMain;
-import runtime.parser.ASTCompilationUnit;
+import runtime.main.CompileMgr;
+import runtime.main.CompilerParameters;
 
 /**
  * @author killer
  *
  */
 public class GdlCompilerTester {
+	CompilerParameters cp = null;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		this.cp = new CompilerParameters();
 	}
 
 	/**
@@ -30,6 +32,7 @@ public class GdlCompilerTester {
 	 */
 	@After
 	public void tearDown() throws Exception {
+		this.cp = null;
 	}
 
 	/**
@@ -38,12 +41,14 @@ public class GdlCompilerTester {
 	@Test
 	public void testGdlCompiler() {
 		String args[] = {new String("r:\\sandbox\\net.bd.gdlc\\gdl\\tests\\compileTest.gdl"),};
+		this.cp.process(args);
 
-		GdlMain gm = new GdlMain();
-		ASTCompilationUnit parseTree = gm.parse(args);
-		assertNotNull("Parse failed.",parseTree);
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
 
-		GdlCompiler compiler = new GdlCompiler(parseTree);
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		GdlCompiler compiler = new GdlCompiler();
 		
 		assertNotNull("Compiler instance not created.",compiler);
 	}
@@ -56,12 +61,15 @@ public class GdlCompilerTester {
 		String args[] = {new String("r:\\sandbox\\net.bd.gdlc\\gdl\\tests\\parseTest.gdl"),};
 		String badArgs[] = {new String("r:\\sandbox\\net.bd.gdlc\\gdl\\tests\\doesnotexist.gdl"),};
 
-		GdlMain gm = new GdlMain();
-		assertNull("Parse should have failed.",gm.parse(badArgs));
+		this.cp.process(args);
 
-		assertNotNull("Parse failed.",gm.parse(args));
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+//		assertNull("Parse should have failed.",mgr.parse(badArgs));
 
-		GdlCompiler compiler = new GdlCompiler(gm.getParseTree());
+//		assertNotNull("Parse failed.",mgr.parse(args));
+
+		GdlCompiler compiler = new GdlCompiler();
 		
 		assertNotNull("Compiler instance not created.",compiler);
 	}
