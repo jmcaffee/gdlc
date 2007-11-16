@@ -12,7 +12,7 @@ dpm	numeric testDpm1;
 dpm	numeric testDpm2;
 dpm	numeric testDpm3;
 
-ppm	app     ppmVar;
+ppm	numeric	app     ppmVar;
 
 rule SimpleRule1()							// Define the rule.
 	if ( dpmVar == 1 )	

@@ -8,7 +8,7 @@
  
 
 dpm	numeric fPICalcType;
-ppm	app     Loan_Amount;
+ppm	money	app     Loan_Amount;
 
 rule G-SetPICalcType()							// Define the rule.
 	if ( Loan_Amount == Loan_Amount )	

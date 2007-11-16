@@ -22,7 +22,7 @@ import(ppm,"c:\some\file\path.dict");
 
 include "r:\sandbox\net.bd.gdlc\gdl\tests\rulesetDefs.inc.gdl";
 
-ppm app Rate;
+ppm numeric app Rate;
 
 rule Rule-4()
 	if(Rate == Rate)

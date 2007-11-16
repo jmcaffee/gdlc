@@ -11,7 +11,7 @@ dpm	money 	pi1st			"PI 1st";
 dpm	numeric LoanBalance-1;
 dpm	numeric	Interest;
 dpm	numeric	loanTerm1st 	"Loan Term 1st";
-ppm	app		pLoanAmount		"Loan Amount";
+ppm	money	app		pLoanAmount		"Loan Amount";
 
 
 

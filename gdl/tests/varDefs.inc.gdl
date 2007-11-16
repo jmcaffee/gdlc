@@ -8,9 +8,9 @@
  
 // Define some variables
 
-			ppm 	app		 	Rate;
-			ppm 	app 		appPpm;
-			ppm		app			Loan_Amount;
+			ppm 	numeric	app		 	Rate;
+			ppm 	text	app 		appPpm;
+			ppm		money	app			Loan_Amount;
 
 			dpm 	numeric 	Rate_1st;
 decision 	dpm 	numeric 	Rate_Adj-Total;

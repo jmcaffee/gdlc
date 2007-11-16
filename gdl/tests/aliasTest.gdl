@@ -10,9 +10,12 @@ include ("simple.gdl");
 
 import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
 
+													// Variable aliases
 dpm numeric alsDpmVar "Alias DPM Variable";
-ppm app		alsPpmVar "PPM Alias Var";
 
+ppm numeric	app		alsPpmVar "PPM Alias Var";
+
+													// Rule alias
 alias(rule, SimpleAliasRule1, "Alias Rule 1");
 
 rule SimpleAliasRule1()								// Define the rule.
@@ -22,6 +25,7 @@ rule SimpleAliasRule1()								// Define the rule.
 	end
 end
 
+													// Ruleset alias
 alias(ruleset, SimpleRuleset1, "Simple Ruleset 1");
 
 ruleset SimpleRuleset1(true)

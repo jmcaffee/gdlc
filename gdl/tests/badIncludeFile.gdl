@@ -6,7 +6,7 @@
  *
  ************************************************************************* */
  
-ppm	BAD		pLoanAmount		"Loan Amount";		// 'BAD' is an error!
+ppm	money	BAD		pLoanAmount		"Loan Amount";		// 'BAD' is an error!
 
 
 

@@ -19,7 +19,7 @@
 
 decision 	dpm text 	textDsm;				// Text decision DPM (DSM)
 
-			ppm app		appPpm;					// Application PPM
+			ppm text	app		appPpm;					// Application PPM
 			
 
 rule VarDefTestRule()				// Define a rule for test purposes.

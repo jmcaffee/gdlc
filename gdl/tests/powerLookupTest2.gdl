@@ -10,7 +10,7 @@
 include ("simple.gdl");
 
 dpm numeric Interest;
-ppm	app		pTierFlag	"TierFlag";
+ppm	text	app		pTierFlag	"TierFlag";
 
 import( lookup, "TestLookups.csv");
 

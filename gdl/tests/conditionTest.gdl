@@ -7,7 +7,7 @@
  ************************************************************************* */
  
 //include ("simple.gdl");
-ppm	app     ppmVar;
+ppm	numeric	app     ppmVar;
 
 //import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
 
@@ -15,6 +15,7 @@ rule SimpleConditionRule1()							// Define the rule.
 	if ( ppmVar == 1 )	
 	then
 		condition(asset, docs, "Test condition message.");
+		condition(asset, docs, "Test another condition message.");
 	end
 end
 

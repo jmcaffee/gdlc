@@ -11,7 +11,7 @@ include ("simple.gdl");
 import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
 
 dpm numeric alsDpmVar "Alias DPM Variable";
-ppm app		alsPpmVar "PPM Alias Var";
+ppm money	app		alsPpmVar "PPM Alias Var";
 
 rule SimpleAliasRule1()								// Define the rule.
 	if ( ppmVar == 1 )	
