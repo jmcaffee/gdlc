@@ -17,7 +17,10 @@ public class CompileError implements IProblem {
 		static public int UNSUPPORTEDOPERATION = 4;
 		static public int IMPORTERROR = 5;
 		static public int PARSEERROR = 6;
-		static public int LASTERR = 6;
+		static public int UNEXPECTEDARG = 7;
+		static public int INCLUDEDIRPATH = 8;
+		static public int OUTPUTERROR = 9;
+		static public int LASTERR = 9;
 		
 		static String[] desc = {
 			"Unknown error has occurred",
@@ -27,6 +30,9 @@ public class CompileError implements IProblem {
 			"Unsupported operation",
 			"Import operation error",
 			"An error has occurred during parsing",
+			"Unexpected argument found",
+			"Check INCLUDE dir paths",
+			"An output error has occurred",
 		};
 
 		static String getErrorDesc(int id){

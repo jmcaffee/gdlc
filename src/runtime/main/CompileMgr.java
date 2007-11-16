@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import runtime.compiler.*;
@@ -23,165 +22,188 @@ import runtime.visitors.XmlVisitor;
  *
  */
 public class CompileMgr {
-	ASTCompilationUnit 	parseTree;
+	static CompilerParameters	config	= null;
+
 	CompilerContext		compilerContext;
-	CompilerParameters	params = null;
+	CompilerParameters	params 		= null;
+	ParseMgr			parseMgr	= null;
 	
+	/**
+	 * Constructor
+	 *
+	 */
 	public CompileMgr() {
-		parseTree = null;
 		compilerContext = new CompilerContext();
+		parseMgr = new ParseMgr();
 	}
 	
-	public void compile(CompilerParameters cp) {
-		params = cp;
-		String srcFile = params.inFile;
+	/**
+	 * getConfig
+	 * Returns the configuration (command line parameters) that the compiler was called with.
+	 * @return CompilerParameters
+	 */
+	static public CompilerParameters getConfig(){
+		if(null == CompileMgr.config){
+			CompileMgr.config = new CompilerParameters();
+		}
+		return CompileMgr.config;
+	}
+	
+	/**
+	 * setConfig
+	 * Set the configuration object.
+	 * @param cfg parameters object. Must not be null.
+	 */
+	static private void setConfig(CompilerParameters cfg){
+		if(null != cfg){
+			CompileMgr.config = cfg;
+		}
+	}
+	
+	/**
+	 * execute execute the parser/compiler
+	 * @param cp CompileParameters object containing configuration options for the compiler
+	 */
+	public void execute(CompilerParameters cp) {
+		CompileMgr.setConfig(cp);			// Set the global configuration
+		
+		String 				srcFile 	= CompileMgr.config.inFile;
+		ASTCompilationUnit 	parseTree	= null;
+		
 											// Store include dirs
-		for(String inc : params.incDirs){
+		for(String inc : CompileMgr.config.incDirs){
 			compilerContext.addIncludeDir(inc);
 		}
 		
-		Log.setVerbose(params.verbose);
+		Log.setVerbose(CompileMgr.config.verbose);
+		Log.setStatusPrefix("GDLC: ");
+		Log.setErrorPrefix("*** ");
 		
-		if(null == (parseTree = parse(srcFile))) {
-			Log.error("Parsing failed");
+		// Parse source code
+		parseMgr.configureDefaultPlugins();
+		parseMgr.execute(srcFile, compilerContext);
+		
+		if(null == (parseTree = parseMgr.getParseTree())) {
+			Log.error("Aborting compile.");
 			return;
 		}
-	    Log.status("GDLC:  Parsing completed.");
-		  
-		compileParseTree(parseTree, compilerContext);
+		
+    	if(CompileMgr.config.verboseParse){
+    		parseMgr.dumpParser();
+    	}
+
+											// Store the abstract source tree...
+		compilerContext.setRootNode(parseTree);  
+		compile(compilerContext, parseTree);			// and compile the tree.
 		 
+		
+											// Dump error and warning info.
 		if(compilerContext.hasErrors()){
-			Log.error("*** GDLC: Compile aborted with errors:");
-			Log.error(compilerContext.dumpErrors());
+			Log.error("Compile aborted with errors:");
+			Log.out(compilerContext.dumpErrors());
 		}
 		
 		if(compilerContext.hasWarnings()){
-			Log.error("*** GDLC: Compile completed with warnings:");
+			Log.error("Compile completed with warnings:");
 			compilerContext.dumpWarnings();
 		}
 
 		if(!compilerContext.hasErrors() && !compilerContext.hasWarnings()){
-			Log.error("GDLC:  Compile completed.");
+			Log.out("Compile completed.");
 		}
 		
 		if(compilerContext.hasErrors()){
 			return;
 		}
 		
-		if(this.params.generateOutput){
+		if(CompileMgr.config.generateOutput){
 			generateOutput();
 		}else{
-			Log.error("No output generated (-nooutput switch)");
+			Log.out("No output generated (-nooutput switch)");
 		}
 		
 	}
 
-	protected void generateOutput(){
-											// Determine name of output file
+
+/**
+ * generateOutput generates compiled output data
+ *
+ */
+	  protected void generateOutput(){
+		  									// Determine name of output file
 		String output = new String();
-		if(this.params.outFile.length() < 1){
+		if(CompileMgr.config.outFile.length() < 1){
 			ASTGuidelineDef gdl = compilerContext.getGuideline();
 			if(null == gdl){
-				Log.error("No guideline definitions exist to write. Use '-raw' flag to force output.");
+				Log.out("No guideline definitions exist to write. Use '-raw' flag to force output.");
 				return;
 			}
-			
+		
 			output = gdl.getName();
 		}
 		else{
-			output = this.params.outFile;
+			output = CompileMgr.config.outFile;
 		}
 		
 		if(output.length() < 1){
 			Log.error("Unable to resolve an output filename.");
 			return;
 		}
-											// Output file should not have an extension.
-		output = output.concat(".xml");		// Add XML extension to filename.
-		
-											// Write file to destination.
+					// Output file might not have an extension.
+					// Add extension if it doesn't.
+		if(!output.endsWith(".xml")){
+			output = output.concat(".xml");		// Add XML extension to filename.
+		}
+					// Write file to destination.
 		
 		if(this.writeXmlToFile(output)){
-			Log.error("XML written to file [" + output + "].");
+			Log.out("XML written to file [" + output + "].");
 		}
 		else{
 			Log.error("Errors occurred while writing XML [" + output + "].");
 		}
-
 	}
-	  private ASTCompilationUnit parse(String srcFile) {
-		  	GdlParser 			parser;
-		    ASTCompilationUnit	tree;
-		    
-		    Log.status("GDLC:  Reading from file " + srcFile + " . . .");
-		    try {
-		        parser = new GdlParser(new java.io.FileInputStream(srcFile));
-		    } 
-		    catch (java.io.FileNotFoundException e) {
-			        Log.error("GDLC:  File not found: " + srcFile + "");
-			        return null;
-			}
 
-//	        if (args.length == 0) {
-//		      Log.status("GDLC:  Reading from standard input . . .");
-//		      parser = new GdlParser(System.in);
-//		    } else if (args.length == 1) {
-//		      Log.status("GDLC:  Reading from file " + args[0] + " . . .");
-//		      try {
-//		        parser = new GdlParser(new java.io.FileInputStream(args[0]));
-//		      } catch (java.io.FileNotFoundException e) {
-//		        Log.error("GDLC:  File not found: " + args[0] + "");
-//		        return null;
-//		      }
-//		    } else {
-//		      System.out.println("GDLC:  Usage is one of:");
-//		      System.out.println("         java GdlCompiler < inputfile");
-//		      System.out.println("OR");
-//		      System.out.println("         java GdlCompiler inputfile");
-//		      return null;
-//		    }
-		    try {
-		    	tree = parser.CompilationUnit();
-		    	Log.status("GDLC:  Guideline parsed successfully.");
-		    	if(params.verboseParse){
-		    		parser.dump();
-		    	}
-		    } catch (ParseException e) {
-		      Log.error("GDLC:  Encountered errors during parsing.");
-		      Log.error(e.toString());
-		      return null;
-		    }
-		    
-		    parseTree = tree;		// Store the tree for later retrieval
-		    
-		    return tree;
-	  }
-
+	  
 	  public ASTCompilationUnit getParseTree(){
-		  return parseTree;
+		  return compilerContext.getRootNode();
 	  }
 	  
 	  
-	  public IProgramContext getContext(){
+	  public CompilerContext getContext(){
 		  return compilerContext;
 	  }
 	  
 	  
-	  private void compileParseTree(ASTCompilationUnit tree, IProgramContext ctx) {
-	      Log.status("GDLC:  Compiling...");
+	  private void compile(IProgramContext ctx, ASTCompilationUnit tree) {
+	      Log.status("Compiling...");
 
-	      if(tree == null){
-		      Log.error("GDLC:  Compile failed: parse tree is empty.");
-		      return;
-	      }
+//	      if(tree == null){
+//		      Log.error("Compile failed: parse tree is empty.");
+//		      return;
+//	      }
 
-	      GdlCompiler compiler = new GdlCompiler(tree);
+	      GdlCompiler compiler = new GdlCompiler();
+	      compiler.configureDefaultPlugins();
+	      
+//	      ArrayList<IGdlcPlugin> compilePlugins = new ArrayList<IGdlcPlugin>(); 
+//	      compilePlugins.add(new VariablesPlugin());
+//	      compilePlugins.add(new LookupImportsPlugin());
+//	      compilePlugins.add(new LookupsPlugin());
+//	      compilePlugins.add(new PowerLookupImportsPlugin());
+//	      compilePlugins.add(new RuleDefsPlugin());
+//	      compilePlugins.add(new RulesetDefsPlugin());
+//	      compilePlugins.add(new RefResolverPlugin());
+//	      compilePlugins.add(new GuidelinesPlugin());
+//	      compilePlugins.add(new AliasesPlugin());
+//
+//	      compiler.configurePlugins("compile", compilePlugins);
 	      
 	      try {
-	    	  compiler.compile(ctx);
+	    	  compiler.compile(ctx, tree);
 
 	      } catch (CompileException e) {
-			      Log.error("GDLC:  Encountered errors during compilation.");
+			      Log.error("Encountered errors during compilation.");
 			      Log.error(e.toString());
 			      return;
 	      }
@@ -240,6 +262,12 @@ public class CompileMgr {
 			
 			// Create XmlVisitor
 			XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
+			
+			// Turn on or off DataType attribute generation.
+			// TODO Remove code. This is now handled by static config object.
+//			xmlVisitor.generateDpmDataType(CompileMgr.config.applyDpmDataType );
+//			xmlVisitor.generatePpmDataType(CompileMgr.config.applyPpmDataType );
+			
 			XmlElem	gdlRoot = new XmlElem("GuidelineRoot");
 			
 			// Run the visitor against the guideline node.

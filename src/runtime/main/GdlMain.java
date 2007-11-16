@@ -23,7 +23,7 @@ public class GdlMain {
 		  cp.process(args);
 		  if(cp.isValid){
 			  CompileMgr mgr = new CompileMgr();
-			  mgr.compile(cp);
+			  mgr.execute(cp);
 		  }
 	  }
 
