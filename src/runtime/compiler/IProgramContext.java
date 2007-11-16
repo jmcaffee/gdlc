@@ -4,7 +4,7 @@ import runtime.main.IProblem;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTRuleDef;
  
-public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncludeDirs {
+public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncludeDirs, IFunctionContext {
 
 	public abstract void 				setRootNode(ASTCompilationUnit cuRoot);
 
@@ -37,7 +37,6 @@ public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncl
 	public abstract IVariable			getVar(VarDpm var);
 
 	public abstract boolean 			containsVar(VarDpm var);
-
 
 
 }
