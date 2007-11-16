@@ -3,192 +3,119 @@
  */
 package runtime.compiler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import runtime.main.Log;
 import runtime.parser.*;
-import runtime.visitors.AliasVisitor;
-import runtime.visitors.GuidelineVisitor;
-import runtime.visitors.ImportPowerLookupVisitor;
-import runtime.visitors.ImportVisitor;
-import runtime.visitors.IncludeVisitor;
-import runtime.visitors.LookupVisitor;
-import runtime.visitors.ResolveRefsVisitor;
-import runtime.visitors.RuleVisitor;
-import runtime.visitors.RulesetVisitor;
-import runtime.visitors.VariableVisitor;
+import runtime.plugins.AliasesPlugin;
+import runtime.plugins.FunctionDefsPlugin;
+import runtime.plugins.GuidelinesPlugin;
+import runtime.plugins.IGdlcPlugin;
+import runtime.plugins.LookupImportsPlugin;
+import runtime.plugins.LookupsPlugin;
+import runtime.plugins.PowerLookupImportsPlugin;
+import runtime.plugins.RefResolverPlugin;
+import runtime.plugins.RuleDefsPlugin;
+import runtime.plugins.RulesetDefsPlugin;
+import runtime.plugins.VariablesPlugin;
 
 /**
  * @author killer
  *
  */
 public class GdlCompiler {
-	ASTCompilationUnit parseTree;
+	HashMap<String, ArrayList<IGdlcPlugin>> compilePlugins = new HashMap<String, ArrayList<IGdlcPlugin>>();
 
-/**
- * Constructor
- * @param parseTree
- */
-	public GdlCompiler( ASTCompilationUnit parseTree ) {
-		this.parseTree = parseTree;
-	}
-	
-/**
- * compile
- * @param ctx
- * @return
- * @throws CompileException
- */	
-	public ASTCompilationUnit compile(IProgramContext ctx) throws CompileException {
-		Log.status("Start compile");
-		Log.info("Root node has " + parseTree.jjtGetNumChildren() + " children.");
-
-		compileIncludes(ctx);
-		compileVariables(ctx);
-		compileLookupImports(ctx);
-		compileLookups(ctx);
-		compilePowerLookupImports(ctx);
-		compileRuleDefs(ctx);
-		compileRulesetDefs(ctx);
-		
-		resolveRefs(ctx);
-
-		compileGuidelines(ctx);
-		
-		compileAliases((CompilerContext)ctx);
-
-		return null;
-	}
-	
-/**
- * compileIncludes
- * @param ctx
- */
-	void compileIncludes(IProgramContext ctx) {
-		Log.status("Compiling Includes");
-		IncludeVisitor visitor = new IncludeVisitor();
-		IncludeContext incCtx = new IncludeContext(ctx);
-		
-		parseTree.childrenAccept(visitor, incCtx);
-		
-		ASTCompilationUnit cu;
-		GdlCompiler incCompiler;
-		
-		while(!incCtx.isEmpty()){
-			cu = incCtx.removeInclude();
-			
-			incCompiler = new GdlCompiler(cu);
-			try {
-				incCompiler.compile(ctx);
-			} catch (CompileException e) {
-				Log.error("GDLC:  Encountered errors during compilation.");
-				Log.error(e.toString());
-				return;
-			}
-		}
-	}
-
-/**
- * compileLookupImports
- * @param ctx
- */	
-	void compileLookupImports(IProgramContext ctx) {
-		Log.status("Compiling Lookup Imports");
-		ImportVisitor visitor = new ImportVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
-		
-	}
-
-/**
- * compilePowerLookupImports
- * @param ctx
- */	
-	void compilePowerLookupImports(IProgramContext ctx) {
-		Log.status("Compiling PowerLookup Imports");
-		ImportPowerLookupVisitor visitor = new ImportPowerLookupVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
-		
-	}
-
-/**
- * compileVariables
- * @param ctx
- */	
-	void compileVariables(IProgramContext ctx) {
-		Log.status("Compiling Variables");
-		VariableVisitor visitor = new VariableVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
-		
-	}
-
-/**
- * compileLookups
- * @param ctx
- */	
-	void compileLookups(IProgramContext ctx) {
-		Log.status("Compiling Lookups");
-		LookupVisitor visitor = new LookupVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
-		
-	}
-
-/**
- * compileRuleDefs
- * @param ctx
- */	
-	void compileRuleDefs(IProgramContext ctx) {
-		Log.status("Compiling Rule definitions");
-		RuleVisitor visitor = new RuleVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
-		
-	}
-
-/**
- * compileRulesetDefs
- * @param ctx
- */	
-	void compileRulesetDefs(IProgramContext ctx) {
-		Log.status("Compiling Ruleset definitions");
-		RulesetVisitor visitor = new RulesetVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
-		
-	}
-
-/**
- * resolveRefs
- * @param ctx
- */	
-	void resolveRefs(IProgramContext ctx){
-		Log.status("Resolving references");
-		ResolveRefsVisitor visitor = new ResolveRefsVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
-	}
-
-/**
- * compileGuidelines
- * @param ctx
- */	
-	void compileGuidelines(IGuidelineContext ctx){
-		Log.status("Compiling Guidelines");
-		GuidelineVisitor visitor = new GuidelineVisitor();
-		
-		parseTree.childrenAccept(visitor, ctx);
+	/**
+	 * Constructor
+	 * @param parseTree
+	 */
+	public GdlCompiler() {
 	}
 
 	/**
-	 * compileAliases
-	 * @param ctx
+	 * configurePlugins configure a sections plugin list. Plugins are processed in order.
+	 * @param section PRECOMPILE, COMPILE, POSTCOMPILE. Case is irrelevent.
+	 * @param plugins ArrayList of plugins for a section.
+	 */
+	public void configurePlugins(String section, ArrayList<IGdlcPlugin> plugins){
+		compilePlugins.put(section.toUpperCase(), plugins);
+	}
+	
+	/**
+	 * configureDefaultPlugins builds a default list of plugins for use by the compiler.
+	 *
+	 */
+	public void configureDefaultPlugins(){
+	      ArrayList<IGdlcPlugin> compilePlugins = new ArrayList<IGdlcPlugin>(); 
+	      
+	      compilePlugins.add(new VariablesPlugin());
+	      compilePlugins.add(new LookupImportsPlugin());
+	      compilePlugins.add(new LookupsPlugin());
+	      compilePlugins.add(new PowerLookupImportsPlugin()); //
+	      compilePlugins.add(new RuleDefsPlugin());
+	      compilePlugins.add(new RulesetDefsPlugin());
+	      compilePlugins.add(new RefResolverPlugin());
+	      compilePlugins.add(new GuidelinesPlugin());
+	      compilePlugins.add(new AliasesPlugin());
+
+	      this.configurePlugins("compile", compilePlugins);
+
+	}
+	
+	/**
+	 * compile compile the provided abstract source tree
+	 * @param ctx compiler context object
+	 * @return the resulting abstract source tree
+	 * @throws CompileException
 	 */	
-		void compileAliases(CompilerContext ctx){
-			Log.status("Compiling Aliases");
-			AliasVisitor visitor = new AliasVisitor();
-			
-			parseTree.childrenAccept(visitor, ctx);
+	public ASTCompilationUnit compile(IProgramContext ctx, ASTCompilationUnit tree) throws CompileException {
+		Log.status("Start compile");
+		Log.info("Current compilation unit has " + tree.jjtGetNumChildren() + " children.");
+
+		String[] sections = {	new String("PRECOMPILE"),
+								new String("COMPILE"),
+								new String("POSTCOMPILE"),
+							};
+
+		for(String section : sections){
+			executePluginSection(section, ctx, tree);
 		}
 
-}
+		return tree;
+	}
+	
+	/**
+	 * executePluginSection execute all plugins for a particular section.
+	 * @param section PRECOMPILE, COMPILE, POSTCOMPILE
+	 * @param ctx Compiler context object
+	 * @param tree tree to parse
+	 */
+	private void executePluginSection(String section, IProgramContext ctx, ASTCompilationUnit tree){
+		ArrayList<IGdlcPlugin> plugins = compilePlugins.get(section);
+		
+		if(null != plugins){
+			for(IGdlcPlugin plugin : plugins){
+				
+				executePlugin(plugin, ctx, tree);
+			}
+		}
+	}
+	
+	/**
+	 * executePlugin execute a plugin against the abstract tree
+	 * @param plugin plugin to execute
+	 * @param ctx compiler context object
+	 * @param tree tree to execute plugin against
+	 */
+	private void executePlugin(IGdlcPlugin plugin, IProgramContext ctx, ASTCompilationUnit tree){
+		if(null != plugin){
+			Log.status("Plugin starting ["+plugin.getName()+"]");
+				plugin.execute(ctx, tree);
+			Log.status("Plugin terminating ["+plugin.getName()+"]");
+		}
+	}
+	
+
+}	// GdlCompiler
