@@ -9,8 +9,9 @@ import java.util.Map;
 
 import runtime.compiler.CompileException;
 import runtime.compiler.PowerLookupData;
+import runtime.main.Log;
 
-import com.Ostermiller.util.ExcelCSVParser;
+import com.Ostermiller.util.CSVParser;
 
 public class CsvPowerLookupFile {
 
@@ -24,7 +25,7 @@ public class CsvPowerLookupFile {
  */	
 	public void parse(String filepath) throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(filepath));
-		data = ExcelCSVParser.parse(in);
+		data = CSVParser.parse(in);
 	}
 	
 /**
@@ -192,18 +193,21 @@ public class CsvPowerLookupFile {
  */
 	public void dumpData(){
 		if(null == data){
-			System.out.println("CsvPowerLookupFile: No data to dump.");
+			Log.info("CsvPowerLookupFile: No data to dump.");
 			return;
 		}
-			
+		
+		StringBuffer rowInfo = new StringBuffer();
 		for(String[] row : data){
 			for(String col : row){
-				System.out.print(col + "\t");
+				rowInfo.append(col + "\t");
 			}
-			System.out.println();
+			Log.info(rowInfo.toString());
+			rowInfo.setLength(0);
+			//Log.info("");
 		}
 		
-		System.out.println("<<<EOD>>>");
+		Log.info("<<<EOD>>>");
 
 	}
 	

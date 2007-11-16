@@ -9,7 +9,7 @@ import java.util.Map;
 import runtime.compiler.CompileException;
 import runtime.compiler.LookupData;
 
-import com.Ostermiller.util.ExcelCSVParser;
+import com.Ostermiller.util.CSVParser;
 
 public class CsvLookupFile {
 	String [][] data = null;
@@ -22,7 +22,7 @@ public class CsvLookupFile {
  */	
 	public void parse(String filepath) throws FileNotFoundException, IOException {
 		BufferedReader in = new BufferedReader(new FileReader(filepath));
-		data = ExcelCSVParser.parse(in);
+		data = CSVParser.parse(in);
 	}
 	
 /**
@@ -189,7 +189,9 @@ public class CsvLookupFile {
 			if(index++ < startIndex){
 				continue;				// Data should not start yet.
 			}
-			lkData.colMinMaxs.add(lkData.new MinMax(min, ""));
+			if(min.length() > 0){
+				lkData.colMinMaxs.add(lkData.new MinMax(min, ""));
+			}
 		}
 	}
 
@@ -210,7 +212,9 @@ public class CsvLookupFile {
 			if(index++ < startIndex){
 				continue;					// Data should not start yet.
 			}
-			lkData.colMinMaxs.get(minmaxIndex++).setMax(max);
+			if(max.length() > 0){
+				lkData.colMinMaxs.get(minmaxIndex++).setMax(max);
+			}
 		}
 	}
 
@@ -226,6 +230,7 @@ public class CsvLookupFile {
 		
 		int startIndex = 2;							// Data should start at index 2.
 		int index = 0;
+		String tmpVal;
 		for(String value : row){
 			if(index++ < startIndex){
 				continue;							// Data should not start yet.
@@ -238,7 +243,10 @@ public class CsvLookupFile {
 				lkData.rowMinMaxs.get(lkData.rowMinMaxs.size()-1).setMax(value);
 				continue;
 			}
-			lkData.values.add(value.trim());
+			tmpVal = value.trim();
+			if(tmpVal.length() > 0){		// Don't add the value if it is empty.
+				lkData.values.add(tmpVal);
+			}
 		}
 		
 	}
