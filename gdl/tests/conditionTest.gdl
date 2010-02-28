@@ -14,8 +14,9 @@ ppm	numeric	app     ppmVar;
 rule SimpleConditionRule1()							// Define the rule.
 	if ( ppmVar == 1 )	
 	then
-		condition(asset, docs, "Test condition message.");
-		condition(asset, docs, "Test another condition message.");
+		condition(asset, docs, 		"Test PriorTo docs condition message.");
+		condition(asset, funding, 	"Test PriorTo funding condition message.");
+		condition(asset, approval, 	"Test PriorTo approval condition message.");
 	end
 end
 
