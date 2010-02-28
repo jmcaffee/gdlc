@@ -1,256 +1,173 @@
-#############################################################################
-#
-# RAKEFILE.rb
-#
-# GDLC distribution makefile
-#
-#############################################################################
+##############################################################################
+# File:: rakefile.rb
+# Purpose:: Generate Java code using JavaCC grammar file.
+# 
+# Author::    Jeff McAffee 02/26/2010
+# Copyright:: Copyright (c) 2010 kTech Systems LLC. All rights reserved.
+# Website::   http://ktechsystems.com
+##############################################################################
 
-require 'ZipFile.rb'
+require 'rake'
+require 'rake/clean'
+require 'rakeUtils.rb'
 
-DEV       = "/sandbox/net.bd.gdlc"
-BINDIR    = "dist/gdlc/bin"
-BUILDDIR  = "build"
-MISCDIR   = "misc"
-JARDIR    = "jars"
-DOCSDIR   = "docs"
-GDLJAR    = "gdlc.jar"
+
+#### Directories
+BUILD_DIR         = "./build"
+
+SRC_DIR           = "src"
+SRC_PARSER_DIR    = "#{SRC_DIR}/runtime/parser"
+
+BACKUP_DIR        = "backup"
+BACKUP_PARSER_DIR = "#{BACKUP_DIR}/runtime/parser"
+
+LIBS_DIR          = "libs"
+MISC_DIR          = "misc"
+DIST_DIR          = "./dist"
+
+# Subdirs
+GRAMMAR_DIR         = "grammar"
+GRAMMAR_BUILD_DIR   = "#{GRAMMAR_DIR}/build"
+
+
+#### Cleanup tasks
+CLEAN.include("#{BUILD_DIR}/**/*.*")
+CLEAN.include("#{DIST_DIR}/**/*.*")
+CLEAN.include("#{SRC_PARSER_DIR}/**/*.*")
+CLOBBER.include("#{BUILD_DIR}")
+CLOBBER.include("#{DIST_DIR}")
+CLOBBER.include("#{SRC_PARSER_DIR}")
+
+
+#### Directory creation tasks
+directory BUILD_DIR
+directory DIST_DIR
+directory BACKUP_DIR
+directory BACKUP_PARSER_DIR
+directory SRC_PARSER_DIR
+
+#### Imports
+# Note: Rake loads imports only after this rakefile has been completely loaded.
+import "#{GRAMMAR_DIR}/grammar.rake"
+
+#######################################
+
+#task :default => [:clean, :generateParser]
+task :default do
+  puts "default task does nothing... yet"
+end
 
 
 #######################################
 
-desc "- Create GDLC distribution"
+task :init => [SRC_PARSER_DIR, BUILD_DIR, DIST_DIR]
 
-task :dist => [:createDirs, :jar, :copyToBin, :copyToRoot, :docs, :zip] do
-  puts "dist created"
+#######################################
+
+desc "Build GDLC application distribution"
+
+task :dist => [:init, :build, :jar, DIST_DIR, :copyLibsToDist] do
+  cp_r("#{BUILD_DIR}/gdlc.jar", "#{DIST_DIR}")
+  
+  puts "GDLC distro built"
 end
 
 #######################################
 
-desc "- Create blank directories if they don't exist"
+desc "Build GDLC application"
 
-task :createDirs do
-  # The folders I need to create
-  shared_folders = ["dist","dist/gdlc","dist/gdlc/bin","dist/gdlc/docs"]
+task :build => [:init, :buildGrammar, :compile] do
+  puts "Application compiled"
+end
+
+#######################################
+
+task :buildGrammar => [:init, "grammar:generate", 
+                      :clean_backup,
+                      "grammar:backup", 
+                      "grammar:copyToAppSrc",
+                      "grammar:replaceCustomSrc"] do
+  puts "Grammar source files built"
+end
+
+#######################################
+
+desc "compile all java src files"
+
+task :compile => [:init] do
+  cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar").gsub(/\//, "\\")
+  cvsjar = "#{LIBS_DIR}/ostermillerutils_1_06_01.jar"
+
+  classpath = "-classpath #{cvsjar}"
   
-  for folder in shared_folders
-    
-    # Check to see if it exists
-    if File.exists?(folder)
-      puts "#{folder} exists"
-    else
-      puts "#{folder} doesn't exist: creating"
-      Dir.mkdir "#{folder}"
-    end
-    
+  options = "#{classpath}"
+  options << " -sourcepath #{SRC_DIR}"
+  options << " -d #{BUILD_DIR}"           # Destination dir
+  options << " -nowarn"                   # Don't show compile warnings
+  options << " -O"                        # Optimize for speed
+  #options << " -g"                        # Include debugging info
+  #options << " -Xlint:unchecked"          # Run lint for unchecked warnings
+
+  sourceFiles = ""
+  srcFiles = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
+  srcFiles.each do |f|
+    sourceFiles << " #{f}"
   end
-end
-
-task :createDirsBAD do
-  # The folders I need to create
-  directory "dist/gdlc/bin"
-  directory "dist/gdlc/docs"
   
-end
-
-
-#######################################
-
-task :zip => ['gdlc.zip'] do
-  puts "Files archived"
-end
-
-#######################################
-
-task :generate do
-  puts "source generated"
-end
-
-#######################################
-
-task :compile do
-  puts "source compiled"
-end
-
-#######################################
-
-#task :copyToBin => ["#{BINDIR}/ostermillerutils_1_06_01.jar", "#{BINDIR}/gdlc.jar"] do
-task :copyToBin => [:refreshJars] do
-  puts "files copied to BIN"
-end
-
-#######################################
-
-task :copyToRoot => ['dist/gdlc/install.rb'] do
-  puts "files copied to root"
-end
-
-#######################################
-
-desc "- Delete all build files"
-
-task :clean do
-  shared_folders = ["dist/gdlc/docs","dist/gdlc/bin","dist/gdlc","dist"]
-  
-  for folder in shared_folders
-    
-    # Check to see if it exists
-    if File.exists?(folder)
-      puts "#{folder} exists: deleting files"
-      rm Dir.glob("#{folder}/*.*")
-    else
-      puts "#{folder} doesn't exist"
-    end
-    
-  end
-  
-  JARFILE = "#{JARDIR}/#{GDLJAR}"
-  if File.exists?(JARFILE)
-    puts "#{JARFILE} exists: deleting file"
-    rm "#{JARFILE}"
-  else
-    puts "#{JARFILE} doesn't exist"
-  end
-    
+  output = `javac #{options} #{sourceFiles}`
+  puts output
   
 end
 
 #######################################
 
-desc "- Delete all build directories"
+desc "generate application jar file"
 
-task :clobber do
-  shared_folders = ["dist"]
+task :jar => [:compile] do
+  target    = "gdlc.jar"
+  manifest  = "../#{MISC_DIR}/manifest.mf"
   
-  for folder in shared_folders
-    
-    # Check to see if it exists
-    if File.exists?(folder)
-      puts "#{folder} exists: deleting"
-      remove_dir(folder)
-      #Dir.rmdir "#{folder}"
-    else
-      puts "#{folder} doesn't exist"
-    end
-    
-  end
-end
-
-#######################################
-
-file 'dist/gdlc/install.rb' => 'misc/install.rb' do |t|
-  cp("#{MISCDIR}/install.rb", t.name )
-end
-
-
-
-#######################################
-
-file 'dist/gdlc/docs/GdlGrammar.html' => ['dist/gdlc/docs/GdlGrammar.jj', :grammarHtml] do |t|
-  
-end
-
-
-#######################################
-
-file 'dist/gdlc/docs/GdlGrammar.jj'  => 'build/runtime/parser/GdlGrammar.jj' do |t|
-  cp(t.prerequisites[0], t.name )
-end
-
-#######################################
-
-file 'dist/gdlc/docs/userManual.html' => ['docs/userManual.html'] do |t|
-  cp(t.prerequisites[0], t.name )
-#  cp ("#{DOCSDIR}/userManual.html" t.name) 
-end
-
-#######################################
-
-file 'dist/gdlc/docs/style.css' => ['docs/style.css'] do |t|
-  cp(t.prerequisites[0], t.name )
-end
-
-#######################################
-
-file 'gdlc.zip' do |t|
-  zip = ZipFile.new(t.name)
-  puts "Zipper created for archive [#{t.name}]"
-  zip.addToArchive("dist", "gdlc")
-end
-
-#######################################
-
-task :refreshJars
-directory BINDIR
-
-#######################################
-
-def make_jar_copy_task(jarname)
-  stagejar = "#{BINDIR}/#{jarname}.jar"
-  devjar   = "jars/#{jarname}.jar"
-
-  task :refreshJars => [ stagejar ]
-
-  file stagejar => [ devjar, BINDIR ] do
-    cp devjar, stagejar
-  end
-end
-
-#######################################
-
-make_jar_copy_task("ostermillerutils_1_06_01")
-
-#######################################
-
-make_jar_copy_task("gdlc")
-
-#######################################
-
-desc "- Create GDLC jar file"
-
-task :jar => [:generate, :compile] do
-  cd('build') {|dir|                                            # Everything is relative to the build dir (where class files are coming from).
-    `jar -cvfm "../#{JARDIR}/#{GDLJAR}" "../#{MISCDIR}/manifest.mf" "runtime"`
+  cd("#{BUILD_DIR}") do |dir| # Everything is relative to the build dir (where class files are coming from).
+    `jar -cvfm "#{target}" "#{manifest}" "runtime"`
     # jar -cvfm jars/gdlc.zip misc/manifest.mf -C build .     # '-C' flag works from the command line but not here.
-  }
+  end
+  
+end
+
+
+#######################################
+
+task :copyLibsToDist do
+  FileList.new(Dir.glob("#{LIBS_DIR}/**.*")).each do |f|
+    cp_r(f, "#{DIST_DIR}")
+  end
+  puts "Libraries copied to #{DIST_DIR}."
 end
 
 #######################################
 
-desc "- Deploy GDLC to tools dir"
+desc "clean all files in backup dir"
 
-task :deploy => [:dist] do
-  distSrc = "dist/gdlc"
-  dest    = "C:/tools"
-#  batDest = "C:/batch"
-  
-#  scriptSrc  = "#{dest}/gdlc/gdlc.cmd"
-#  scriptDest = "#{batDest}/gdlc.cmd"
-  
-  
-  cp_r distSrc, dest
-  #cp scriptSrc, scriptDest
+task :clean_backup do
+  if( File.directory?(BACKUP_DIR) )
+    FileList.new(Dir.glob("#{BACKUP_DIR}/**.*")).each do |f|
+      rm_f(f)
+    end
+    puts "Backup directory cleaned"
+  end
 end
 
 #######################################
 
-desc "- Create compiler documentation"
+desc "clobber backup dir"
 
-task :docs => [:createDirs, 'dist/gdlc/docs/GdlGrammar.html', 'dist/gdlc/docs/userManual.html','dist/gdlc/docs/style.css'] do
-  puts "Documents created"
+task :clobber_backup do
+  if( File.directory?(BACKUP_DIR) )
+    rm_rf(BACKUP_DIR)
+    puts "Backup directory clobbered"
+  end
+
 end
 
 #######################################
 
-task :grammarHtml do
-  srcName     = "GdlGrammar"
-  src         = "#{srcName}.jj"
-  docsDir     = "dist/gdlc/docs"
-
-  jjdoc       = "m:/javacc/bin/jjdoc.bat"
-  
-  cd(docsDir) {|dir|                                            
-    system(jjdoc, src)
-  }
-  
-end

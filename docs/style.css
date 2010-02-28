@@ -1,0 +1,154 @@
+body
+{
+	background-color: #DDD;
+	color: #000000;
+	margin: 0;
+	padding: 0;
+	font-family: verdana, "lucida console", sans-serif;
+	font-size: 0.9em;
+}
+
+#header
+{
+/*
+*/
+	border: solid #AAA 1px;
+	background-color: #EEE;
+	padding-left: 1em;
+
+}
+
+#nav
+{
+/*
+	border: solid green 1px;
+*/
+	min-width: 80px;
+	width: 18%;
+	float: left;
+
+}
+
+#main
+{
+/*
+	border-left: dotted blue 1px;
+*/
+	border: solid #AAA 1px;
+	background-color: #FFF;
+	min-width: 670px;
+	width: 75%;
+	float: left;
+	margin-left: 1em;
+	margin-top: .5em;
+	padding: .5em 1em 1em 1em;
+
+}
+
+#footer
+{
+/*
+	border: solid red 1px;
+*/
+	clear: both;
+	text-align: center;
+	margin-top: 2em;
+
+}
+
+#nav ul
+{
+	list-style-type: none;
+	padding-left: 0;
+	margin-left: 0;
+	font-weight: bold;
+	font-size: 90%;
+}
+
+#nav li
+{
+	padding-left: .25em;
+	padding-right: .25em;
+}
+
+#main h2
+{
+	font-variant: small-caps;
+	border-bottom: 1px dotted black;
+}
+
+.cvlinks h4
+{
+	margin-top: .5em;
+	margin-bottom: 0;
+}
+
+#footer .footer-text
+{
+	border-top: 1px dotted #AAA;
+	padding-left: 2em;
+	padding-right: 2em;
+	padding-top: .25em;
+	font-size: 75%;
+}
+
+.block {
+	border: 1px solid #EFEFEF;
+	float: left;
+	margin: 0;
+	padding: 10px;
+	height: 90%;
+}
+
+.keyword {
+	font-weight: bold;
+	color: blue;
+}
+
+.exEm {
+	font-weight: bold;
+}
+
+.example {
+	border: 1px solid #DDDDDD;
+	padding: 10px;
+	max-width: 80%;
+	font-family: "Courier", verdana, "lucida console", sans-serif;
+	margin-left: 2em;
+	background-color: #EEEEEE;
+
+}
+
+.section {
+	background-color: #EAEAEA;
+	padding: 10px;
+	margin-top: 10px;
+	
+}
+
+.subsection {
+	background-color: #FFFFFF;
+	padding: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-top: 5px;
+}
+
+.section h2{
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.subsection h2{
+	font-weight: bold;
+	font-size: 0.8em;
+}
+
+.desc {
+	padding-left: 10px;
+	font-size
+}
+
+table.keywordTable td{
+width: 200px;
+}

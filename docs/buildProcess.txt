@@ -1,0 +1,33 @@
+GDLC BUILD PROCESS
+=====================================
+
+This document decribes the build process for creating the 
+Guideline Compiler (GDLC).
+
+
+Overview
+--------
+
+Generate JavaCC grammar file (.jj) and Java source files based on 
+the JJTree grammar file (.jjt).
+
+Using JavaCC, generate Token Manager files.
+
+Backup generated files because we are going to delete some of them; these 
+files will be replaced with customized versions.
+
+Delete files to be customized.
+
+Copy all generated parser files into the application's source tree.
+
+Build the application.
+
+
+Generating JavaCC grammar file
+------------------------------
+
+JJTree is used to generate the JavaCC grammar file.
+JJTree options are set within the .jjt file so there is no need to set any
+options other than the output directory.
+
+
