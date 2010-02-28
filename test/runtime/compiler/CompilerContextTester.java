@@ -38,9 +38,9 @@ public class CompilerContextTester {
 
 	@Test
 	public void testCompileArgs() {
-		String incDir1 = "/Ir:/sandbox/net.bd.gdlc/gdl";
-		String incDir2 = "/Ir:/sandbox/net.bd.gdlc/gdl/tests";
-		String args[] = {new String("r:\\sandbox\\net.bd.gdlc\\gdl\\tests\\compileTest.gdl"),
+		String incDir1 = "/Ir:/tools/java/com.ktechsystems.gdlc/gdl";
+		String incDir2 = "/Ir:/tools/java/com.ktechsystems.gdlc/gdl/tests";
+		String args[] = {new String("r:\\tools\\java\\com.ktechsystems.gdlc\\gdl\\tests\\compileTest.gdl"),
 						incDir1,};
 		this.cp.process(args);
 

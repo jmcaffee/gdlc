@@ -12,8 +12,11 @@ import runtime.compiler.IErrorContext;
 
 public class TestHelper {
 
+	public String rootDir;
+	
 	public TestHelper() {
 		super();
+		rootDir = "r:/tools/java/com.ktechsystems.gdlc";
 	}
 
 	/**

@@ -30,10 +30,10 @@ import runtime.helpers.TestHelper;
  */
 public class CompileMgrTester extends TestHelper {
 	CompilerParameters 	cp 			= null;
-	String				TESTDIR		= "r:/sandbox/net.bd.gdlc/gdl/tests";
-	String 				OUTPUTDIR	= "r:/sandbox/net.bd.gdlc/gdl/tests/output";
-	String 				EXPECTED	= "r:/sandbox/net.bd.gdlc/gdl/tests/expected";
-	String 				LOOKUPS		= "r:/sandbox/net.bd.gdlc/gdl/tests/lookups";
+	String				TESTDIR		= rootDir + "/gdl/tests";
+	String 				OUTPUTDIR	= rootDir + "/gdl/tests/output";
+	String 				EXPECTED	= rootDir + "/gdl/tests/expected";
+	String 				LOOKUPS		= rootDir + "/gdl/tests/lookups";
 
 	/**
 	 * writeXmlToFile - helper function - writes xml output file to disk
@@ -783,7 +783,7 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
-		assertIfContextErrorNotExist(mgr.getContext(),"r:\\sandbox\\net.bd.gdlc\\gdl\\tests\\badIncludeFile.gdl"); 
+		assertIfContextErrorNotExist(mgr.getContext(),"r:\\tools\\java\\com.ktechsystems.gdlc\\gdl\\tests\\badIncludeFile.gdl"); 
 
 		writeXmlToFile(mgr, outFile);
 		
