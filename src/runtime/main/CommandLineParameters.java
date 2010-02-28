@@ -58,6 +58,10 @@ public class CommandLineParameters {
 		
 	}
 	
+	public void version(){
+		
+	}
+	
 	protected void processSwitches(){
 		
 	}

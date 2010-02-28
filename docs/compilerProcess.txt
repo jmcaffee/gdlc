@@ -1,0 +1,22 @@
+GDLC COMPILER PROCESS
+=====================================
+
+This document decribes how the Guideline Compiler (GDLC) works.
+
+
+Overview
+--------
+
+There are three basic steps to the process:
+
+	1. 	Parse the input file and turn the GDL code into an 
+		Abstract Symbol Tree (AST).
+		
+	2. 	Walk the AST and compile it into objects (variables, rules, rulesets, 
+		lookups, guideline, etc)
+		
+	3.	Walk the compiled guideline and output the objects as XML.
+
+Much of the heavy lifting is done through the use of 'plugins'. Plugins are
+used to help with modularity and code re-use.
+

@@ -121,6 +121,35 @@ end
 
 #######################################
 
+desc "compile each src file individually"
+
+task :compile_each => [:init] do
+  cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar").gsub(/\//, "\\")
+  cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar")
+  cvsjar = "#{LIBS_DIR}/ostermillerutils_1_06_01.jar"
+
+  classpath = "-classpath #{cvsjar}"
+  
+  options = "#{classpath}"
+  options << " -sourcepath ./#{SRC_DIR}"
+  options << " -d #{BUILD_DIR}"           # Destination dir
+  options << " -nowarn"                   # Don't show compile warnings
+  options << " -O"                        # Optimize for speed
+  #options << " -g"                        # Include debugging info
+  #options << " -Xlint:unchecked"          # Run lint for unchecked warnings
+
+  sourceFiles = ""
+  srcFiles = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
+  srcFiles.each do |f|
+    puts "Compiling: #{f}"
+    output = `javac #{options} #{f}`
+    puts output
+  end
+    
+end
+
+#######################################
+
 desc "generate application jar file"
 
 task :jar => [:compile] do

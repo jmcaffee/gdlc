@@ -10,15 +10,21 @@ Overview
 
 Generate JavaCC grammar file (.jj) and Java source files based on 
 the JJTree grammar file (.jjt).
+	Grammar source files are generated in #{basedir}/grammar/build
 
-Using JavaCC, generate Token Manager files.
+Using JavaCC, generate Token Manager files (in #{basedir}/grammar/build)
 
-Backup generated files because we are going to delete some of them; these 
-files will be replaced with customized versions.
-
-Delete files to be customized.
-
+Backup the old (generated) files located in the application source tree.
+	Backed up to #{basedir}/backup/src/runtime/parser
+	
 Copy all generated parser files into the application's source tree.
+	#{basedir}/src/runtime/parser
+
+Replace generated files with customized versions of the files.
+	Delete files to be customized.
+	Copy custom versions to application source tree.
+	Custom files are located at #{basedir}/grammar/src and are copied
+	to #{basedir}/src/runtime/parser
 
 Build the application.
 

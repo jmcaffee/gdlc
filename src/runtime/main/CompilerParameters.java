@@ -5,6 +5,7 @@ package runtime.main;
 
 import java.util.ArrayList;
 
+
 /**
  * @author killer
  *
@@ -43,6 +44,7 @@ public class CompilerParameters extends CommandLineParameters {
 		System.out.println();
 		System.out.println("   --switches--");
 		System.out.println("	-h, -help     show usage instructions.");
+		System.out.println("	-version      display the application version.");
 		System.out.println("	-no,-nooutput do not generate output.");
 		System.out.println("	-r, -raw      force output of all rules/sets/lookups.");
 		System.out.println("	              outFile is a required parameter when -raw is used.");
@@ -60,6 +62,15 @@ public class CompilerParameters extends CommandLineParameters {
 		System.out.println();
 		System.out.println("======================================================================");
 		System.out.println();
+		System.exit(0);
+	}
+	
+	@Override
+	public void version(){
+		System.out.println();
+		System.out.println("GDLC GuideLine Compiler v" + Constants.VERSION);
+		System.out.println();
+		System.exit(0);
 	}
 	
 	public boolean isValid(){ return this.isValid;}
@@ -70,6 +81,11 @@ public class CompilerParameters extends CommandLineParameters {
 			// Right now, only -h is a valid switch.
 			if(sw.equalsIgnoreCase("h") || sw.equalsIgnoreCase("help")){
 				this.usage();
+				continue;
+			}
+
+			if(sw.equalsIgnoreCase("version")){
+				this.version();
 				continue;
 			}
 

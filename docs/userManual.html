@@ -35,29 +35,34 @@
 
 				<p>
 					<pre>
-				PARAMETER ERROR: Missing inFile parameter.
-
 				======================================================================
-				GDLC GuideLine Compiler
-				Usage:  GDLC inFile [outFile] [-switch]* [/I]*
-				
-				        [] = optional
-				        *  = 0 or more, separated by spaces
-				
-				        inFile    name of file to compile.
-				        outFile   name of XML output file. (default is guideline name)
-				
-				   --switches--
-				        -h, -help     show usage instructions.
-				        -no,-nooutput do not generate output.
-				        -r, -raw      force output of all rules/sets/lookups.
-				                      outFile is a required parameter when -raw is used.
-				        -v, -verbose  show all status messages.
-				        -vp,          show parse tree.
-				
-				   --parameters--
-				        /Ipath        path to include dir.
-				
+        GDLC GuideLine Compiler
+        Usage:  GDLC inFile [outFile] [-switch]* [/I]*
+
+                [] = optional
+                *  = 0 or more, separated by spaces
+
+                inFile    name of file to compile.
+                outFile   name of XML output file. (default is guideline name)
+
+           --switches--
+                -h, -help     show usage instructions.
+                -version      display the application version.
+                -no,-nooutput do not generate output.
+                -r, -raw      force output of all rules/sets/lookups.
+                              outFile is a required parameter when -raw is used.
+                -v, -verbose  show all status messages.
+                -vp,          show parse tree.
+
+                -Vfd          force output of DPM DataType.
+                -Vfp          force output of PPM DataType.
+
+                -Vod          do NOT output DPM DataType in lookups.
+                -Vop          do NOT output PPM DataType in lookups.
+
+           --parameters--
+                /Ipath        path to include dir.
+                
 				======================================================================
 
 					</pre>
