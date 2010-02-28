@@ -45,6 +45,7 @@ public class CompilerParameters extends CommandLineParameters {
 		System.out.println("   --switches--");
 		System.out.println("	-h, -help     show usage instructions.");
 		System.out.println("	-version      display the application version.");
+		System.out.println();
 		System.out.println("	-no,-nooutput do not generate output.");
 		System.out.println("	-r, -raw      force output of all rules/sets/lookups.");
 		System.out.println("	              outFile is a required parameter when -raw is used.");
@@ -78,7 +79,7 @@ public class CompilerParameters extends CommandLineParameters {
 	@Override
 	protected void processSwitches(){
 		for( String sw : this.switches){
-			// Right now, only -h is a valid switch.
+
 			if(sw.equalsIgnoreCase("h") || sw.equalsIgnoreCase("help")){
 				this.usage();
 				continue;
