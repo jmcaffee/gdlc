@@ -70,19 +70,9 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 			me.setIsShortTag(true);
 
 			me.putAttribute("Name", dpm.getAlias());
-			me.putAttribute("DataType", dpm.getDataType());
-			me.putAttribute("Type", dpm.getType());
-			me.putAttribute("Order", dpm.getOrder());
-			me.putAttribute("ProductType", dpm.getProductType());
 			
-			if(true == (CompileMgr.getConfig().outputDpmDataTypeInLookups)){
-				String[] attOrder = {"Name", "DataType", "Type", "Order", "ProductType"};
-				me.setAttributeOrder(attOrder);
-			}else{
-				String[] attOrder = {"Name", "Type", "Order", "ProductType"};
-				me.setAttributeOrder(attOrder);
-			}
-
+			String[] attOrder = {"Name"};
+			me.setAttributeOrder(attOrder);
 		} 
 		else {
 			VarPpm ppm = (VarPpm)this.ctx.getVar(new VarPpm(varName));
@@ -93,14 +83,8 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 			me.putAttribute("DataType", ppm.getDataType());
 			me.putAttribute("Type", ppm.getType());
 			
-			if(true == (CompileMgr.getConfig().outputPpmDataTypeInLookups)){
-				String[] attOrder = {"Name", "DataType", "Type"};
-				me.setAttributeOrder(attOrder);
-			}else{
-				String[] attOrder = {"Name", "Type"};
-				me.setAttributeOrder(attOrder);
-			}
-
+			String[] attOrder = {"Name", "DataType", "Type"};
+			me.setAttributeOrder(attOrder);
 		}
 		
 		if(null == me){

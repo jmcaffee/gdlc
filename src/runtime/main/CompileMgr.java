@@ -12,6 +12,7 @@ import java.util.HashMap;
 import runtime.compiler.*;
 import runtime.elements.XmlElem;
 import runtime.parser.*;
+import runtime.visitors.CollectReferencedDpmsVisitor;
 import runtime.visitors.CollectReferencedLookupsVisitor;
 import runtime.visitors.LookupNodeVisitor;
 import runtime.visitors.XmlVisitor;
@@ -280,6 +281,14 @@ public class CompileMgr {
 			XmlElem lookupData = buildLookupsElement(lookupList.lookups);
 			gdlRoot.appendXml(lookupData.toXml());
 			
+			// Build a list of DPM names referenced in the guideline definition.
+			CollectReferencedDpmsVisitor dpmList = new CollectReferencedDpmsVisitor(compilerContext);
+			gdl.jjtAccept(dpmList, null);
+			
+			// Build the DERIVEDPARAMETERS element.
+			XmlElem dpmData = buildDerivedParametersElement(dpmList.dpms);
+			gdlRoot.appendXml(dpmData.toXml());
+			
 			String content = gdlRoot.toXml();
 			out.write(content);
 			out.close();
@@ -302,6 +311,44 @@ public class CompileMgr {
 			
 			node.jjtAccept(lkupVisitor, parent);
 			
+		}
+	
+		protected XmlElem buildDerivedParametersElement(HashMap<String,String> list){
+			XmlElem dpmData = new XmlElem("DERIVEDPARAMETERS");
+			
+			
+			for(String dpmName : list.keySet()){
+				buildDpm(dpmData, dpmName);
+			}
+			
+			return dpmData;
+		}
+		
+		protected void buildDpm(XmlElem parent, String dpmName){
+			XmlElem me = null;
+			
+			if(compilerContext.containsVar(new VarDpm(dpmName))){
+				VarDpm dpm = (VarDpm)compilerContext.getVar(new VarDpm(dpmName));
+				me = new XmlElem(dpm.getVarType());
+				me.setIsShortTag(true);
+
+				me.putAttribute("Name", dpm.getAlias());
+				me.putAttribute("Type", dpm.getType());
+				me.putAttribute("Order", dpm.getOrder());
+				me.putAttribute("ProductType", dpm.getProductType());
+				//me.putAttribute("Precision", dpm.getPrecision());	// TODO: Add precision functionality.
+				me.putAttribute("DataType", dpm.getDataType());
+				
+				String[] attOrder = {"Name", "Type", "Order", "ProductType", "DataType"};
+				me.setAttributeOrder(attOrder);
+			} 
+			
+			if(null == me){
+				Log.error("Missing variable.");
+				return;
+			}
+			
+			parent.appendXml(me.toXml());
 		}
 	
 		protected boolean writeXmlToFile(String filepath){

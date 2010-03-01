@@ -1,5 +1,7 @@
 package runtime.elements;
 
+import runtime.main.CompileMgr;
+
 
 /**
  * @author killer
@@ -88,6 +90,9 @@ public class XmlElem extends BaseElem {
 		}
 		
 		if(true == this.isShortTag && (this.content.length() < 1)){
+			if(true == (CompileMgr.getConfig().validXml)){
+				xml.append(" "); 			// Add space before closing bracket (valid XML).
+			}
 			xml.append("/>");
 		}
 		else {

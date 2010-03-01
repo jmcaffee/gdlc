@@ -600,36 +600,25 @@ public class XmlVisitor extends DepthFirstVisitor {
 			me = new XmlElem(dpm.getVarType());
 			me.setIsShortTag(true);
 
+			// DPMs only output their DataType in the DERIVEDPARAMETERS element (v2.x).
+			// See CompileMgr.java#buildDpm()			
 			me.putAttribute("Name", dpm.getAlias());
-			me.putAttribute("DataType", dpm.getDataType());
-			me.putAttribute("Type", dpm.getType());
-			me.putAttribute("Order", dpm.getOrder());
-			me.putAttribute("ProductType", dpm.getProductType());
 			
-			if(true == (CompileMgr.getConfig().applyDpmDataType)){
-				String[] attOrder = {"Name", "DataType", "Type", "Order", "ProductType"};
-				me.setAttributeOrder(attOrder);
-			}else{
-				String[] attOrder = {"Name", "Type", "Order", "ProductType"};
-				me.setAttributeOrder(attOrder);
-			}
+			String[] attOrder = {"Name"};
+			me.setAttributeOrder(attOrder);
 		} 
 		else {
 			VarPpm ppm = (VarPpm)this.ctx.getVar(new VarPpm(varName));
 			me = new XmlElem(ppm.getVarType());
 			me.setIsShortTag(true);
 
+			// PPMs always output their DataType (v2.x).			
 			me.putAttribute("Name", ppm.getAlias());
 			me.putAttribute("DataType", ppm.getDataType());
 			me.putAttribute("Type", ppm.getType());
 			
-			if(true == (CompileMgr.getConfig().applyPpmDataType)){
-				String[] attOrder = {"Name", "DataType", "Type"};
-				me.setAttributeOrder(attOrder);
-			}else{
-				String[] attOrder = {"Name", "Type"};
-				me.setAttributeOrder(attOrder);
-			}
+			String[] attOrder = {"Name", "DataType", "Type"};
+			me.setAttributeOrder(attOrder);
 		}
 		
 		if(null == me){
