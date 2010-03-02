@@ -30,12 +30,12 @@
 
 			<div class='desc'>
 				<p>
-					Typing GDLC without any parameters will result in the following usage message:
+					Typing GDLC without any parameters (or with the -h option) will result in the following usage message:
 				</p>
 
 				<p>
 					<pre>
-				======================================================================
+        ======================================================================
         GDLC GuideLine Compiler
         Usage:  GDLC inFile [outFile] [-switch]* [/I]*
 
@@ -48,23 +48,19 @@
            --switches--
                 -h, -help     show usage instructions.
                 -version      display the application version.
+
                 -no,-nooutput do not generate output.
                 -r, -raw      force output of all rules/sets/lookups.
                               outFile is a required parameter when -raw is used.
                 -v, -verbose  show all status messages.
                 -vp,          show parse tree.
 
-                -Vfd          force output of DPM DataType.
-                -Vfp          force output of PPM DataType.
-
-                -Vod          do NOT output DPM DataType in lookups.
-                -Vop          do NOT output PPM DataType in lookups.
+                -validxml     output valid xml.
 
            --parameters--
                 /Ipath        path to include dir.
-                
-				======================================================================
 
+        ======================================================================
 					</pre>
 				</p>
 
@@ -124,60 +120,62 @@
 					<td><span class='keyword'>alias</span></td>
 					<td><span class='keyword'>app</span></td>
 					<td><span class='keyword'>boolean</span></td>
+					<td><span class='keyword'>condition</span></td>
 					<td><span class='keyword'>continue</span></td>
-					<td><span class='keyword'>crd</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>crd</span></td>
 					<td><span class='keyword'>date</span></td>
 					<td><span class='keyword'>decision</span></td>
 					<td><span class='keyword'>dpm</span></td>
 					<td><span class='keyword'>dsm</span></td>
-					<td><span class='keyword'>else</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>else</span></td>
 					<td><span class='keyword'>end</span></td>
 					<td><span class='keyword'>false</span></td>
 					<td><span class='keyword'>guideline</span></td>
 					<td><span class='keyword'>if</span></td>
+
+				</tr>
+				<tr>
+
+				</tr>
+
+				<tr>
 					<td><span class='keyword'>import</span></td>
-
-				</tr>
-				<tr>
-
-				</tr>
-
-				<tr>
 					<td><span class='keyword'>include</span></td>
 					<td><span class='keyword'>InsertPricingGuideline</span></td>
 					<td><span class='keyword'>lookup</span></td>
-					<td><span class='keyword'>money</span></td>
-					<td><span class='keyword'>numeric</span></td>
+					<td><span class='keyword'>message</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>money</span></td>
+					<td><span class='keyword'>numeric</span></td>
 					<td><span class='keyword'>percentage</span></td>
 					<td><span class='keyword'>PL</span></td>
 					<td><span class='keyword'>powerlookup</span></td>
-					<td><span class='keyword'>ppm</span></td>
-					<td><span class='keyword'>prd</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>ppm</span></td>
+					<td><span class='keyword'>prd</span></td>
 					<td><span class='keyword'>rule</span></td>
 					<td><span class='keyword'>ruleset</span></td>
 					<td><span class='keyword'>text</span></td>
-					<td><span class='keyword'>then</span></td>
-					<td><span class='keyword'>true</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>then</span></td>
+					<td><span class='keyword'>true</span></td>
 
 				</tr>
 			</table>
@@ -190,7 +188,7 @@
 		<h2>Identifiers</h2>
 			<div class='desc'>
 					<p>
-						Variable, rule, and ruleset identifiers (names) are limited to the string lengths listed below. Spaces and special characters 
+						Variable, rule, ruleset and condition identifiers (names) are limited to the string lengths listed below. Spaces and special characters 
 						(such as &amp;, *, @) are not allowed as part of the identifier. The only special characters that are allowed (other than alphanumeric
 						characters) are _ (the underscore) and - (the dash). Identifiers must start with a letter.
 					</p>	
@@ -393,6 +391,110 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 </div>
 
 <div class='section'>
+		<h2>Condition Message Definitions/References</h2>
+
+      <h5><span class='keyword'>condition</span> identifier("SystemName", ConditionType, PriorToType, "Image Doc Name", "Condition message");</h5>
+
+			<div class='desc'>
+        <p>
+        "SystemName": Name of the condition when displayed in the GUI conditions interface.<br />
+        <br />
+        ConditionType: Category of condition. Can be one of the following:<br />
+          <ul>
+            <li><span class='keyword'>asset</span></li>
+            <li><span class='keyword'>income</span></li>
+            <li><span class='keyword'>property</span></li>
+            <li><span class='keyword'>purchase</span></li>
+            <li><span class='keyword'>title</span></li>
+          </ul>
+        PriorToType: Stage where condition should be cleared 'prior to'. Can be one of the following:<br />
+          <ul>
+            <li><span class='keyword'>docs</span></li>
+            <li><span class='keyword'>funding</span></li>
+            <li><span class='keyword'>approval</span></li>
+          </ul>
+        "Image Doc Name": Name of image document that condition is tied to.<br />
+        <br />
+        "Condition message.": Actual text of the condition.<br />
+        </p>	
+        
+        <p>
+        Condition definition and reference statements must be terminated with a ';'.
+        </p>
+        
+				<p>
+				Condition messages are used by the system to generate 'underwriter' conditions. If a condition message is redefined
+        only the last definition will be used (uploaded) regardless of where the definition occurred within the guideline.
+				</p>		
+
+				<p>
+				Condition message definitions contain a number of required parameters used by the system to generate 'underwriter' conditions. If a condition message is redefined
+        only the last definition will be used (uploaded) regardless of where the definition occurred within the guideline.
+				</p>		
+
+				<p>
+				Condition message <em>references</em> can only be used within the 'if-true' or 'if-false' sections of rule definitions.
+				</p>		
+
+			</div>
+
+			<p class='example'>
+      Definition:<br />
+        <span class='keyword'>condition</span> requiredCond-W2 ("W2Condition", income, docs, "HUD", "W2s for last 2 years.");<br />
+        <br />
+      Reference:<br />
+        <span class='keyword'>condition</span> requiredCond-W2();<br />
+			</p>
+
+</div>
+
+<div class='section'>
+		<h2>Message Definitions</h2>
+
+      <h5><span class='keyword'>message</span> (exception, exceptionType, "Message text to display.");</h5>
+      <h5><span class='keyword'>message</span> (messageType, "Message text to display.");</h5>
+
+			<div class='desc'>
+        <p>
+        exception: Exception type messages are used to indicate a <em>failure</em> of some sort. Exception messages are displayed on the decision results.<br />
+        exceptionType: When the 'exception' message type is used, the exceptionType is <em>required</em>. It can be one of the following:<br />
+          <ul>
+            <li><span class='keyword'>exception</span></li>
+            <li><span class='keyword'>assets</span></li>
+          </ul>
+        messageType: Message types other than exceptions are used to convey information to the user. The following types are available:<br />
+          <ul>
+            <li><span class='keyword'>findings</span></li>
+            <li><span class='keyword'>observation</span></li>
+            <li><span class='keyword'>credit</span></li>
+          </ul>
+        "Message text": Actual text of the message that will be displayed.<br />
+        <br />
+        DPM variable values can be incorporated into the message text by surrounding the variable name with &lt;DPM&gt; &lt;/DPM&gt; tags.<br />
+        When using DPM variables within messages, if the DPM/DSM has an alias defined, the alias <em>must</em> be used; the engine only recognizes/knows about the alias.
+        </p>	
+        
+        <p>
+        Message definition statements must be terminated with a ';'.
+        </p>
+        
+				<p>
+				Message definitions can only be used within the 'if-true' or 'if-false' sections of rule definitions.
+				</p>		
+
+			</div>
+
+			<p class='example'>
+        Exception message:<br />
+        <span class='keyword'>message</span>(exception, exception, "LTV of &lt;DPM&gt;LTV&lt;/DPM&gt; is greater than 70%.");<br />
+        <br />
+        Informational message:<br />
+        <span class='keyword'>message</span>(findings, "The borrower has a payoff on their credit report.");<br />
+			</p>
+
+</div>
+
+<div class='section'>
 		<h2>Aliases</h2>
 			<div class='desc'>
 				<p>
@@ -532,7 +634,6 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 					</p>		
 
 					<p>
-					Import can only load CSV files. Non CSV files should not be referenced by the import statement.<br />
 					The CSV file extension must be part of the filename.<br />
 					The import statement must be terminated with a ';'.
 					</p>

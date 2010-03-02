@@ -27,25 +27,6 @@ public class GdlMain {
 		  }
 	  }
 
-//	  public static void usage(){
-//		System.out.println();
-//		System.out.println("======================================================================");
-//		System.out.println("GDLC GuideLine Compiler");
-//		System.out.println("Usage:  GDLC inFile [/I]*");
-//		System.out.println();
-//		System.out.println("	inFile    name of file to compile.");
-//		System.out.println();
-//		System.out.println("   --switches--");
-//		System.out.println("	none");
-//		System.out.println();
-//		System.out.println("   --parameters--");
-//		System.out.println("	/Ipath        path to include dir.");
-//		System.out.println();
-//		System.out.println("======================================================================");
-//		System.out.println();
-//
-//	  }
-	  
 	  static void writeWarnings(CompilerContext ctx){
 		  Log.status("GDLC has completed with warnings:");
 		  ctx.dumpWarnings();
