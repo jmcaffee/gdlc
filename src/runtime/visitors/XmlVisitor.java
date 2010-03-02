@@ -7,17 +7,17 @@ import runtime.compiler.CompilerContext;
 import runtime.compiler.IRuleset;
 import runtime.compiler.VarDpm;
 import runtime.compiler.VarPpm;
+import runtime.elements.ConditionMsg;
 import runtime.elements.XmlElem;
-import runtime.main.CompileMgr;
 import runtime.main.Log;
 import runtime.parser.ASTAndOperator;
 import runtime.parser.ASTAssign;
 import runtime.parser.ASTAssignTo;
 import runtime.parser.ASTAssignValue;
 import runtime.parser.ASTBrace;
-import runtime.parser.ASTCondType;
 import runtime.parser.ASTCondition;
-import runtime.parser.ASTConditionMsg;
+import runtime.parser.ASTConditionMsgDef;
+import runtime.parser.ASTConditionMsgRef;
 import runtime.parser.ASTConstant;
 import runtime.parser.ASTDivOperator;
 import runtime.parser.ASTElseActions;
@@ -41,7 +41,6 @@ import runtime.parser.ASTMinusOperator;
 import runtime.parser.ASTMultOperator;
 import runtime.parser.ASTOrOperator;
 import runtime.parser.ASTPlusOperator;
-import runtime.parser.ASTPriorTo;
 import runtime.parser.ASTRaiseToOperator;
 import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTRuleRef;
@@ -504,88 +503,28 @@ public class XmlVisitor extends DepthFirstVisitor {
 		return elem;
 	}
 
-	/* (non-Javadoc)
-	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTConditionMsg, java.lang.Object)
-	 */
-	public Object visit(ASTConditionMsg node, Object data){
+	public Object visit(ASTConditionMsgRef node, Object data) {
 		if(false == this.parseMsgs){return data;}	// Skip if message parsing is not on.
-
+		// Attempt to retrieve the condition msg def node and parse it.
+		ConditionMsg actualNode = this.ctx.getCondition(node.getData("Identifier"));
+	
 		XmlElem elem = (XmlElem)data;
-		XmlElem me = new XmlElem("Message");
-
-		String[] attribs = {"Type", "Id", "PriorTo", "Category", "Responsible", "WhoCanClear", "Critical", "Visibility"};
-		me.setAttributeOrder(attribs);
-		
-		me.putAttribute("Type", "Condition");
-		// The engine will assume that all conditions are the same if they have
-		// the same ID within the same guideline. This results in the engine only
-		// outputting one condition when it should output more than one.
-		me.putAttribute("Id", Integer.toString(ctx.getNextConditionId()));
-		me.putAttribute("Responsible", "Broker");
-		me.putAttribute("WhoCanClear", "Underwriter");
-		me.putAttribute("Critical", "No");
-		me.putAttribute("Visibility", "External");
-
-		node.childrenAccept(this, me);
-
-		StringBuffer msgText = new StringBuffer();
-		StringBuffer msg = new StringBuffer(node.getData("value"));
-		
-		msgText.append("<![CDATA[").append(msg).append("]]>");
-		me.appendXml(msgText.toString());
-
+		XmlElem me = (XmlElem)actualNode.buildXmlRefElement();
 		elem.appendXml(me.toXml());
 		return elem;
 	}
 
 	/* (non-Javadoc)
-	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTCondType, java.lang.Object)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTConditionMsgDef, java.lang.Object)
 	 */
-	public Object visit(ASTCondType node, Object data){
-		XmlElem elem = (XmlElem)data;
-		String value = node.getData("value");
+	public Object visit(ASTConditionMsgDef node, Object data){
+		if(false == this.parseMsgs){return data;}	// Skip if message parsing is not on.
+		// Attempt to retrieve the condition msg def node and parse it.
+		ConditionMsg actualNode = this.ctx.getCondition(node.getData("Identifier"));
 		
-		if(value.equalsIgnoreCase("asset")) {
-			value = new String("1");
-		}
-		else if(value.equalsIgnoreCase("credit")) {
-			value = new String("2");
-		}
-		else if(value.equalsIgnoreCase("income")) {
-			value = new String("3");
-		}
-		else if(value.equalsIgnoreCase("property")) {
-			value = new String("4");
-		}
-		else if(value.equalsIgnoreCase("purchase")) {
-			value = new String("5");
-		}
-		else if(value.equalsIgnoreCase("title")) {
-			value = new String("6");
-		}
-									// Set attributes for the parent Message element.
-		elem.putAttribute("Category", value);
-		return elem;
-	}
-
-	/* (non-Javadoc)
-	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTPriorTo, java.lang.Object)
-	 */
-	public Object visit(ASTPriorTo node, Object data){
 		XmlElem elem = (XmlElem)data;
-		String value = node.getData("value");
-		
-		if(value.equalsIgnoreCase("docs")) {
-			value = new String("1");
-		}
-		else if(value.equalsIgnoreCase("funding")) {
-			value = new String("2");
-		}
-		else if(value.equalsIgnoreCase("approval")) {
-			value = new String("3");
-		}
-									// Set attributes for the parent Message element.
-		elem.putAttribute("PriorTo", value);
+		XmlElem me = (XmlElem)actualNode.buildXmlRefElement();
+		elem.appendXml(me.toXml());
 		return elem;
 	}
 

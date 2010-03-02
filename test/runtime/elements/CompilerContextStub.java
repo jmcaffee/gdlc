@@ -11,6 +11,7 @@ import runtime.compiler.VarPpm;
 import runtime.compiler.FunctionMgr.Function;
 import runtime.main.IProblem;
 import runtime.parser.ASTCompilationUnit;
+import runtime.parser.ASTConditionMsgDef;
 import runtime.parser.ASTFunctionDef;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTRuleDef;
@@ -23,6 +24,7 @@ public class CompilerContextStub implements IProgramContext {
 	HashMap<String,ASTVarDef> 		ppmVars 	= new HashMap<String,ASTVarDef>();
 	HashMap<String,ASTRuleDef>		rules 		= new HashMap<String,ASTRuleDef>();
 	HashMap<String,IRuleset>		rulesets 	= new HashMap<String,IRuleset>();
+	HashMap<String,ASTConditionMsgDef>		conditions 	= new HashMap<String,ASTConditionMsgDef>();
 	
 	ArrayList<IProblem> 				warnings	= new ArrayList<IProblem>();
 	ArrayList<IProblem> 				errors		= new ArrayList<IProblem>();
@@ -84,6 +86,19 @@ public class CompilerContextStub implements IProgramContext {
 	 */
 	public boolean containsRuleset(String key) { return rulesets.containsKey(key);}
 
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#addCondition(java.lang.String, runtime.parser.ASTConditionMsgDef)
+	 */
+	public void addCondition(String key, ASTConditionMsgDef condition){conditions.put(key, condition);}
+
+	public ASTConditionMsgDef getCondition(String key){return null;}
+	public ASTConditionMsgDef getAstCondition(String key){return conditions.get(key);}
+	
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#containsCondition(java.lang.String)
+	 */
+	public boolean containsCondition(String key) { return conditions.containsKey(key);}
+	
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addFunction(java.lang.String, runtime.parser.ASTFunctionDef)
 	 */

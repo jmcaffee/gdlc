@@ -1,7 +1,9 @@
 package runtime.compiler;
 
+import runtime.elements.ConditionMsg;
 import runtime.main.IProblem;
 import runtime.parser.ASTCompilationUnit;
+import runtime.parser.ASTConditionMsgDef;
 import runtime.parser.ASTRuleDef;
  
 public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncludeDirs, IFunctionContext {
@@ -21,6 +23,12 @@ public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncl
 	public abstract IRuleset			getRuleset(String key);
 
 	public abstract boolean 			containsRuleset(String key);
+
+	public abstract void 				addCondition(String key, ASTConditionMsgDef condition);
+
+	public abstract ConditionMsg		getCondition(String key);
+
+	public abstract boolean 			containsCondition(String key);
 
 	public abstract void 				addWarning(IProblem warn);
 

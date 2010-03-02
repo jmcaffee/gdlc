@@ -5,7 +5,8 @@ package runtime.visitors;
 
 import java.util.ArrayList;
 
-import runtime.parser.ASTConditionMsg;
+import runtime.parser.ASTConditionMsgDef;
+import runtime.parser.ASTConditionMsgRef;
 import runtime.parser.ASTMessage;
 import runtime.parser.SimpleNode;
 
@@ -24,7 +25,12 @@ public class MsgCollectorVisitor extends DepthFirstVisitor {
 		return data;
 	}
 	
-	public Object visit(ASTConditionMsg node, Object data) {
+	public Object visit(ASTConditionMsgRef node, Object data) {
+		messages.add(node);
+		return data;
+	}
+	
+	public Object visit(ASTConditionMsgDef node, Object data) {
 		messages.add(node);
 		return data;
 	}

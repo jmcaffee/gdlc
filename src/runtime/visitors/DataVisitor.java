@@ -12,7 +12,8 @@ import runtime.parser.ASTCodeBlock;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTCondType;
 import runtime.parser.ASTCondition;
-import runtime.parser.ASTConditionMsg;
+import runtime.parser.ASTConditionMsgDef;
+import runtime.parser.ASTConditionMsgRef;
 import runtime.parser.ASTConstant;
 import runtime.parser.ASTDivOperator;
 import runtime.parser.ASTElseActions;
@@ -646,9 +647,25 @@ public class DataVisitor implements GdlParserVisitor {
 	}
 
 	/* (non-Javadoc)
-	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTConditionMsg, java.lang.Object)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTConditionMsgDef, java.lang.Object)
 	 */
-	public Object visit(ASTConditionMsg node, Object data){
+	public Object visit(ASTConditionMsgDef node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTConditionMsgRef, java.lang.Object)
+	 */
+	public Object visit(ASTConditionMsgRef node, Object data){
 		// Dump node info
 		CompilerContext ctx = (CompilerContext)data;
 		int cnt = ctx.getTabCount();

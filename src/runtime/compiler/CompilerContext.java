@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import runtime.elements.ConditionMsg;
 import runtime.compiler.FunctionMgr.Function;
 import runtime.main.CompileWarning;
 import runtime.main.IProblem;
@@ -16,6 +17,7 @@ import runtime.parser.ASTFunctionDef;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTLookupDef;
 import runtime.parser.ASTRuleDef;
+import runtime.parser.ASTConditionMsgDef;
 import runtime.parser.ASTVarRef;
 
 public class CompilerContext implements IProgramContext, ILookups, IFunctionContext {
@@ -32,6 +34,7 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 //	HashMap<String,ASTGuidelineDef>	guidelines	= new HashMap<String,ASTGuidelineDef>();
 	ASTGuidelineDef					guideline	= null;
 	IFunctionContext				functions	= new FunctionMgr();
+	HashMap<String,ConditionMsg>	conditions	= new HashMap<String,ConditionMsg>();
 	ArrayList<IProblem> 			warnings	= new ArrayList<IProblem>();
 	ArrayList<IProblem> 			errors		= new ArrayList<IProblem>();
 	
@@ -152,6 +155,39 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 	 * @see runtime.compiler.IProgramContext#containsFunction(java.lang.String)
 	 */
 	public boolean containsFunction(String key) { return functions.containsFunction(key);}
+	
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#addCondition(java.lang.String, runtime.parser.ASTConditionMsgDef)
+	 */
+	public void addCondition(String key, ASTConditionMsgDef condition){
+//		this.conditions.addConditionsMsg(key, condition);
+		ConditionMsg 	cond 	= null;
+		
+		if(this.containsCondition(key)){
+			this.addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
+							"A condition has been redefined 1 or more times. [ " + key + " ]"));
+			cond = this.getCondition(key);
+			cond.initialize(condition);
+		}
+		else {
+			cond = new ConditionMsg(this, key);
+			cond.initialize(condition);
+			cond.setId(this.getNextConditionId());
+		}
+		
+		conditions.put(key, cond);
+		
+	}
+	
+/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#getCondition(java.lang.String)
+	 */
+	public ConditionMsg getCondition(String key){return this.conditions.get(key);}
+
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#containsCondition(java.lang.String)
+	 */
+	public boolean containsCondition(String key) { return this.conditions.containsKey(key);}
 	
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addGuideline(java.lang.String, runtime.parser.ASTGuidelineDef)
@@ -357,7 +393,7 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 		return lookupData.containsKey(key);
 	}
 
-	public void setLookupData(Map lkData){
+	public void setLookupData(Map<String, LookupData> lkData){
 		this.lookupData = (HashMap<String, LookupData>)lkData;
 	}
 

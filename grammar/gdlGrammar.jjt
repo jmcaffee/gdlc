@@ -334,7 +334,8 @@ ASTCompilationUnit CompilationUnit() :
   | LOOKAHEAD(3)FunctionDef()
   | FunctionRef() 
   | RuleDef() 
-  | RulesetDef() )* 
+  | RulesetDef()
+  | ConditionMsgDef() )* 
   ( GuidelineDef() )? 
   <EOF>  
   { return jjtThis; }
@@ -418,6 +419,7 @@ String AliasType() #void :
 {
   (<RULE>        
   | <RULESET>   
+  | <CONDITION>   
   | <LOOKUP>    ){ return token.image;}
 }
 
@@ -957,7 +959,9 @@ void IfActions() :
   ( 
     Assign() 
   | Message()
-  | ConditionMsg() 
+  | ( LOOKAHEAD(4)
+		ConditionMsgDef() 
+	| 	ConditionMsgRef()  )
   )* 
 }
 
@@ -967,7 +971,9 @@ void ElseActions() :
   ( 
     Assign() 
   | Message() 
-  | ConditionMsg()
+  | ( LOOKAHEAD(4)
+		ConditionMsgDef() 
+	| 	ConditionMsgRef()  )
   )* 
 }
 
@@ -1037,11 +1043,19 @@ void MessageType() :
   ( t=<MSG_FINDINGS> | t=<MSG_OBSERVATION> | t=<MSG_CREDIT> ) { jjtThis.data.put("value", t.image); }
 }
 
-void ConditionMsg() :
-{ String msg;}
+void ConditionMsgRef() :
+{String id;}
 {
-  "condition" <LPAREN> CondType() "," PriorTo() "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
+  "condition" id=Name(){jjtThis.data.put("Identifier",id);} <LPAREN> <RPAREN> EOS()
 }
+
+void ConditionMsgDef() :
+{ String id; String nm; String idt; String msg;}
+{
+  "condition" id=Name(){jjtThis.data.put("Identifier",id);} <LPAREN> nm=StringLiteral(){jjtThis.data.put("Name",nm);} "," CondType() "," PriorTo() "," idt=StringLiteral(){jjtThis.data.put("ImageDocType",idt);} "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
+}
+
+
 
 void CondType() :
 { Token t;}

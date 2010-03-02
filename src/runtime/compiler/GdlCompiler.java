@@ -9,6 +9,7 @@ import java.util.HashMap;
 import runtime.main.Log;
 import runtime.parser.*;
 import runtime.plugins.AliasesPlugin;
+import runtime.plugins.ConditionDefsPlugin;
 import runtime.plugins.FunctionDefsPlugin;
 import runtime.plugins.GuidelinesPlugin;
 import runtime.plugins.IGdlcPlugin;
@@ -54,6 +55,7 @@ public class GdlCompiler {
 	      compilePlugins.add(new LookupImportsPlugin());
 	      compilePlugins.add(new LookupsPlugin());
 	      compilePlugins.add(new PowerLookupImportsPlugin()); //
+	      compilePlugins.add(new ConditionDefsPlugin());
 	      compilePlugins.add(new RuleDefsPlugin());
 	      compilePlugins.add(new RulesetDefsPlugin());
 	      compilePlugins.add(new RefResolverPlugin());

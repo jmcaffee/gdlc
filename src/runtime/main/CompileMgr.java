@@ -10,8 +10,10 @@ import java.io.Writer;
 import java.util.HashMap;
 
 import runtime.compiler.*;
+import runtime.elements.ConditionMsg;
 import runtime.elements.XmlElem;
 import runtime.parser.*;
+import runtime.visitors.CollectReferencedConditionsVisitor;
 import runtime.visitors.CollectReferencedDpmsVisitor;
 import runtime.visitors.CollectReferencedLookupsVisitor;
 import runtime.visitors.LookupNodeVisitor;
@@ -281,6 +283,14 @@ public class CompileMgr {
 			XmlElem lookupData = buildLookupsElement(lookupList.lookups);
 			gdlRoot.appendXml(lookupData.toXml());
 			
+			// Build a list of Condition names referenced in the guideline definition.
+			CollectReferencedConditionsVisitor condList = new CollectReferencedConditionsVisitor(compilerContext);
+			gdl.jjtAccept(condList, null);
+			
+			// Build the Conditions element.
+			XmlElem condData = buildConditionsElement(condList.conditions);
+			gdlRoot.appendXml(condData.toXml());
+			
 			// Build a list of DPM names referenced in the guideline definition.
 			CollectReferencedDpmsVisitor dpmList = new CollectReferencedDpmsVisitor(compilerContext);
 			gdl.jjtAccept(dpmList, null);
@@ -313,6 +323,20 @@ public class CompileMgr {
 			
 		}
 	
+		protected XmlElem buildConditionsElement(HashMap<String,String> list){
+			XmlElem condData = new XmlElem("Conditions");
+			
+			
+			for(String condName : list.keySet()){
+				XmlElem condElem = null;
+				ConditionMsg cond = compilerContext.getCondition(condName);
+				condElem = (XmlElem)cond.buildXmlDefElement();
+				condData.appendXml(condElem.toXml());
+			}
+			
+			return condData;
+		}
+		
 		protected XmlElem buildDerivedParametersElement(HashMap<String,String> list){
 			XmlElem dpmData = new XmlElem("DERIVEDPARAMETERS");
 			
