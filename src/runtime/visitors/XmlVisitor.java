@@ -50,8 +50,9 @@ import runtime.parser.ASTVarRef;
 import runtime.parser.SimpleNode;
 
 public class XmlVisitor extends DepthFirstVisitor {
-	CompilerContext ctx = null;
-	boolean 		parseMsgs = false;		// Set this to true if Message element XML should
+	CompilerContext ctx 			= null;
+	int				orderIndex	= 1;
+	boolean 		parseMsgs 		= false;// Set this to true if Message element XML should
 											// be returned as well.
 	
 	public XmlVisitor(CompilerContext ctx){ this.ctx = ctx;}
@@ -61,6 +62,9 @@ public class XmlVisitor extends DepthFirstVisitor {
 //	
 //	public	void generatePpmDataType(boolean flag){ this.applyPpmDataTypeAttrib = flag;}
 
+			int	getNextOrderIndex(){ int cnt = this.orderIndex; this.orderIndex += 1; return cnt; }
+			void resetOrderIndex() { this.orderIndex = 1; }
+			
 	public void parseMessages(boolean parseMsgs){ this.parseMsgs = parseMsgs;}
 	
 	public Object visit(ASTGuidelineDef node, Object data) {
@@ -160,6 +164,7 @@ public class XmlVisitor extends DepthFirstVisitor {
 		if(node.jjtGetNumChildren() > 2){
 			node.jjtGetChild(2).jjtAccept(msgColl, null);
 
+			msgXmlVisit.resetOrderIndex();	// Reset the order counter (used to set order attrib).
 			for(SimpleNode msgNode: msgColl.getMsgs()){
 				msgNode.jjtAccept(msgXmlVisit, elseMsgs);
 			}
@@ -509,7 +514,7 @@ public class XmlVisitor extends DepthFirstVisitor {
 		ConditionMsg actualNode = this.ctx.getCondition(node.getData("Identifier"));
 	
 		XmlElem elem = (XmlElem)data;
-		XmlElem me = (XmlElem)actualNode.buildXmlRefElement();
+		XmlElem me = (XmlElem)actualNode.buildXmlRefElement(this.getNextOrderIndex());
 		elem.appendXml(me.toXml());
 		return elem;
 	}
@@ -523,7 +528,7 @@ public class XmlVisitor extends DepthFirstVisitor {
 		ConditionMsg actualNode = this.ctx.getCondition(node.getData("Identifier"));
 		
 		XmlElem elem = (XmlElem)data;
-		XmlElem me = (XmlElem)actualNode.buildXmlRefElement();
+		XmlElem me = (XmlElem)actualNode.buildXmlRefElement(this.getNextOrderIndex());
 		elem.appendXml(me.toXml());
 		return elem;
 	}
