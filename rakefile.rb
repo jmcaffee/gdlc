@@ -47,7 +47,7 @@ directory BACKUP_PARSER_DIR
 directory SRC_PARSER_DIR
 
 #### Imports
-# Note: Rake loads imports only after this rakefile has been completely loaded.
+# Note: Rake loads imports only after the current rakefile has been completely loaded.
 import "#{GRAMMAR_DIR}/grammar.rake"
 
 #######################################
@@ -76,7 +76,7 @@ end
 
 desc "Build GDLC application"
 
-task :build => [:init, :buildGrammar, :compile] do
+task :build => [:init, :buildGrammar, "version:generateVersionFile", :compile, "version:inc_build"] do
   puts "Application compiled"
 end
 
@@ -198,5 +198,86 @@ task :clobber_backup do
 
 end
 
+#######################################
+#######################################
+
+namespace :version do
+
+  #######################################
+
+  desc "increment major version number"
+
+  task :inc_major do
+    yml = DataFile.new
+    key = "version_major"
+    data = yml.read("#{MISC_DIR}/projectproperties.yml")
+    data["#{key}"] = data["#{key}"] + 1
+    yml.write("#{MISC_DIR}/projectproperties.yml", data)
+
+  end
+
+  #######################################
+
+  desc "increment minor version number"
+
+  task :inc_minor do
+    yml = DataFile.new
+    key = "version_minor"
+    data = yml.read("#{MISC_DIR}/projectproperties.yml")
+    data["#{key}"] = data["#{key}"] + 1
+    yml.write("#{MISC_DIR}/projectproperties.yml", data)
+
+  end
+
+  #######################################
+
+  desc "increment build version number"
+
+  task :inc_build do
+    yml = DataFile.new
+    key = "version_build"
+    data = yml.read("#{MISC_DIR}/projectproperties.yml")
+    data["#{key}"] = data["#{key}"] + 1
+    yml.write("#{MISC_DIR}/projectproperties.yml", data)
+
+  end
+
+  #######################################
+
+  #desc "generate app version file"
+
+  task :generateVersionFile do
+    appVersionFile = "Constants.java"
+    versionFile = File.join(MISC_DIR, "projectproperties.yml")
+    
+    srcDir = MISC_DIR
+    destDir = "src/runtime/main"
+    
+    srcPath = File.join(srcDir, appVersionFile)
+    destPath = File.join(destDir, appVersionFile)
+    
+    gen = FileGenTask.new(true)
+    gen.generate(srcPath, destPath, versionFile)
+
+  end
+
+  #######################################
+
+  #desc "create yml"
+
+  task :create_yml do
+    yml = DataFile.new
+    data = {}
+    data["version_major"] = 1
+    data["version_minor"] = 0
+    data["version_build"] = 0
+    yml.write("#{MISC_DIR}/newprops.yml", data)
+    puts "New version file written to [ #{MISC_DIR}/newprops.yml ]."
+
+  end
+
+end # namespace :version
+
+#######################################
 #######################################
 
