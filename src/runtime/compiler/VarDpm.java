@@ -12,12 +12,14 @@ import runtime.parser.ASTVarDef;
 public class VarDpm extends VarBase implements IVariable {
 	String order = new String();
 	String productType = new String();
+	String precision = new String();
 	
 	public VarDpm(ASTVarDef node){
 		super(node);
 		
 		this.order = node.getData("Order");
 		this.productType = node.getData("ProductType");
+		this.precision = node.getData("Precision");
 		
 		if(null == this.order) {
 			this.order = new String("0");	// Order is never set so we need a default.
@@ -36,12 +38,20 @@ public class VarDpm extends VarBase implements IVariable {
 		return this.productType;
 	}
 
+	public String getPrecision() {
+		return this.precision;
+	}
+
 	public void setOrder(String order) {
 		this.order = order;
 	}
 
 	public void setProductType(String type) {
 		this.productType = type;
+	}
+
+	public void setPrecision(String precision) {
+		this.precision = precision;
 	}
 
 	public String getDataType() {

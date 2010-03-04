@@ -210,8 +210,12 @@ namespace :version do
   task :inc_major do
     yml = DataFile.new
     key = "version_major"
+    minorkey = "version_minor"
+    buildkey = "version_build"
     data = yml.read("#{MISC_DIR}/projectproperties.yml")
     data["#{key}"] = data["#{key}"] + 1
+    data["#{minorkey}"] = 0
+    data["#{buildkey}"] = 0
     yml.write("#{MISC_DIR}/projectproperties.yml", data)
 
   end
@@ -223,8 +227,10 @@ namespace :version do
   task :inc_minor do
     yml = DataFile.new
     key = "version_minor"
+    buildkey = "version_build"
     data = yml.read("#{MISC_DIR}/projectproperties.yml")
     data["#{key}"] = data["#{key}"] + 1
+    data["#{buildkey}"] = 0
     yml.write("#{MISC_DIR}/projectproperties.yml", data)
 
   end

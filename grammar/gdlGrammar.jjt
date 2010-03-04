@@ -344,7 +344,7 @@ ASTCompilationUnit CompilationUnit() :
 
 void VarDef() :
 {
-	String nm,dtyp,typ,als;
+	String nm,dtyp,typ,als,prcsn;
 	Token t;
 }
 {
@@ -356,7 +356,8 @@ void VarDef() :
 	  			jjtThis.data.put("Type","DPM");
 	  		}
 	  		jjtThis.data.put("varType","DPM");
-	  	} nm=Name(){
+	  	} (prcsn=Precision(){jjtThis.data.put("Precision",prcsn);})? 
+		nm=Name(){
 	  		jjtThis.data.put("Name",nm);
 	  	} 
 		(als=AliasOf(){jjtThis.data.put("Alias",als);})? EOS() )
@@ -380,6 +381,15 @@ String VarType() #void :
   | <NUMERIC>     { return new String("4");}
   | <PERCENTAGE>  { return new String("5");}
   | <TEXT>        { return new String("6");}
+} 
+
+
+String Precision() #void :
+{ 
+	Token t;
+}
+{
+  <LPAREN> t=<NUMERIC_CONSTANT> <RPAREN> { return t.image;} 
 } 
 
 

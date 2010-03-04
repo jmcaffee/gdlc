@@ -359,12 +359,21 @@ public class CompileMgr {
 				me.putAttribute("Name", dpm.getAlias());
 				me.putAttribute("Type", dpm.getType());
 				me.putAttribute("Order", dpm.getOrder());
-				me.putAttribute("ProductType", dpm.getProductType());
-				//me.putAttribute("Precision", dpm.getPrecision());	// TODO: Add precision functionality.
+				String pt = dpm.getProductType();
+				me.putAttribute("ProductType", pt);
+				if(pt.equals("4")){
+					me.putAttribute("Precision", dpm.getPrecision());
+				}
 				me.putAttribute("DataType", dpm.getDataType());
 				
+				String[] attOrderWithPrecision = {"Name", "Type", "Order", "ProductType", "Precision", "DataType"};
 				String[] attOrder = {"Name", "Type", "Order", "ProductType", "DataType"};
-				me.setAttributeOrder(attOrder);
+				if(pt.equals("4") && !pt.isEmpty()){
+					me.setAttributeOrder(attOrderWithPrecision);
+				}
+				else {
+					me.setAttributeOrder(attOrder);
+				}
 			} 
 			
 			if(null == me){
