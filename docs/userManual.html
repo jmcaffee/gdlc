@@ -148,34 +148,37 @@
 
 				<tr>
 					<td><span class='keyword'>import</span></td>
+					<td><span class='keyword'>IN</span></td>
 					<td><span class='keyword'>include</span></td>
 					<td><span class='keyword'>InsertPricingGuideline</span></td>
 					<td><span class='keyword'>lookup</span></td>
-					<td><span class='keyword'>message</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>message</span></td>
 					<td><span class='keyword'>money</span></td>
 					<td><span class='keyword'>numeric</span></td>
+					<td><span class='keyword'>OUT</span></td>
 					<td><span class='keyword'>percentage</span></td>
-					<td><span class='keyword'>PL</span></td>
-					<td><span class='keyword'>powerlookup</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>PL</span></td>
+					<td><span class='keyword'>powerlookup</span></td>
 					<td><span class='keyword'>ppm</span></td>
 					<td><span class='keyword'>prd</span></td>
 					<td><span class='keyword'>rule</span></td>
-					<td><span class='keyword'>ruleset</span></td>
-					<td><span class='keyword'>text</span></td>
 
 				</tr>
 
 				<tr>
+					<td><span class='keyword'>ruleset</span></td>
+					<td><span class='keyword'>text</span></td>
 					<td><span class='keyword'>then</span></td>
 					<td><span class='keyword'>true</span></td>
+					<td><span class='keyword'>xmlfunc</span></td>
 
 				</tr>
 			</table>
@@ -219,9 +222,21 @@
 		
 		<div class='subsection'>
 			<h2>PPM Variables</h2>
-				<h5><span class='keyword'>ppm</span> ppmType identifier ["alias"];</h5>
+				<h5><span class='keyword'>ppm</span> valueType ppmType identifier ["alias"];</h5>
 
 				<div class='desc'>
+					<p>
+					valueTypes (type of data variable will contain): <br />
+						<ul>
+							<li><span class='keyword'>boolean</span></li>
+							<li><span class='keyword'>date</span></li>
+							<li><span class='keyword'>money</span></li>
+							<li><span class='keyword'>numeric</span></li>
+							<li><span class='keyword'>percentage</span></li>
+							<li><span class='keyword'>text</span></li>
+						</ul>
+					</p>	
+          
 					<p>
 					ppmTypes: <br />
 						<ul>
@@ -238,20 +253,20 @@
 				</div>
 				
 				<p class='example'>
-					<span class='keyword'>ppm</span> <span class='keyword'>prd</span>     pProgramName                    "Program Name";			<br />
-					<span class='keyword'>ppm</span> <span class='keyword'>app</span>     pUserType                       "User Type";				<br />
-					<span class='keyword'>ppm</span> <span class='keyword'>crd</span>     pMortgagePayoffs                "Mortgage Payoffs";	<br />
+					<span class='keyword'>ppm</span> <span class='keyword'>text</span> <span class='keyword'>prd</span>     pProgramName                    "Program Name";			<br />
+					<span class='keyword'>ppm</span> <span class='keyword'>text</span> <span class='keyword'>app</span>     pUserType                       "User Type";				<br />
+					<span class='keyword'>ppm</span> <span class='keyword'>money</span> <span class='keyword'>crd</span>     pMortgagePayoffs                "Mortgage Payoffs";	<br />
 				</p>
 
 		</div>
 
 		<div class='subsection'>
 			<h2>DPM Variables</h2>
-				<h5><span class='keyword'>dpm</span> dpmType identifier ["alias"];</h5>
+				<h5><span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
 
 				<div class='desc'>
 					<p>
-					dpmTypes (type of data variable will contain): <br />
+					valueTypes (type of data variable will contain): <br />
 						<ul>
 							<li><span class='keyword'>boolean</span></li>
 							<li><span class='keyword'>date</span></li>
@@ -279,7 +294,7 @@
 
 		<div class='subsection'>
 			<h2>DSM Variables</h2>
-				<h5><span class='keyword'>decision</span> <span class='keyword'>dpm</span> dpmType identifier ["alias"];</h5>
+				<h5><span class='keyword'>decision</span> <span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
 				<div class='desc'>
 					<p>
 					DSM variables are a special subset of DPM variables. They are indicated by the <span class='keyword'>decision</span> keyword that begins the 
@@ -669,6 +684,82 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 							<p class='example'>
 								<span class='keyword'>import</span>( <span class='keyword'>powerlookup</span>, "TestPowerLookups.csv");
 							</p>
+
+			</div>
+
+		</div>
+
+<div class='section'>
+		<h2>XML Functions</h2>
+				<h5><span class='keyword'>xmlfunc</span> identifier( [IN|OUT] dpmVariable, [IN|OUT] "constant", [IN|OUT] 15.5 );</h5>
+
+				<div class='desc'>
+					<p>
+					XML Functions are defined and provided by the engine. The compiler does not know whether or not a function is
+          available. It is up to the user to verify the function exists before using it in your guideline.
+					</p>		
+
+					<p>
+					To use an XML function, it must first be defined. The compiler does check the argument count against the function definition
+          when it is referenced within a rule. Errors will be thrown if the argument count doesn't match.
+					</p>		
+
+					<p>
+					In both definitions and references, the IN and OUT keywords can be used in front of each argument. These keywords are optional.
+          They affect nothing and are only used as an indicator for the user as to whether the variable is used for INput to the 
+          function or OUTput from the function. IN and OUT can be used in either definitions, or references, or both.
+					</p>		
+
+					<p>
+					DPM variables, PPM variables, numbers and constants (values surrounded with quotes) can be used as arguments. Inline expressions are not allowed
+          as arguments to the function. Assigning values to variables before using them within a function can be done within the same rule.
+					</p>		
+
+					<p>
+					Function definition statements must be terminated with a ';'.<br />
+          Function reference statements must also be termined with ; (the same as any other assignment operation).
+					</p>
+				</div>
+
+
+		<div class='subsection'>
+					<h2>XML Function Definition Example:</h2>
+
+						<div class='desc'>
+							<p>
+              Argument <em>types</em> are not checked by the compiler. Because of this, it is usually helpful to use constants in the argument
+              list of the definition that describe what the argument should be.
+							</p>		
+
+						</div>
+
+						<p class='example'>
+							<span class='keyword'>xmlfunc</span> Floor( <span class='keyword'>IN</span> "NumToBeFloored", <span class='keyword'>IN</span> "Multiple" );<br />
+						</p>
+
+		</div>
+
+
+			<div class='subsection'>
+					<h2>XML Function Reference Example:</h2>
+
+							<div class='desc'>
+								<p>
+								XML function references are used on the right hand side of assignment operations. The <span class='keyword'>xmlfunc</span> keyword
+                is not used in references.
+								</p>		
+							</div>
+
+							<p class='example'>
+<span class='keyword'>rule</span> SetAppraisedValue()<br />
+		&nbsp;&nbsp;<span class='keyword'>if</span>(pReviewValue != 0)<br />
+		&nbsp;&nbsp;<span class='keyword'>then</span><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = <b>Floor( <span class='keyword'>IN</span> pReviewValue, <span class='keyword'>IN</span> 100 )</b>;<br />
+		&nbsp;&nbsp;<span class='keyword'>else</span><br />
+		&nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = purchasePrice;<br />
+		&nbsp;&nbsp;<span class='keyword'>end</span><br />
+    <span class='keyword'>end</span><br />
+									</p>
 
 			</div>
 

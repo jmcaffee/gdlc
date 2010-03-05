@@ -95,6 +95,7 @@ end
 desc "compile all java src files"
 
 task :compile => [:init] do
+  puts "Compiling java source."
   cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar").gsub(/\//, "\\")
   cvsjar = "#{LIBS_DIR}/ostermillerutils_1_06_01.jar"
 
@@ -124,6 +125,8 @@ end
 desc "compile each src file individually"
 
 task :compile_each => [:init] do
+  puts "Compiling each java source file individually."
+  
   cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar").gsub(/\//, "\\")
   cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar")
   cvsjar = "#{LIBS_DIR}/ostermillerutils_1_06_01.jar"
@@ -153,6 +156,7 @@ end
 desc "generate application jar file"
 
 task :jar => [:compile] do
+  puts "Building java archive file (jar)."
   target    = "gdlc.jar"
   manifest  = "../#{MISC_DIR}/manifest.mf"
   

@@ -47,6 +47,9 @@ import runtime.parser.ASTRuleRef;
 import runtime.parser.ASTRulesetDef;
 import runtime.parser.ASTRulesetRef;
 import runtime.parser.ASTVarRef;
+import runtime.parser.ASTXmlFuncRef;
+import runtime.parser.ASTXmlFuncRefArg;
+import runtime.parser.ASTXmlFuncRefArgList;
 import runtime.parser.SimpleNode;
 
 public class XmlVisitor extends DepthFirstVisitor {
@@ -57,11 +60,6 @@ public class XmlVisitor extends DepthFirstVisitor {
 	
 	public XmlVisitor(CompilerContext ctx){ this.ctx = ctx;}
 	
-				// TODO Remove code. This is now handled by static config object.
-//	public	void generateDpmDataType(boolean flag){ this.applyDpmDataTypeAttrib = flag;}
-//	
-//	public	void generatePpmDataType(boolean flag){ this.applyPpmDataTypeAttrib = flag;}
-
 			int	getNextOrderIndex(){ int cnt = this.orderIndex; this.orderIndex += 1; return cnt; }
 			void resetOrderIndex() { this.orderIndex = 1; }
 			
@@ -613,6 +611,63 @@ public class XmlVisitor extends DepthFirstVisitor {
 		elem.appendXml(me.toXml());
 		
 		return elem;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRef, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRef node, Object data){
+		XmlElem elem = (XmlElem)data;
+
+		XmlElem expr = new XmlElem("Expression");
+		
+		String[] attribs = {"Name"};
+		XmlElem me = new XmlElem("Function");
+		me.setAttributeOrder(attribs);
+		
+		me.putAttribute("Name", node.getData("Identifier"));
+		
+		me.setIsShortTag(false);
+		node.childrenAccept(this, me);
+		
+		expr.appendXml(me.toXml());
+		elem.appendXml(expr.toXml());
+		
+		return elem;
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRefArgList node, Object data){
+		XmlElem elem = (XmlElem)data;
+		XmlElem me = new XmlElem("Args");
+		
+		me.setIsShortTag(false);
+		node.childrenAccept(this, me);
+		
+		elem.appendXml(me.toXml());
+		
+		return elem;
+		
+	}
+
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRefArg, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRefArg node, Object data){
+		XmlElem elem = (XmlElem)data;
+		XmlElem me = new XmlElem("Arg");
+		
+		me.setIsShortTag(false);
+		node.childrenAccept(this, me);
+		
+		elem.appendXml(me.toXml());
+		
+		return elem;
+		
 	}
 
 }

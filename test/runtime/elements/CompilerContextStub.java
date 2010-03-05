@@ -91,7 +91,7 @@ public class CompilerContextStub implements IProgramContext {
 	 */
 	public void addCondition(String key, ASTConditionMsgDef condition){conditions.put(key, condition);}
 
-	public ASTConditionMsgDef getCondition(String key){return null;}
+	public ConditionMsg getCondition(String key){return null;}
 	public ASTConditionMsgDef getAstCondition(String key){return conditions.get(key);}
 	
 	/* (non-Javadoc)

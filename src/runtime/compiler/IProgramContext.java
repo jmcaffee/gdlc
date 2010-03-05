@@ -6,7 +6,7 @@ import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTConditionMsgDef;
 import runtime.parser.ASTRuleDef;
  
-public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncludeDirs, IFunctionContext {
+public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncludeDirs, IFunctionContext, IXmlFunctionContext {
 
 	public abstract void 				setRootNode(ASTCompilationUnit cuRoot);
 

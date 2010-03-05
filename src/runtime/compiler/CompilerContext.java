@@ -9,6 +9,7 @@ import java.util.Set;
 
 import runtime.elements.ConditionMsg;
 import runtime.compiler.FunctionMgr.Function;
+import runtime.compiler.XmlFunctionMgr.XmlFunction;
 import runtime.main.CompileWarning;
 import runtime.main.IProblem;
 import runtime.main.Log;
@@ -19,8 +20,9 @@ import runtime.parser.ASTLookupDef;
 import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTConditionMsgDef;
 import runtime.parser.ASTVarRef;
+import runtime.parser.ASTXmlFuncDef;
 
-public class CompilerContext implements IProgramContext, ILookups, IFunctionContext {
+public class CompilerContext implements IProgramContext, ILookups, IFunctionContext, IXmlFunctionContext {
 	
 	int 							tabCnt 		= 0;
 	ASTCompilationUnit				rootNode	= null;
@@ -34,6 +36,7 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 //	HashMap<String,ASTGuidelineDef>	guidelines	= new HashMap<String,ASTGuidelineDef>();
 	ASTGuidelineDef					guideline	= null;
 	IFunctionContext				functions	= new FunctionMgr();
+	IXmlFunctionContext				xmlFuncs	= new XmlFunctionMgr();
 	HashMap<String,ConditionMsg>	conditions	= new HashMap<String,ConditionMsg>();
 	ArrayList<IProblem> 			warnings	= new ArrayList<IProblem>();
 	ArrayList<IProblem> 			errors		= new ArrayList<IProblem>();
@@ -155,6 +158,21 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 	 * @see runtime.compiler.IProgramContext#containsFunction(java.lang.String)
 	 */
 	public boolean containsFunction(String key) { return functions.containsFunction(key);}
+	
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#addXmlFunction(java.lang.String, runtime.parser.ASTFunctionDef)
+	 */
+	public void addXmlFunction(String key, ASTXmlFuncDef rule){xmlFuncs.addXmlFunction(key, rule);}
+
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#getXmlFunction(java.lang.String)
+	 */
+	public XmlFunction getXmlFunction(String key){return xmlFuncs.getXmlFunction(key);}
+
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#containsXmlFunction(java.lang.String)
+	 */
+	public boolean containsXmlFunction(String key) { return xmlFuncs.containsXmlFunction(key);}
 	
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addCondition(java.lang.String, runtime.parser.ASTConditionMsgDef)

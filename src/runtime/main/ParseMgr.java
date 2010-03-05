@@ -15,6 +15,7 @@ import runtime.plugins.ComputePlugin;
 import runtime.plugins.FunctionDefsPlugin;
 import runtime.plugins.IGdlcPlugin;
 import runtime.plugins.IncludesPlugin;
+import runtime.plugins.XmlFunctionsParsePlugin;
 
 
 /**
@@ -53,6 +54,7 @@ public class ParseMgr {
 	      parsePlugins.add(new IncludesPlugin());
 	      parsePlugins.add(new ComputePlugin());
 	      parsePlugins.add(new FunctionDefsPlugin());
+	      parsePlugins.add(new XmlFunctionsParsePlugin());
 
 
 	      this.configurePlugins("parse", parsePlugins);

@@ -18,9 +18,10 @@ public class CompileError implements IProblem {
 		static public int IMPORTERROR = 5;
 		static public int PARSEERROR = 6;
 		static public int UNEXPECTEDARG = 7;
-		static public int INCLUDEDIRPATH = 8;
-		static public int OUTPUTERROR = 9;
-		static public int LASTERR = 9;
+		static public int MISSINGARG = 8;
+		static public int INCLUDEDIRPATH = 9;
+		static public int OUTPUTERROR = 10;
+		static public int LASTERR = 10;
 		
 		static String[] desc = {
 			"Unknown error has occurred",
@@ -31,6 +32,7 @@ public class CompileError implements IProblem {
 			"Import operation error",
 			"An error has occurred during parsing",
 			"Unexpected argument found",
+			"Argument missing",
 			"Check INCLUDE dir paths",
 			"An output error has occurred",
 		};

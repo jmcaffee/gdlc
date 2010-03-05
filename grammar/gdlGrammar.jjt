@@ -141,6 +141,7 @@ TOKEN :  /* Guideline Keywords */
 | < TRUE:       ( "true" | "TRUE" ) >
 | < FALSE:      ( "false" | "FALSE" ) >
 | < CONTINUE:   "continue">
+| < XMLFUNC:   	"xmlfunc">
 }
 
 
@@ -172,6 +173,14 @@ TOKEN :  /* Guideline Condition Message 'PriorTo' Keywords */
   < CONDPRIORTO_DOCS:  		"docs">
 | < CONDPRIORTO_FUNDING:  	"funding">
 | < CONDPRIORTO_APPROVAL:  	"approval">
+}
+
+
+
+TOKEN :  /* XML Function input/output var indicators */
+{
+  < IND_IN:		"IN">
+| < IND_OUT:    "OUT">
 }
 
 
@@ -238,7 +247,7 @@ TOKEN :
 }
 
 
-TOKEN :   /* Seperators */
+TOKEN :   /* Separators */
 {
   < LPAREN:     "(" >
 | < RPAREN:     ")" >
@@ -335,6 +344,7 @@ ASTCompilationUnit CompilationUnit() :
   | FunctionRef() 
   | RuleDef() 
   | RulesetDef()
+  | XmlFuncDef()
   | ConditionMsgDef() )* 
   ( GuidelineDef() )? 
   <EOF>  
@@ -589,6 +599,59 @@ String CodeBlock() :
 {							
 	t=<CODE_BLOCK> {return t.image.substring(1,(t.image.length()-1));}
 }
+
+
+
+void XmlFuncDef() :
+{String nm;}
+{
+  <XMLFUNC> nm=Name(){jjtThis.data.put("Identifier",nm);} <LPAREN> (XmlFuncDefArgList() )? <RPAREN> EOS()
+}
+
+
+
+void XmlFuncDefArgList() :
+{}
+{
+	XmlFuncDefArg() ( "," XmlFuncDefArg() )*
+}
+
+
+
+void XmlFuncDefArg() :
+{}
+{  
+  (	LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? Constant()
+	| LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? VarRef()
+  )
+}
+
+
+
+void XmlFuncRef() :
+{String nm;}
+{
+  nm=Name(){jjtThis.data.put("Identifier",nm);} <LPAREN> (XmlFuncRefArgList() )? <RPAREN>
+}
+
+
+
+void XmlFuncRefArgList() :
+{}
+{
+	XmlFuncRefArg() ( "," XmlFuncRefArg() )*
+}
+
+
+
+void XmlFuncRefArg() :
+{}
+{  
+  (	LOOKAHEAD(3) ( <IND_IN> | <IND_OUT> )? Constant()
+	| ( <IND_IN> | <IND_OUT> )? VarRef()
+  )
+}
+
 
 
 void RulesetDef() :
@@ -1004,10 +1067,10 @@ void AssignTo() :
 void AssignValue() :
 {}
 {
-  (LOOKAHEAD(2)
-    MathExpression()
-    | ConstantExpression()
-    | LookupDef()
+  (LOOKAHEAD(2) XmlFuncRef()
+	| (LOOKAHEAD(2) MathExpression()
+		| ConstantExpression()
+		| LookupDef() )
   )
 }
 

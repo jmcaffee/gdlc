@@ -53,6 +53,12 @@ import runtime.parser.ASTVarCast;
 import runtime.parser.ASTVarDef;
 import runtime.parser.ASTVarRef;
 import runtime.parser.ASTVariableType;
+import runtime.parser.ASTXmlFuncDef;
+import runtime.parser.ASTXmlFuncDefArg;
+import runtime.parser.ASTXmlFuncDefArgList;
+import runtime.parser.ASTXmlFuncRef;
+import runtime.parser.ASTXmlFuncRefArg;
+import runtime.parser.ASTXmlFuncRefArgList;
 import runtime.parser.GdlParserVisitor;
 import runtime.parser.SimpleNode;
 
@@ -524,5 +530,56 @@ public class DepthFirstVisitor implements GdlParserVisitor {
 		return data;
 	}
 
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncDef, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncDef node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncDefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncDefArgList node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncDefArg, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncDefArg node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRef, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRef node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRefArgList node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRefArg, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRefArg node, Object data){
+		data = node.childrenAccept(this, data);
+		return data;
+	}
 
 }

@@ -55,6 +55,12 @@ import runtime.parser.ASTVarCast;
 import runtime.parser.ASTVarDef;
 import runtime.parser.ASTVarRef;
 import runtime.parser.ASTVariableType;
+import runtime.parser.ASTXmlFuncDef;
+import runtime.parser.ASTXmlFuncDefArg;
+import runtime.parser.ASTXmlFuncDefArgList;
+import runtime.parser.ASTXmlFuncRef;
+import runtime.parser.ASTXmlFuncRefArg;
+import runtime.parser.ASTXmlFuncRefArgList;
 import runtime.parser.GdlParserVisitor;
 import runtime.parser.SimpleNode;
 
@@ -806,5 +812,103 @@ public class DataVisitor implements GdlParserVisitor {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncDef, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncDef node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
 	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncDefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncDefArgList node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncDefArg, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncDefArg node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRef, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRef node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRefArgList, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRefArgList node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTXmlFuncRefArg, java.lang.Object)
+	 */
+	public Object visit(ASTXmlFuncRefArg node, Object data){
+		// Dump node info
+		CompilerContext ctx = (CompilerContext)data;
+		int cnt = ctx.getTabCount();
+
+		Log.info(tabify(cnt,node.toString()));
+		
+		ctx.setTabCount(cnt+1);
+		node.childrenAccept(this, data);
+		ctx.setTabCount(cnt);
+		return ctx;
+	}
+
 }
