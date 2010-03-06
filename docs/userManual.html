@@ -117,29 +117,29 @@
 			</div>
 			<table class='keywordTable'>
 				<tr>
-					<td><span class='keyword'>alias</span></td>
-					<td><span class='keyword'>app</span></td>
-					<td><span class='keyword'>boolean</span></td>
-					<td><span class='keyword'>condition</span></td>
-					<td><span class='keyword'>continue</span></td>
+					<td><span class='keyword'><a href="#alias">alias</a></span></td>
+					<td><span class='keyword'><a href="#ppm">app</a></span></td>
+					<td><span class='keyword'><a href="#dpm">boolean</a></span></td>
+					<td><span class='keyword'><a href="#condition">condition</a></span></td>
+					<td><span class='keyword'><a href="#ruleset">continue</a></span></td>
 
 				</tr>
 
 				<tr>
-					<td><span class='keyword'>crd</span></td>
-					<td><span class='keyword'>date</span></td>
-					<td><span class='keyword'>decision</span></td>
-					<td><span class='keyword'>dpm</span></td>
-					<td><span class='keyword'>dsm</span></td>
+					<td><span class='keyword'><a href="#ppm">crd</a></span></td>
+					<td><span class='keyword'><a href="#dpm">date</a></span></td>
+					<td><span class='keyword'><a href="#dsm">decision</a></span></td>
+					<td><span class='keyword'><a href="#dpm">dpm</a></span></td>
+					<td><span class='keyword'><a href="#dsm">dsm</a></span></td>
 
 				</tr>
 
 				<tr>
-					<td><span class='keyword'>else</span></td>
-					<td><span class='keyword'>end</span></td>
-					<td><span class='keyword'>false</span></td>
-					<td><span class='keyword'>guideline</span></td>
-					<td><span class='keyword'>if</span></td>
+					<td><span class='keyword'><a href="#rule">else</a></span></td>
+					<td><span class='keyword'><a href="#rule">end</a></span></td>
+					<td><span class='keyword'><a href="#ruleset">false</a></span></td>
+					<td><span class='keyword'><a href="#guideline">guideline</a></span></td>
+					<td><span class='keyword'><a href="#rule">if</a></span></td>
 
 				</tr>
 				<tr>
@@ -147,38 +147,38 @@
 				</tr>
 
 				<tr>
-					<td><span class='keyword'>import</span></td>
-					<td><span class='keyword'>IN</span></td>
-					<td><span class='keyword'>include</span></td>
-					<td><span class='keyword'>InsertPricingGuideline</span></td>
-					<td><span class='keyword'>lookup</span></td>
+					<td><span class='keyword'><a href="#import">import</a></span></td>
+					<td><span class='keyword'><a href="#xmlfunc">IN</a></span></td>
+					<td><span class='keyword'><a href="#include">include</a></span></td>
+					<td><span class='keyword'><a href="#InsertPricingGuideline">InsertPricingGuideline</a></span></td>
+					<td><span class='keyword'><a href="#lookup">lookup</a></span></td>
 
 				</tr>
 
 				<tr>
-					<td><span class='keyword'>message</span></td>
-					<td><span class='keyword'>money</span></td>
-					<td><span class='keyword'>numeric</span></td>
-					<td><span class='keyword'>OUT</span></td>
-					<td><span class='keyword'>percentage</span></td>
+					<td><span class='keyword'><a href="#message">message</a></span></td>
+					<td><span class='keyword'><a href="#dpm">money</a></span></td>
+					<td><span class='keyword'><a href="#dpm">numeric</a></span></td>
+					<td><span class='keyword'><a href="#xmlfunc">OUT</a></span></td>
+					<td><span class='keyword'><a href="#dpm">percentage</a></span></td>
 
 				</tr>
 
 				<tr>
-					<td><span class='keyword'>PL</span></td>
-					<td><span class='keyword'>powerlookup</span></td>
-					<td><span class='keyword'>ppm</span></td>
-					<td><span class='keyword'>prd</span></td>
-					<td><span class='keyword'>rule</span></td>
+					<td><span class='keyword'><a href="#ruleset">PL</a></span></td>
+					<td><span class='keyword'><a href="#powerlookup">powerlookup</a></span></td>
+					<td><span class='keyword'><a href="#ppm">ppm</a></span></td>
+					<td><span class='keyword'><a href="#ppm">prd</a></span></td>
+					<td><span class='keyword'><a href="#rule">rule</a></span></td>
 
 				</tr>
 
 				<tr>
-					<td><span class='keyword'>ruleset</span></td>
-					<td><span class='keyword'>text</span></td>
-					<td><span class='keyword'>then</span></td>
-					<td><span class='keyword'>true</span></td>
-					<td><span class='keyword'>xmlfunc</span></td>
+					<td><span class='keyword'><a href="#ruleset">ruleset</a></span></td>
+					<td><span class='keyword'><a href="#dpm">text</a></span></td>
+					<td><span class='keyword'><a href="#rule">then</a></span></td>
+					<td><span class='keyword'><a href="#ruleset">true</a></span></td>
+					<td><span class='keyword'><a href="#xmlfunc">xmlfunc</a></span></td>
 
 				</tr>
 			</table>
@@ -187,6 +187,105 @@
 			
 
 </div>
+
+<div class='section'>
+		<h2>Operators</h2>
+			<div class='desc'>
+        These operators are available for use in the guidelines.
+			</div>
+			<p>
+			</p>
+
+  <div class='subsection'>
+      <h2>Equality Operators</h2>
+        <div class='desc'>
+          Equality operators can only be used inside of <span class='keyword'>if</span> statements.
+        </div>
+        <table class='keywordTable'>
+          <tr>
+            <td><span class='keyword'>&lt;</span></td>
+            <td><span class='keyword'>&lt;=</span></td>
+            <td><span class='keyword'>&gt;</span></td>
+
+          </tr>
+
+          <tr>
+            <td><span class='keyword'>&gt=</span></td>
+            <td><span class='keyword'>==</span></td>
+            <td><span class='keyword'>!=</span></td>
+
+          </tr>
+
+          <tr>
+            <td><span class='keyword'>&lt;&gt;</span></td>
+            <td><span class='keyword'>in</span></td>
+            <td><span class='keyword'>??</span></td>
+
+          </tr>
+          <tr>
+
+          </tr>
+
+        </table>
+        <p>
+        </p>
+  </div>
+
+  <div class='subsection'>
+      <h2>Boolean Operators</h2>
+        <div class='desc'>
+          Boolean operators can only be used inside of <span class='keyword'>if</span> statements.
+        </div>
+        <table class='keywordTable'>
+          <tr>
+            <td><span class='keyword'>&&</span></td>
+            <td><span class='keyword'>and</span></td>
+            <td><span class='keyword'>||</span></td>
+            <td><span class='keyword'>or</span></td>
+            <td><span class='keyword'>(</span></td>
+            <td><span class='keyword'>)</span></td>
+
+          </tr>
+
+          <tr>
+
+          </tr>
+
+        </table>
+        <p>
+        </p>
+
+  </div>
+			
+  <div class='subsection'>
+      <h2>Mathematical Operators</h2>
+        <div class='desc'>
+          Mathematical operators can only be used on the right hand side of assignment ( <span class='keyword'>=</span> ) statements.
+        </div>
+        <table class='keywordTable'>
+          <tr>
+            <td><span class='keyword'>+</span></td>
+            <td><span class='keyword'>-</span></td>
+            <td><span class='keyword'>*</span></td>
+            <td><span class='keyword'>/</span></td>
+            <td><span class='keyword'>^</span></td>
+            <td><span class='keyword'>(</span></td>
+            <td><span class='keyword'>)</span></td>
+
+          </tr>
+
+          <tr>
+
+          </tr>
+
+        </table>
+        <p>
+        </p>
+
+  </div>
+
+</div>
+
 <div class='section'>
 		<h2>Identifiers</h2>
 			<div class='desc'>
@@ -220,7 +319,7 @@
 			</p>
 		</div>
 		
-		<div class='subsection'>
+		<div id="ppm" class='subsection'>
 			<h2>PPM Variables</h2>
 				<h5><span class='keyword'>ppm</span> valueType ppmType identifier ["alias"];</h5>
 
@@ -260,7 +359,7 @@
 
 		</div>
 
-		<div class='subsection'>
+		<div id="dpm" class='subsection'>
 			<h2>DPM Variables</h2>
 				<h5><span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
 
@@ -292,7 +391,7 @@
 
 		</div>
 
-		<div class='subsection'>
+		<div id="dsm" class='subsection'>
 			<h2>DSM Variables</h2>
 				<h5><span class='keyword'>decision</span> <span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
 				<div class='desc'>
@@ -310,7 +409,7 @@
 
 </div>
 
-<div class='section'>
+<div id="lookup" class='section'>
 		<h2>Lookup Definitions/References</h2>
 				<h5><span class='keyword'>lookup</span>("Lookup Name", xParameterVariable, yParameterVariable);</h5>
 
@@ -318,7 +417,7 @@
 					<p>
 					This statement defines a lookup and returns the looked-up value. It can be used on the right hand side of an assignment ( = ) statement.
 					When a lookup is defined, the compiler searches for the lookup data in memory. An error will be thrown if the data does not exist.
-					See the <span class='keyword'>import</span> statement for how to load lookup data.
+					See the <span class='keyword'><a href="#import">import</a></span> statement for how to load lookup data.
 					</p>		
 
 					<p>
@@ -333,7 +432,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 </div>
 
-<div class='section'>
+<div id="powerlookup" class='section'>
 		<h2>PowerLookup Definitions/References</h2>
 
 			<div class='desc'>
@@ -348,7 +447,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 </div>
 
-<div class='section'>
+<div id="rule" class='section'>
 		<h2>Rule Definitions/References</h2>
 
 			<div class='desc'>
@@ -371,12 +470,12 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 </div>
 
-<div class='section'>
+<div id="ruleset" class='section'>
 		<h2>Ruleset Definitions/References</h2>
 
 			<div class='desc'>
 				<p>
-				Need more info here.
+				<i>Missing info about 'PL' modifier keyword.</i>
 				</p>		
 			</div>
 
@@ -405,7 +504,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 </div>
 
-<div class='section'>
+<div id="condition" class='section'>
 		<h2>Condition Message Definitions/References</h2>
 
       <h5><span class='keyword'>condition</span> identifier("SystemName", ConditionType, PriorToType, "Image Doc Name", "Condition message");</h5>
@@ -463,7 +562,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 </div>
 
-<div class='section'>
+<div id="message" class='section'>
 		<h2>Message Definitions</h2>
 
       <h5><span class='keyword'>message</span> (exception, exceptionType, "Message text to display.");</h5>
@@ -486,7 +585,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
         "Message text": Actual text of the message that will be displayed.<br />
         <br />
         DPM variable values can be incorporated into the message text by surrounding the variable name with &lt;DPM&gt; &lt;/DPM&gt; tags.<br />
-        When using DPM variables within messages, if the DPM/DSM has an alias defined, the alias <em>must</em> be used; the engine only recognizes/knows about the alias.
+        When using DPM variables within messages, if the DPM/DSM has an <a href="#alias">alias</a> defined, the alias <em>must</em> be used; the engine only recognizes/knows about the alias.
         </p>	
         
         <p>
@@ -509,7 +608,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 </div>
 
-<div class='section'>
+<div id="alias" class='section'>
 		<h2>Aliases</h2>
 			<div class='desc'>
 				<p>
@@ -579,7 +678,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 		</div>
 </div>
 
-<div class='section'>
+<div id="guideline" class='section'>
 		<h2>Guideline Definitions</h2>
 				<h5><span class='keyword'>guideline</span>("Guideline Name") ... <span class='keyword'>end</span></h5>
 
@@ -605,7 +704,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 			</p>
 </div>
 
-<div class='section'>
+<div id="include" class='section'>
 		<h2>Including Source Files</h2>
 				<h5><span class='keyword'>include</span>("includeFileName");</h5>
 				<div class='desc'>
@@ -629,7 +728,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 				</p>
 </div>
 		
-<div class='section'>
+<div id="import" class='section'>
 		<h2>Importing Files</h2>
 				<h5><span class='keyword'>import</span>( importType, "csvFileToImport" );</h5>
 
@@ -689,7 +788,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 		</div>
 
-<div class='section'>
+<div id="xmlfunc" class='section'>
 		<h2>XML Functions</h2>
 				<h5><span class='keyword'>xmlfunc</span> identifier( [IN|OUT] dpmVariable, [IN|OUT] "constant", [IN|OUT] 15.5 );</h5>
 
@@ -767,7 +866,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 		<div class='section'>
 				<h2>Miscellaneous</h2>
-				<div class='subsection'>
+				<div id="InsertPricingGuideline" class='subsection'>
 					<h2>Inserting a Pricing Guideline (special rule)</h2>
 						<h5><span class='keyword'>InsertPricingGuideline</span>();</h5>
 

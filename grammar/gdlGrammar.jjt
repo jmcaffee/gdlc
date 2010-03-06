@@ -293,6 +293,8 @@ TOKEN :  /* Equality Operators */
 | < GT:     ">">
 | < LEQ:    "<=">
 | < GEQ:    ">=">
+| < IN1:    "in">
+| < IN2:    "??">
 }
   
 
@@ -822,6 +824,8 @@ void EqualityOperator() :
   | t=<EQU>		{ jjtThis.data.put("value", new String("==") ); }
   | t=<LEQ>		{ jjtThis.data.put("value", new String("&lt;=") ); }
   | t=<GEQ>  	{ jjtThis.data.put("value", new String("&gt;=") ); }
+  | t=<IN1>  	{ jjtThis.data.put("value", new String("??") ); }
+  | t=<IN2>  	{ jjtThis.data.put("value", new String("??") ); }
 }
 
 
