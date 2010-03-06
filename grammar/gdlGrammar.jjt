@@ -1098,7 +1098,7 @@ void LookupDef() :
 void Message() :
 { String msg;}
 {
-  "message" <LPAREN> ( ( Exptn() "," ExptnType() ) | MessageType() ) "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
+  "message" <LPAREN> MessageType() "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
 }
 
 void Exptn() :
@@ -1111,13 +1111,13 @@ void Exptn() :
 void ExptnType() :
 { Token t;}
 {
-  ( t=<MSG_EXC_ASSETS> | t=<MSG_EXC> ) { jjtThis.data.put("value", t.image); }
+  ( t=<MSG_EXC_ASSETS> /*| t=<MSG_EXC>*/ ) { jjtThis.data.put("value", t.image); }
 }
 
 void MessageType() :
 { Token t; }
 {
-  ( t=<MSG_FINDINGS> | t=<MSG_OBSERVATION> | t=<MSG_CREDIT> ) { jjtThis.data.put("value", t.image); }
+  ( t=<MSG_FINDINGS> | t=<MSG_OBSERVATION> | t=<MSG_CREDIT> | t=<MSG_EXC> ) { jjtThis.data.put("value", t.image); }
 }
 
 void ConditionMsgRef() :

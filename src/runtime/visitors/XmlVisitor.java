@@ -492,7 +492,10 @@ public class XmlVisitor extends DepthFirstVisitor {
 		XmlElem elem = (XmlElem)data;
 		String value = node.getData("value");
 		
-		if(value.equalsIgnoreCase("findings")) {
+		if(value.equalsIgnoreCase("exception")) {
+			value = new String("Exceptions");
+		}
+		else if(value.equalsIgnoreCase("findings")) {
 			value = new String("Findings");
 		}
 		else if(value.equalsIgnoreCase("observation")) {
