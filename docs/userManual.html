@@ -565,19 +565,14 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 <div id="message" class='section'>
 		<h2>Message Definitions</h2>
 
-      <h5><span class='keyword'>message</span> (exception, exceptionType, "Message text to display.");</h5>
       <h5><span class='keyword'>message</span> (messageType, "Message text to display.");</h5>
 
 			<div class='desc'>
         <p>
-        exception: Exception type messages are used to indicate a <em>failure</em> of some sort. Exception messages are displayed on the decision results.<br />
-        exceptionType: When the 'exception' message type is used, the exceptionType is <em>required</em>. It can be one of the following:<br />
+        messageType: Exception type messages are used to indicate a <em>failure</em> of some sort. Exception messages are displayed on the decision results.
+        Message types other than exceptions are used to convey information to the user. The following types are available:<br />
           <ul>
             <li><span class='keyword'>exception</span></li>
-            <li><span class='keyword'>assets</span></li>
-          </ul>
-        messageType: Message types other than exceptions are used to convey information to the user. The following types are available:<br />
-          <ul>
             <li><span class='keyword'>findings</span></li>
             <li><span class='keyword'>observation</span></li>
             <li><span class='keyword'>credit</span></li>
@@ -600,7 +595,7 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 
 			<p class='example'>
         Exception message:<br />
-        <span class='keyword'>message</span>(exception, exception, "LTV of &lt;DPM&gt;LTV&lt;/DPM&gt; is greater than 70%.");<br />
+        <span class='keyword'>message</span>(exception, "LTV of &lt;DPM&gt;LTV&lt;/DPM&gt; is greater than 70%.");<br />
         <br />
         Informational message:<br />
         <span class='keyword'>message</span>(findings, "The borrower has a payoff on their credit report.");<br />

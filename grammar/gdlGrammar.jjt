@@ -149,7 +149,6 @@ TOKEN :  /* Guideline Keywords */
 TOKEN :  /* Guideline 'Message' Keywords */
 {
   < MSG_EXC:          "exception">
-| < MSG_EXC_ASSETS:   "assets">
 | < MSG_FINDINGS:     "findings">
 | < MSG_OBSERVATION:  "observation">
 | < MSG_CREDIT:       "credit">
@@ -1099,19 +1098,6 @@ void Message() :
 { String msg;}
 {
   "message" <LPAREN> MessageType() "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
-}
-
-void Exptn() :
-{}
-{
-  <MSG_EXC>
-}
-
-
-void ExptnType() :
-{ Token t;}
-{
-  ( t=<MSG_EXC_ASSETS> /*| t=<MSG_EXC>*/ ) { jjtThis.data.put("value", t.image); }
 }
 
 void MessageType() :

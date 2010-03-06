@@ -18,8 +18,6 @@ import runtime.parser.ASTElseActions;
 import runtime.parser.ASTEqualityCompute;
 import runtime.parser.ASTEqualityOperator;
 import runtime.parser.ASTExpression;
-import runtime.parser.ASTExptn;
-import runtime.parser.ASTExptnType;
 import runtime.parser.ASTFunctionDef;
 import runtime.parser.ASTFunctionDefArg;
 import runtime.parser.ASTFunctionDefArgList;
@@ -362,22 +360,6 @@ public class DepthFirstVisitor implements GdlParserVisitor {
 	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTMessage, java.lang.Object)
 	 */
 	public Object visit(ASTMessage node, Object data) {
-		data = node.childrenAccept(this, data);
-		return data;
-	}
-
-	/* (non-Javadoc)
-	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTExptn, java.lang.Object)
-	 */
-	public Object visit(ASTExptn node, Object data) {
-		data = node.childrenAccept(this, data);
-		return data;
-	}
-
-	/* (non-Javadoc)
-	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTExptnType, java.lang.Object)
-	 */
-	public Object visit(ASTExptnType node, Object data) {
 		data = node.childrenAccept(this, data);
 		return data;
 	}

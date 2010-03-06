@@ -20,8 +20,6 @@ import runtime.parser.ASTElseActions;
 import runtime.parser.ASTEqualityCompute;
 import runtime.parser.ASTEqualityOperator;
 import runtime.parser.ASTExpression;
-import runtime.parser.ASTExptn;
-import runtime.parser.ASTExptnType;
 import runtime.parser.ASTFunctionDef;
 import runtime.parser.ASTFunctionDefArg;
 import runtime.parser.ASTFunctionDefArgList;
@@ -536,32 +534,6 @@ public class DataVisitor implements GdlParserVisitor {
 	}
 
 	public Object visit(ASTMessage node, Object data) {
-		// Dump node info
-		CompilerContext ctx = (CompilerContext)data;
-		int cnt = ctx.getTabCount();
-
-		Log.info(tabify(cnt,node.toString()));
-		
-		ctx.setTabCount(cnt+1);
-		node.childrenAccept(this, data);
-		ctx.setTabCount(cnt);
-		return ctx;
-	}
-
-	public Object visit(ASTExptn node, Object data) {
-		// Dump node info
-		CompilerContext ctx = (CompilerContext)data;
-		int cnt = ctx.getTabCount();
-
-		Log.info(tabify(cnt,node.toString()));
-		
-		ctx.setTabCount(cnt+1);
-		node.childrenAccept(this, data);
-		ctx.setTabCount(cnt);
-		return ctx;
-	}
-
-	public Object visit(ASTExptnType node, Object data) {
 		// Dump node info
 		CompilerContext ctx = (CompilerContext)data;
 		int cnt = ctx.getTabCount();

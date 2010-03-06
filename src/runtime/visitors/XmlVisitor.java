@@ -24,8 +24,6 @@ import runtime.parser.ASTElseActions;
 import runtime.parser.ASTEqualityCompute;
 import runtime.parser.ASTEqualityOperator;
 import runtime.parser.ASTExpression;
-import runtime.parser.ASTExptn;
-import runtime.parser.ASTExptnType;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTIfActions;
 import runtime.parser.ASTInsertPricing;
@@ -462,29 +460,6 @@ public class XmlVisitor extends DepthFirstVisitor {
 		me.appendXml(msgText.toString());
 
 		elem.appendXml(me.toXml());
-		return elem;
-	}
-
-	public Object visit(ASTExptn node, Object data) {
-		XmlElem elem = (XmlElem)data;
-		String value = new String("Exceptions");
-									// Set attributes for the parent Message element.
-		elem.putAttribute("Type", value);
-		return elem;
-	}
-
-	public Object visit(ASTExptnType node, Object data) {
-		XmlElem elem = (XmlElem)data;
-		String value = node.getData("value");
-		
-		if(value.equalsIgnoreCase("exception")){
-			value = new String("Exceptions");
-		}
-		else if(value.equalsIgnoreCase("assets")) {
-			value = new String("Assets");
-		}
-									// Set attributes for the parent Message element.
-		elem.putAttribute("ExceptionType", value);
 		return elem;
 	}
 
