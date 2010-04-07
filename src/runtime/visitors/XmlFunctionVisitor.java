@@ -27,7 +27,7 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 		String id 		= node.getData("Identifier");
 		
 		if(ctx.containsXmlFunction(id)){
-			ctx.addWarning(new CompileError(CompileWarning.warnings.REDEFINITION,
+			ctx.addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
 					new String("XmlFunction [" + id + "] has been redefined.")));
 		}
 		
