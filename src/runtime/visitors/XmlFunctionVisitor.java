@@ -4,6 +4,7 @@ import runtime.compiler.IProgramContext;
 import runtime.compiler.XmlFunctionMgr.XmlFunction;
 import runtime.main.CompileError;
 import runtime.main.CompileWarning;
+import runtime.main.Log;
 import runtime.parser.ASTXmlFuncDef;
 import runtime.parser.ASTXmlFuncRef;
 import runtime.parser.ASTXmlFuncRefArg;
@@ -29,6 +30,7 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 		if(ctx.containsXmlFunction(id)){
 			ctx.addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
 					new String("XmlFunction [" + id + "] has been redefined.")));
+			Log.warning("Context already contains xmlfunc: " + id + ". Redef warning generated.");
 		}
 		
 		ctx.addXmlFunction(id, node);
@@ -47,6 +49,7 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 			ctx.addError(new CompileError(CompileError.errors.DEFMISSING,
 					new String("XmlFunction [" + id + "] has not been defined.")));
 			
+			Log.error("Xmlfunc definition missing from context: " + id + ". Def missing error generated.");
 			return ctx;
 		}
 		
@@ -61,11 +64,13 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 			int countDiff = defArgCount - this.argCount;
 			ctx.addError(new CompileError(CompileError.errors.MISSINGARG,
 						new String("XmlFunction reference [" + id + "] is missing " + Integer.toString(countDiff) + " argument(s). Expecting " + Integer.toString(defArgCount) + ", found " + Integer.toString(this.argCount) + ".")));
+			Log.error("Xmlfunc ref is missing argument: " + id + ". Missing Arg error generated.");
 		}
 		
 		if(this.argCount > defArgCount){
 			ctx.addError(new CompileError(CompileError.errors.UNEXPECTEDARG,
 						new String("XmlFunction reference [" + id + "] has too many arguments. Expecting " + Integer.toString(defArgCount) + ", found " + Integer.toString(this.argCount) + ".")));
+			Log.error("Xmlfunc ref has extra arguments: " + id + ". Unexpected Arg error generated.");		
 		}
 		
 		return ctx;

@@ -70,7 +70,20 @@ SKIP :
 | "\r"
 | "\n"
 | <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
-| <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/">
+// | <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/">	// Disabling this and setting up the following...
+}
+
+
+SKIP :
+{														// This changes the lexical state so that tokens are
+<"/*">: INSIDE_COMMENT									// not matched (the tokens only match in the DEFAULT
+}														// state).
+
+<INSIDE_COMMENT>
+SKIP:
+{														// This sets the state back to DEFAULT when the ending
+        <"*/">: DEFAULT									// tag for the multi-line comment is parsed.
+|       <~[]>											// See http://www.cs.utsa.edu/~danlo/teaching/cs4713/lecture/node16.html
 }
 
 
