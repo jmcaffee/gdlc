@@ -77,7 +77,7 @@ SKIP :
 SKIP :
 {														// This changes the lexical state so that tokens are
 <"/*">: INSIDE_COMMENT									// not matched (the tokens only match in the DEFAULT
-}														// state).
+}														// state). This method does NOT allow nested multi-line comments.
 
 <INSIDE_COMMENT>
 SKIP:
@@ -151,8 +151,8 @@ TOKEN :  /* Guideline Keywords */
 | < THEN:       "then">
 | < ELSE:       "else">
 | < END:        "end">
-| < TRUE:       ( "true" | "TRUE" ) >
-| < FALSE:      ( "false" | "FALSE" ) >
+| < TRUE:       ( "true" | "True" | "TRUE" ) >
+| < FALSE:      ( "false" | "False" | "FALSE" ) >
 | < CONTINUE:   "continue">
 | < XMLFUNC:   	"xmlfunc">
 }
@@ -325,6 +325,13 @@ TOKEN :  /* Boolean Operators */
 TOKEN :  /* Misc Symbols*/
 {
   < STRING:   "$" >
+}
+  
+
+
+TOKEN :  /* Reserved Constants */
+{
+  < CONST_NULL:		( "NULL" | "Null" | "null" ) >
 }
   
 
@@ -895,6 +902,9 @@ void Constant() :
 { Token t; String str; }
 {
 	t=<NUMERIC_CONSTANT> 	{ jjtThis.data.put("value",t.image ); }
+	| t=<CONST_NULL>		{ jjtThis.data.put("value","NULL" ); }
+	| t=<TRUE>				{ jjtThis.data.put("value","True" ); }
+	| t=<FALSE> 			{ jjtThis.data.put("value","False" ); }
   	| 
   	str=StringLiteral()  	{ jjtThis.data.put("value",str); }
 }
