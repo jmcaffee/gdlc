@@ -113,6 +113,14 @@ TOKEN :  /* GDL Keywords 3 */
 
 
 
+TOKEN :  /* GDL Keywords 4 (Casting) */
+{
+  < CAST_DPM: "DPM">
+| < CAST_PPM: "PPM">
+}
+
+
+
 SPECIAL_TOKEN :  /* DPM Variable modifier */
 {
   < DECISION: "decision">
@@ -1160,7 +1168,9 @@ void PriorTo() :
 void VarRef() :
 {String nm;}
 {
-  nm=Name(){jjtThis.data.put("Name",nm);}
+  <CAST_DPM> <LPAREN> nm=Name() <RPAREN> 	{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","dpm");}
+  | <CAST_PPM> <LPAREN> nm=Name() <RPAREN> 	{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","ppm");}
+  | nm=Name()								{jjtThis.data.put("Name",nm);}
 //  ( VarCast() )? <IDENTIFIER>
 }
 
