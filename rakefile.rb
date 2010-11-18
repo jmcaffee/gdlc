@@ -11,6 +11,7 @@ require 'rake'
 require 'rake/clean'
 require 'rakeUtils.rb'
 
+$verbose = true
 
 #### Directories
 BUILD_DIR         = "./build"
@@ -29,6 +30,8 @@ DIST_DIR          = "./dist"
 GRAMMAR_DIR         = "grammar"
 GRAMMAR_BUILD_DIR   = "#{GRAMMAR_DIR}/build"
 
+# Vendor Libraries
+OSTERMILLERUTILS	= File.expand_path(File.join(LIBS_DIR, "ostermillerutils","ostermillerutils*.jar"))
 
 #### Cleanup tasks
 CLEAN.include("#{BUILD_DIR}/**/*.*")
@@ -48,7 +51,18 @@ directory SRC_PARSER_DIR
 
 #### Imports
 # Note: Rake loads imports only after the current rakefile has been completely loaded.
+# Load grammar tasks.
 import "#{GRAMMAR_DIR}/grammar.rake"
+
+# Load local tasks.
+imports = FileList['tasks/**/*.rake']
+imports.each do |imp|
+	puts "Importing local task file: #{imp}" if $verbose
+	import "#{imp}"
+end
+
+
+
 
 #######################################
 
@@ -96,8 +110,8 @@ desc "compile all java src files"
 
 task :compile => [:init] do
   puts "Compiling java source."
-  cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar").gsub(/\//, "\\")
-  cvsjar = "#{LIBS_DIR}/ostermillerutils_1_06_01.jar"
+#  cvsjar = File.expand_path("#{OSTERMILLERUTILS}").gsub(/\//, "\\")
+  cvsjar = "#{OSTERMILLERUTILS}"
 
   classpath = "-classpath #{cvsjar}"
   
@@ -127,9 +141,9 @@ desc "compile each src file individually"
 task :compile_each => [:init] do
   puts "Compiling each java source file individually."
   
-  cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar").gsub(/\//, "\\")
-  cvsjar = File.expand_path("#{LIBS_DIR}/ostermillerutils_1_06_01.jar")
-  cvsjar = "#{LIBS_DIR}/ostermillerutils_1_06_01.jar"
+  cvsjar = File.expand_path("#{OSTERMILLERUTILS}").gsub(/\//, "\\")
+  cvsjar = File.expand_path("#{OSTERMILLERUTILS}")
+  cvsjar = "#{OSTERMILLERUTILS}"
 
   classpath = "-classpath #{cvsjar}"
   
@@ -171,7 +185,7 @@ end
 #######################################
 
 task :copyLibsToDist do
-  FileList.new(Dir.glob("#{LIBS_DIR}/**.*")).each do |f|
+  FileList.new(Dir.glob("#{LIBS_DIR}/**/**.*")).each do |f|
     cp_r(f, "#{DIST_DIR}")
   end
   puts "Libraries copied to #{DIST_DIR}."
@@ -287,6 +301,23 @@ namespace :version do
   end
 
 end # namespace :version
+
+#######################################
+#######################################
+
+def currentVersionString
+    yml = DataFile.new
+    key = "version_major"
+    minorkey = "version_minor"
+    buildkey = "version_build"
+    data = yml.read("#{MISC_DIR}/projectproperties.yml")
+    major = data["#{key}"]
+	minor = data["#{minorkey}"]
+									# The version file is incremented at the end of the build so it's ready for the next. 
+									# To be sure the filename will match the actual version, decrement the build #.
+	build = data["#{buildkey}"] - 1 
+	versionStr = "#{major}.#{minor}.#{build}"
+end
 
 #######################################
 #######################################

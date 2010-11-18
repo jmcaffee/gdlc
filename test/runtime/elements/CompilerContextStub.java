@@ -6,9 +6,11 @@ import java.util.HashMap;
 
 import runtime.compiler.IProgramContext;
 import runtime.compiler.IRuleset;
+import runtime.compiler.IVariable;
 import runtime.compiler.VarDpm;
 import runtime.compiler.VarPpm;
 import runtime.compiler.FunctionMgr.Function;
+import runtime.compiler.XmlFunctionMgr.XmlFunction;
 import runtime.main.IProblem;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTConditionMsgDef;
@@ -16,6 +18,7 @@ import runtime.parser.ASTFunctionDef;
 import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTVarDef;
+import runtime.parser.ASTXmlFuncDef;
 
 public class CompilerContextStub implements IProgramContext {
 	ASTCompilationUnit	rootNode;
@@ -159,5 +162,30 @@ public class CompilerContextStub implements IProgramContext {
 	public VarDpm getVar(VarDpm var){ return null; /*return dpmVars.get(var.getName());*/	}
 
 	public boolean containsVar(VarDpm var){ return false; /*return dpmVars.containsKey(var.getName());*/ }
+
+	public void addXmlFunction(String key, ASTXmlFuncDef rule) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean containsXmlFunction(String key) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public XmlFunction getXmlFunction(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public IVariable getVarDpm(String alias) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public IVariable getVarPpm(String alias) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -38,11 +38,15 @@ public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncl
 
 	public abstract IVariable			getVar(VarPpm var);
 
+	public abstract IVariable			getVarPpm(String alias);
+
 	public abstract boolean 			containsVar(VarPpm var);
 
 	public abstract void 				addVar(VarDpm var);
 
 	public abstract IVariable			getVar(VarDpm var);
+
+	public abstract IVariable			getVarDpm(String alias);
 
 	public abstract boolean 			containsVar(VarDpm var);
 

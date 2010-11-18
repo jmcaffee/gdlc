@@ -455,7 +455,6 @@ public class XmlVisitor extends DepthFirstVisitor {
 
 		StringBuffer msgText = new StringBuffer();
 		StringBuffer msg = new StringBuffer(node.getData("value"));
-		// TODO: Parse message and replace var names (<DPM></DPM>) with aliases.
 		
 		msgText.append("<![CDATA[").append(msg).append("]]>");
 		me.appendXml(msgText.toString());

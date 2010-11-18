@@ -113,10 +113,20 @@ TOKEN :  /* GDL Keywords 3 */
 
 
 
+TOKEN :  /* Only used with CAST_DPM and CAST_PPM */
+{
+  < #PAREN_LITERAL:
+      ("("
+      (   (~["(",")","\"","'",",","\n","\r"])
+      )+
+      ")")
+  >
+}
+  
 TOKEN :  /* GDL Keywords 4 (Casting) */
 {
-  < CAST_DPM: "DPM">
-| < CAST_PPM: "PPM">
+  < CAST_DPM: "DPM" ( <PAREN_LITERAL> | "(" <STRING_LITERAL> ")" ) >
+| < CAST_PPM: "PPM" ( <PAREN_LITERAL> | "(" <STRING_LITERAL> ")" ) >
 }
 
 
@@ -257,6 +267,19 @@ TOKEN :
       )*
       "'")
   >
+|
+  < DEREFERENCE:
+      ("()")
+  >
+/*
+|
+  < #BRACKET_LITERAL:
+      ("["
+      (   (~["]","\"","'",",","\n","\r"])
+      )+
+      "]")
+  > 
+*/
 |
   < CODE_BLOCK:
       ("{"
@@ -526,6 +549,7 @@ String ParenFilenameLiteral() #void :
   ( ( <LPAREN> fn=Filename() <RPAREN> ) | fn=Filename() ){ return fn;}
 }
 
+
 String ParenStringLiteral() #void :
 {String str;}
 {
@@ -559,7 +583,7 @@ void GuidelineDef() :
 void InsertPricing() :
 {}
 {
-	<INSERT_PRICING_GUIDELINE> <LPAREN><RPAREN> EOS()
+	<INSERT_PRICING_GUIDELINE> <DEREFERENCE> EOS()
 }
 
 String StringLiteral() #void : 
@@ -567,6 +591,20 @@ String StringLiteral() #void :
 {
   <STRING_LITERAL>  { return token.image.substring(1,(token.image.length()-1));}
 }
+
+/*
+String ParenLiteral() #void : 
+{}
+{
+  <PAREN_LITERAL>  { return token.image.substring(1,(token.image.length()-1));}
+}
+
+String BracketLiteral() #void : 
+{}
+{
+  <BRACKET_LITERAL>  { return (token.image.substring(1,(token.image.length()-1))).trim();}
+}
+*/
 
 String Name() #void :
 {}
@@ -577,7 +615,7 @@ String Name() #void :
 void FunctionRef() :
 {String nm;}
 {
-  nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> (FunctionRefArgList() )? <RPAREN> EOS()
+  nm=Name(){jjtThis.data.put("Name",nm);} ( <DEREFERENCE> | <LPAREN> (FunctionRefArgList() )? <RPAREN> ) EOS()
 }
 
 
@@ -602,7 +640,7 @@ void FunctionRefArg() :
 void FunctionDef() :
 {String nm, codeBlock;}
 {
-  nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> ( FunctionDefArgList() )? <RPAREN> 
+  nm=Name(){jjtThis.data.put("Name",nm);} ( <DEREFERENCE> | <LPAREN> ( FunctionDefArgList() )? <RPAREN> )
   codeBlock=CodeBlock(){jjtThis.data.put("codeBlock", codeBlock);}
 }
 
@@ -707,7 +745,7 @@ String ExecuteType() #void :
 void RulesetRef() :
 {String nm;}
 {
-  "ruleset" nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> <RPAREN> EOS()
+  "ruleset" nm=Name(){jjtThis.data.put("Name",nm);} <DEREFERENCE> EOS()
 }
 
 
@@ -715,7 +753,7 @@ void RulesetRef() :
 void RuleDef() :
 {String nm;}
 {
-  "rule" nm=Name(){jjtThis.data.put("Name",nm);jjtThis.data.put("Id","99999");} <LPAREN> <RPAREN>
+  "rule" nm=Name(){jjtThis.data.put("Name",nm);jjtThis.data.put("Id","99999");} <DEREFERENCE>
   ( IfThenElse() )
   <END>
 }
@@ -725,7 +763,7 @@ void RuleDef() :
 void RuleRef() :
 {String nm;}
 {
-  "rule" nm=Name(){jjtThis.data.put("Name",nm);} <LPAREN> <RPAREN> EOS()
+  "rule" nm=Name(){jjtThis.data.put("Name",nm);} <DEREFERENCE> EOS()
 }
 
 
@@ -1140,7 +1178,7 @@ void MessageType() :
 void ConditionMsgRef() :
 {String id;}
 {
-  "condition" id=Name(){jjtThis.data.put("Identifier",id);} <LPAREN> <RPAREN> EOS()
+  "condition" id=Name(){jjtThis.data.put("Identifier",id);} <DEREFERENCE> EOS()
 }
 
 void ConditionMsgDef() :
@@ -1168,16 +1206,36 @@ void PriorTo() :
 void VarRef() :
 {String nm;}
 {
-  <CAST_DPM> <LPAREN> nm=Name() <RPAREN> 	{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","dpm");}
-  | <CAST_PPM> <LPAREN> nm=Name() <RPAREN> 	{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","ppm");}
-  | nm=Name()								{jjtThis.data.put("Name",nm);}
-//  ( VarCast() )? <IDENTIFIER>
+  nm=VarCastDpm()  				{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","dpm");}
+  | nm=VarCastPpm() 			{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","ppm");}
+  | nm=Name()					{jjtThis.data.put("Name",nm);}
 }
 
-void VarCast() :
-{}
+String VarCastDpm() #void :
+{Token t; String tmp;}
 {
-  <LPAREN> VariableType() <RPAREN>
+  t=<CAST_DPM> { 	tmp=t.image.substring(4,(t.image.length()-1)); 
+					if( tmp.substring(0,1).equals("\"") ){
+						if( tmp.substring((tmp.length()-1),(tmp.length())).equals("\"") ){
+							tmp=tmp.substring(1,(tmp.length()-1));
+						}
+					}
+					return tmp;
+			   }
+}
+
+
+String VarCastPpm() #void :
+{Token t; String tmp;}
+{
+  t=<CAST_PPM> { 	tmp=t.image.substring(4,(t.image.length()-1)); 
+					if( tmp.substring(0,1).equals("\"") ){
+						if( tmp.substring((tmp.length()-1),(tmp.length())).equals("\"") ){
+							tmp=tmp.substring(1,(tmp.length()-1));
+						}
+					}
+					return tmp;
+			   }
 }
 
 

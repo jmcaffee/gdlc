@@ -125,4 +125,56 @@ public class TestHelper {
 		return result;
 	}
 
+	
+	/**
+	 * fileContentsAreIdenticalWithStrippedDate compares two text 
+	 * files and returns false if any errors occur,
+	 * either file is not found, or if any line does not match.
+	 * Before comparison, the guideline StartDate Attribute is 
+	 * stripped from both file's data.
+	 * @param fname1 filename/path of file to compare
+	 * @param fname2 filename/path of 2nd file to compare with
+	 * @return true/false
+	 */
+	protected boolean fileContentsAreIdenticalWithStrippedDate(String fname1, String fname2){
+		boolean result = true;
+		
+		BufferedReader f1 = null;
+		BufferedReader f2 = null;
+		String line;
+		String otherLine;
+		
+		try{
+			f1 = new BufferedReader(new FileReader(fname1));
+			f2 = new BufferedReader(new FileReader(fname2));
+
+			while(null != (line = f1.readLine())){
+				otherLine = f2.readLine();
+				if(!stripDate(line).equals(stripDate(otherLine))){
+					System.out.println("[FILECOMPARE = false] contents do not match.");
+					result = false;
+					f1.close();
+					f2.close();
+					break;
+				}
+				
+			}
+		}
+		catch(FileNotFoundException e){
+			System.out.println("[FILECOMPARE = false] File not found: "+e.getMessage()+".");
+			return false;
+		}
+		catch(IOException e){
+			System.out.println("[FILECOMPARE = false] Read exception: "+e.getMessage()+".");
+			return false;
+		}
+		
+		return result;
+	}
+	
+	
+	String stripDate(String line){
+		String clean = line.replaceFirst("StartDate=\"[a-zA-Z]++\\s\\d{1,2}+\\s\\d{4}+\\s\\d{2}+:\\d{2}+(AM|PM)\"", "StartDate=\"\"");
+		return clean;
+	}
 }

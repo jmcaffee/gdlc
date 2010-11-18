@@ -28,7 +28,7 @@ end
 rule R-IfMessageRule()							// Define the rule.
 	if ( Loan_Amount == Loan_Amount )	
 	then
-	  message(exception, exception, "IfMsg exception message.");
+	  message(exception, "IfMsg exception message.");
 	end
 end
 
@@ -36,15 +36,14 @@ rule R-ElseMessageRule()							// Define the rule.
 	if ( Loan_Amount == Loan_Amount )	
 	then
 	else
-	  message(exception, exception, "ElseMsg exception message.");
+	  message(exception, "ElseMsg exception message.");
 	end
 end
 
 rule R-AllMessages()							// Define the rule.
 	if ( Loan_Amount == Loan_Amount )	
 	then
-	  message(exception, exception, "exception/exception message.");
-	  message(exception, assets, "exception/asset message.");
+	  message(exception, "exception message.");
 	  message(findings, "findings message.");
 	  message(observation, "observation message.");
 	  message(credit, "credit message.");

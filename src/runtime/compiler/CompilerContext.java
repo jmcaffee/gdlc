@@ -75,11 +75,35 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 
 	public boolean containsVar(VarPpm var){ return ppmVars.containsKey(var.getName()); }
 
+	public IVariable getVarPpm(String alias) {
+		if(ppmVars.isEmpty()){
+			return null;
+		}
+		for (IVariable ppm : ppmVars.values()) {
+			if(ppm.getAlias().equalsIgnoreCase(alias)){
+				return ppm;
+			}
+		}
+		return null;
+	}
+
 	public void addVar(VarDpm var){ dpmVars.put(var.getName(), var); }
 
 	public VarDpm getVar(VarDpm var){ return (VarDpm)dpmVars.get(var.getName());	}
 
 	public boolean containsVar(VarDpm var){ return dpmVars.containsKey(var.getName()); }
+
+	public IVariable getVarDpm(String alias) {
+		if(dpmVars.isEmpty()){
+			return null;
+		}
+		for (IVariable dpm : dpmVars.values()) {
+			if(dpm.getAlias().equalsIgnoreCase(alias)){
+				return dpm;
+			}
+		}
+		return null;
+	}
 
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addRule(java.lang.String, runtime.parser.ASTRuleDef)
@@ -421,6 +445,86 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 
 	public LookupData getLookupData(String name){
 		return this.lookupData.get(name);
+	}
+	
+	
+	/**
+	 * Return a variable's name based on its alias.
+	 * @param alias variable alias
+	 * @param hint DPM,PPM or "" to search both both
+	 * @return variable name or null if no match
+	 */
+	public String getVarName(String alias, String hint){
+		
+		if(hint.isEmpty() || hint.toUpperCase().contains("DPM")){
+			if(!dpmVars.isEmpty()){
+				for (IVariable dpm : dpmVars.values()) {
+					if(dpm.getAlias().equalsIgnoreCase(alias)){
+						return dpm.getName();
+					}
+				}
+			}
+
+/*
+ * 			VarDpm var = (VarDpm) getDpmVar(alias);
+ * 
+			if(null != var){
+				return var.name;
+			}
+ * 
+ */
+		}
+		
+		if(hint.isEmpty() || hint.toUpperCase().contains("PPM")){
+			if(!ppmVars.isEmpty()){
+				for (IVariable ppm : ppmVars.values()) {
+					if(ppm.getAlias().equalsIgnoreCase(alias)){
+						return ppm.getName();
+					}
+				}
+			}
+
+/*			
+			VarPpm var = (VarPpm) getPpmVar(alias);
+			if(null != var){
+				return var.name;
+			}
+*/
+		}
+		
+		return null;
+	}
+	
+	
+	/**
+	 * Return a variable's alias based on its name.
+	 * @param name variable name (valid id)
+	 * @param hint DPM,PPM or "" for both
+	 * @return variable alias or null if no match
+	 */
+	public String getVarAlias(String name, String hint){
+		
+		if(hint.isEmpty() || hint.toUpperCase().contains("DPM")){
+			if(!dpmVars.isEmpty()){
+				for (IVariable dpm : dpmVars.values()) {
+					if(dpm.getName().equalsIgnoreCase(name)){
+						return dpm.getAlias();
+					}
+				}
+			}
+		}
+		
+		if(hint.isEmpty() || hint.toUpperCase().contains("PPM")){
+			if(!ppmVars.isEmpty()){
+				for (IVariable ppm : ppmVars.values()) {
+					if(ppm.getName().equalsIgnoreCase(name)){
+						return ppm.getAlias();
+					}
+				}
+			}
+		}
+		
+		return null;
 	}
 
 

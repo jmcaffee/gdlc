@@ -383,7 +383,7 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertTrue("Output file [testCompilePowerLookupWithManyComparisons] not created", f.exists());
 
-		assertTrue("File contents do not match", fileContentsAreIdentical(outFile, expected));
+		assertTrue("File contents do not match", fileContentsAreIdenticalWithStrippedDate(outFile, expected));
 
 	}
 
@@ -418,7 +418,7 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertTrue("Output file [testCompilePowerLookupWithManyComparisons] not created", f.exists());
 
-		assertTrue("File contents do not match", fileContentsAreIdentical(outFile, expected));
+		assertTrue("File contents do not match", fileContentsAreIdenticalWithStrippedDate(outFile, expected));
 
 	}
 
@@ -476,9 +476,9 @@ public class CompileMgrTester extends TestHelper {
 		assertTrue("XML string is empty", (xml.length() > 0));
 		
 		String outFile = new String(TESTDIR + "/output/deepComputeTest.xml");
-		String expected = new String(EXPECTED + "/expectedDeepComputeTest.xml");
+		String expected = new String(EXPECTED + "/deepComputeTest.xml");
 		
-		assertTrue("File contents do not match", fileContentsAreIdentical(outFile, expected));
+		assertTrue("File contents do not match", fileContentsAreIdenticalWithStrippedDate(outFile, expected));
 		
 	}
 
@@ -594,6 +594,7 @@ public class CompileMgrTester extends TestHelper {
 		String xml = mgr.getGuidelineXml();
 		assertTrue("XML string is empty", (xml.length() > 0));
 
+		// TODO: Turn this into a helper test function: wrap xml in currently dated Guideline tag.
 		SimpleDateFormat dtFormat = new SimpleDateFormat("MMM dd yyyy");
 		String gdlAttribs = new String("GuidelineID=\"1\" Name=\"TestGuideline\" Version=\"1\" StartDate=\"" + dtFormat.format(new Date()) + " 12:00AM\"");
 
@@ -942,4 +943,247 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 
+	@Test
+	public void testCompileUsingReservedConstants() {
+		String args[] = {new String(TESTDIR + "/compileTest-reservedConstants.gdl"),
+						new String("-v"),
+						new String("-vp"),
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+		assertIfContextHasError(mgr.getContext()); 
+		
+		String xml = mgr.getRuleXml("Rule-TestNullConstant");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/Rule-TestNullConstant.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("NullConstant XML string is not valid", validXml, xml);
+		
+		xml = mgr.getRuleXml("Rule-TestTrueConstant");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/Rule-TestTrueConstant.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("TrueConstant XML string is not valid", validXml, xml);
+		
+		xml = mgr.getRuleXml("Rule-TestFalseConstant");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/Rule-TestFalseConstant.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("FalseConstant XML string is not valid", validXml, xml);
+		
+
+	}
+
+	
+	@Test
+	public void testCompileUsingVarCasting() {
+		String args[] = {new String(TESTDIR + "/compileTest-varCasting.gdl"),
+						new String("-v"),
+						new String("-vp"),
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+		assertIfContextHasError(mgr.getContext()); 
+		
+		String xml = mgr.getRuleXml("Rule-TestDpmCast");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/Rule-TestDpmCast.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("DpmCast XML string is not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("Rule-TestDpmCastWithParens");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/Rule-TestDpmCastWithParens.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("DpmCast with parens in the alias failed", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("Rule-TestPpmCast");
+		assertTrue("PpmCast XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/Rule-TestPpmCast.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+		xml = mgr.getRuleXml("Rule-TestPpmCastWithParens");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/Rule-TestPpmCastWithParens.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("PpmCast with parens in the alias failed", validXml, xml);
+		
+		
+
+	}
+
+	
+	@Test
+	public void testCompilePowerLookups_CastingVars() {
+		String args[] = {new String(TESTDIR + "/powerLookupTest-castingVars.gdl"),
+						new String("/I" + TESTDIR),
+						new String("-v"),
+						new String("-vp"),
+						new String("-nooutput"),
+						};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+		assertIfContextHasError(mgr.getContext()); 
+		
+		String xml = mgr.getRuleXml("CastVarsNumericPLK-1");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/CastVarsNumericPLK-1.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("DpmCast XML string is not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("CastVarsTextPLK-1");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/CastVarsTextPLK-1.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("DpmCast with parens in the alias failed", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("CastVarsBooleanPLK-1");
+		assertTrue("PpmCast XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/CastVarsBooleanPLK-1.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("CastVarsBooleanPLK-2");
+		assertTrue("PpmCast XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/CastVarsBooleanPLK-2.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("CastVarsBooleanPLK-3");
+		assertTrue("PpmCast XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/CastVarsBooleanPLK-3.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+		
+
+	}
+
+	
+	@Test
+	public void testCompilePowerLookups_exeType() {
+		String args[] = {new String(TESTDIR + "/powerLookupTest-exeType.gdl"),
+						new String("/I" + TESTDIR),
+						new String("-v"),
+						new String("-vp"),
+						new String("-nooutput"),
+						};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+		assertIfContextHasError(mgr.getContext()); 
+		
+		String xml = mgr.getRulesetXml("TestTrueExeTypePLK");
+		assertTrue("TestTrueExeTypePLK ruleset XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/TestTrueExeTypePLK.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("TestTrueExeTypePLK ruleset XML is not valid", validXml, xml);
+		
+		
+		xml = mgr.getRulesetXml("TestContinueExeTypePLK");
+		assertTrue("TestContinueExeTypePLK ruleset XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/TestContinueExeTypePLK.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("TestContinueExeTypePLK ruleset XML is not valid", validXml, xml);
+		
+		
+	}
+
+	
+	@Test
+	public void testCompilePowerLookups_Msgs() {
+		String args[] = {new String(TESTDIR + "/powerLookupTest-msgs.gdl"),
+						new String("/I" + TESTDIR),
+						new String("-v"),
+						new String("-vp"),
+						new String("-nooutput"),
+						};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+		assertIfContextHasError(mgr.getContext()); 
+		
+		String xml = mgr.getRuleXml("MsgsTruePLK-1");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/MsgsTruePLK-1.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("PowerLookup with True Message XML not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("MsgsFalsePLK-1");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/MsgsFalsePLK-1.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("PowerLookup with False Message XML not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("MsgsTrueWithDpmPLK-1");
+		assertTrue("PpmCast XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/MsgsTrueWithDpmPLK-1.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("PowerLookup - True Message - Nested DPMs - XML not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("MsgsTrueWithDpmPLK-2");
+		assertTrue("PpmCast XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/MsgsTrueWithDpmPLK-2.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("PowerLookup - True Message - Nested DPMs - XML not valid", validXml, xml);
+		
+		
+		xml = mgr.getRuleXml("MsgsTrueWithDpmPLK-3");
+		assertTrue("PpmCast XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/MsgsTrueWithDpmPLK-3.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("PowerLookup - True Message - Nested DPMs - XML not valid", validXml, xml);
+		
+		
+
+	}
+
+	
 }

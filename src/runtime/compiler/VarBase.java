@@ -4,11 +4,11 @@ import runtime.parser.ASTVarDef;
 
 public class VarBase {
 
-	protected String varType = new String();
-	protected String name = new String();
-	protected String alias = new String();
-	protected String type = new String();
-	protected String dataType = new String();
+	protected String varType 	= new String();
+	protected String name 		= new String();
+	protected String alias 		= new String();
+	protected String type 		= new String();
+	protected String dataType 	= new String();
 
 	public VarBase(ASTVarDef node) {
 		super();
@@ -58,6 +58,10 @@ public class VarBase {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public void setType(String type) {

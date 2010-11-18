@@ -37,8 +37,25 @@ public class CsvPowerLookupFile {
 		boolean varIdsRead 		= false;
 		boolean varTypesRead 	= false;
 		boolean	actionsRead		= false;
+		PlkCsvData plk			= new PlkCsvData();
+		for(String[] row : data){
+			plk.addRow(row);
+			if(plk.isLookupComplete()){
+				if(plk.hasErrors()){
+					throw new CompileException("Invalid lookup format. Errors: " + plk.getErrors());
+				}
+				
+				map.put(plk.getName(), plk.getData());
+				plk.reset();
+			}
+		}
 		
-		for(String[] row : data){			
+		if(!plk.isLookupComplete()){
+			plk.endOfData();					// Tell Data object that we are finished.
+			map.put(plk.getName(), plk.getData());
+		}
+		
+/*		
 			if(isLookupTag(row)){			// It is a new lookup.
 				if(null != lkData){			// If lkData already points to something, 
 					map.put(lkData.name, lkData);	// store the previous object
@@ -60,7 +77,7 @@ public class CsvPowerLookupFile {
 			}
 			
 //	 This will never fire. Blank lines are not returned as part of the data.
-//	 This funcionality has been moved to the first check (above).			
+//	 This functionality has been moved to the first check (above).			
 //				if((null != lkData) && isBlankRow(row)){
 //					map.put(lkData.name, lkData);
 //					lkData = null;
@@ -105,6 +122,7 @@ public class CsvPowerLookupFile {
 		if(null != lkData){					// If there is an object from the last read,
 			map.put(lkData.name, lkData);	// store the data in the supplied Map.
 		}
+*/			
 		
 		return map;
 	}
@@ -179,12 +197,23 @@ public class CsvPowerLookupFile {
 		if((row[0].length() > 0) || (row[1].length() > 0)){
 			return false;
 		}
-											// Third column must have data in it.
-		if(row[2].length() < 1){
-			return false;
+		
+		boolean hasOneItem = false;
+		int startIndex = 2;				// Data should start at index 2.
+		int index = 0;
+		for(String item : row){
+			if(index++ < startIndex){
+				continue;				// Data should not start yet.
+			}
+			
+			if(!item.isEmpty() ){
+				hasOneItem = true;
+				break;
+				
+			}
 		}
-
-		return true;
+		
+		return hasOneItem;
 	}
 	
 /**
@@ -227,6 +256,7 @@ public class CsvPowerLookupFile {
 			if(index++ < startIndex){
 				continue;				// Data should not start yet.
 			}
+
 			lkData.operations.add(lkData.new VarOp(name));
 		}
 	}

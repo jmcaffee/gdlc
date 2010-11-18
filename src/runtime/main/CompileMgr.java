@@ -266,11 +266,6 @@ public class CompileMgr {
 			// Create XmlVisitor
 			XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
 			
-			// Turn on or off DataType attribute generation.
-			// TODO Remove code. This is now handled by static config object.
-//			xmlVisitor.generateDpmDataType(CompileMgr.config.applyDpmDataType );
-//			xmlVisitor.generatePpmDataType(CompileMgr.config.applyPpmDataType );
-			
 			XmlElem	gdlRoot = new XmlElem("GuidelineRoot");
 			
 			// Run the visitor against the guideline node.

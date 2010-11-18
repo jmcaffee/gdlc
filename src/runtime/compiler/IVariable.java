@@ -21,9 +21,12 @@ public interface IVariable {
 	
 	abstract public void setName(String name);
 
+	abstract public String getAlias();
+	
+	abstract public void setAlias(String alias);
+
 	abstract public String getType();
 	
 	abstract public void setType(String type);
 	
-	// TODO: Going to want to add alias support framework here.
 }

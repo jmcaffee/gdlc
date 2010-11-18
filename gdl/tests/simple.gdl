@@ -44,7 +44,7 @@ end
 rule SimpleExceptionIfMsgRule()				// Define the rule.
 	if ( dpmVar == 1 )	
 	then
-	  message(exception, exception, "Simple exception if-message");
+	  message(exception, "Simple exception if-message");
 	end
 end
 
@@ -52,15 +52,14 @@ rule SimpleExceptionElseMsgRule()			// Define the rule.
 	if ( dpmVar == 1 )	
 	then
 	else
-	  message(exception, exception, "Simple exception else-message");
+	  message(exception, "Simple exception else-message");
 	end
 end
 
 rule SimpleAllMsgsRule()					// Define the rule.
 	if ( ppmVar == 1 )	
 	then
-	  message(exception, exception, "exception/exception message.");
-	  message(exception, assets, "exception/asset message.");
+	  message(exception, "exception message.");
 	  message(findings, "findings message.");
 	  message(observation, "observation message.");
 	  message(credit, "credit message.");

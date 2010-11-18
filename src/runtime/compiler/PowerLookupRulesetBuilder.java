@@ -11,15 +11,15 @@ import runtime.parser.SimpleNode;
 public class PowerLookupRulesetBuilder {
 
 	CompilerContext ctx = null;
+	VarGdlGenerator	genVar = null;
 	
-	public PowerLookupRulesetBuilder(CompilerContext ctx){this.ctx = ctx;}
+	public PowerLookupRulesetBuilder(CompilerContext ctx){this.ctx = ctx; genVar = new VarGdlGenerator(ctx);}
 	
 	public StringBuffer build(PowerLookupData plData){
 		String 			plName 		= plData.name;
 		StringBuffer 	ruleset 	= new StringBuffer();
 		int				ruleIndex 	= 1;
 		
-		// Normalize name (remove spaces)
 		
 		// Add rule aliases
 		for(int i = 0; i < plData.values.size(); i++){
@@ -28,8 +28,11 @@ public class PowerLookupRulesetBuilder {
 
 		ruleIndex = 1;		// Reset the index.
 		
-		ruleset.append("ruleset ").append(plName).append("(true, PL)");
+		ruleset.append( buildRulesetAlias(plName) );
+		String exeType = filterExeType(plData.exeType);
+		ruleset.append("ruleset ").append( cleanString(plName) ).append("(").append(exeType).append(", PL)");
 		
+			// values is an array of arrays (rows).
 			for(ArrayList<String> values : plData.values){
 				ruleset.append(buildRule(plName, ruleIndex++, plData.operations, values));
 			}
@@ -39,11 +42,47 @@ public class PowerLookupRulesetBuilder {
 		return ruleset;
 	}
 	
-	protected String generateRuleName(String name, int num){ return new String(name+"-"+num);}
+	private String filterExeType(String exeType) {
+		if(exeType.equalsIgnoreCase("Continue")){
+			return "continue";
+		}
+
+		// Currently only continue and true are supported for PLKs.
+		// True is the default so a blank = true OR Stop if True = true.
+		// Since there are no other options here, return true.
+		return "true";
+	}
+
+
+	protected String generateRuleName(String name, int num){ 
+		String cleanStr = cleanString(name);
+		return new String(cleanStr+"-"+num);
+	}
+	
 	protected String generateRuleAlias(String name, int num){ return new String(name+"."+num);}
 	
+	protected String cleanString(String dirty){
+		String cleanStr = dirty;
+		cleanStr = cleanStr.replaceAll("[\\s/\\?*#+]", "");	// Removes whitespace, forward and backslashes, and ?*#+ chars.
+		cleanStr = cleanStr.replace("[_]+", "_");	// Replace consecutive underscores with 1 underscore.
+		cleanStr = cleanStr.replace("[\\.]", "-");	// Replace periods with dash.
+		return new String(cleanStr);
+	}
 	//alias(rule, SimpleAliasRule1, "Alias Rule 1");
 
+	protected StringBuffer buildRulesetAlias(String name){
+		String id = cleanString(name);
+		if(id.equals(name)){	// Don't create an alias if it is not needed.
+			return new StringBuffer();
+		}
+		StringBuffer alias = new StringBuffer("alias(ruleset, ");
+		alias.append( cleanString(name) ).append(", ");
+		alias.append("\"" + name ).append("\");");
+		
+		Log.info(alias.toString());
+		return alias;
+	}
+	
 	protected StringBuffer buildRuleAlias(String name, int ruleNum){
 		StringBuffer alias = new StringBuffer("alias(rule, ");
 		alias.append( generateRuleName(name, ruleNum) ).append(", ");
@@ -54,7 +93,8 @@ public class PowerLookupRulesetBuilder {
 	}
 	
 	protected StringBuffer buildRule(String name, int ruleNum, ArrayList<VarOp> ops, ArrayList<String> values){
-		StringBuffer rule = new StringBuffer();
+		StringBuffer rule 		= new StringBuffer();
+		StringBuffer ruleOps 	= new StringBuffer();
 		
 		rule.append("rule ").append("" + generateRuleName(name, ruleNum) ).append("() ");
 			rule.append("if(");
@@ -62,20 +102,32 @@ public class PowerLookupRulesetBuilder {
 			boolean first 		= true;
 			int		valueIndex 	= 0;
 			
+			// For each row of data, use the operation (LHOperand and Operator)
+			// at the same index.
 			for(VarOp op : ops){
 				if(isActionOp(op)){
 					break;
 				}
 
+				// Skip adding the var, op, value set if the value is blank.
+				if(values.get(valueIndex).isEmpty()){
+					valueIndex++;
+					continue;
+				}
+				
 				if(first){
 					first = false;
-					rule.append(op.getName() +" "+ op.getOp());
+					ruleOps.append(genVar.lookupAndCast(op.getName(), op.typ) +" "+ op.getOp());
 				}else{
-					rule.append(" && "+ op.getName() +" "+ op.getOp());
+					ruleOps.append(" && "+ genVar.lookupAndCast(op.getName(), op.typ) +" "+ op.getOp());
 				}
-				rule.append(" \""+ values.get(valueIndex++) +"\" ");
+				ruleOps.append(" "+ normalizeValue(values.get(valueIndex++)) +" ");
 			}
 
+			if(!(ruleOps.length() > 0)){
+				return new StringBuffer();
+			}
+			rule.append(ruleOps);
 			rule.append(") then ");
 
 			for(VarOp op : ops){
@@ -94,14 +146,63 @@ public class PowerLookupRulesetBuilder {
 		return rule;
 	}
 
+	protected boolean isMsgOp(VarOp op){
+		if(op.getName().equalsIgnoreCase("True Message")){
+			return true;
+		}
+		if(op.getName().equalsIgnoreCase("False Message")){
+			return true;
+		}
+		return false;
+	}
+	
 	protected void addAction(String value, StringBuffer rule, VarOp op) {
-		rule.append(""+ op.name +" = ");
-		if(op.op.equals("Lookup")){
+		if(value.isEmpty()){
+			return;				// Don't add action if the value is blank. 
+		}
+		if(isMsgOp(op)){
+			addMessageAction(value, rule, op);
+			return;
+		}
+		rule.append(""+ genVar.lookupAndCast(op.name, op.typ) +" = ");
+		if(op.op.equals("Lookup")){	
 			addLookupAction(value, rule, op);
 		}else {
-			rule.append("\""+ value +"\";");
+			rule.append(normalizeValue(value) +";");
 		}
 	}
+
+	
+	protected void addMessageAction(String value, StringBuffer rule, VarOp op) {
+		if(!value.startsWith("{") && !value.endsWith("}")){
+			ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
+				new String("Message [" + value + "] declaration is missing brace prefix or suffix. PowerLookup messages must be surrounded with braces: '{Message text here.}'.")));
+			return;
+		}
+		
+		// Ex:
+		// message(findings, "Recommendation By CV: New Balance of $<DPM>dpmCurrency</DPM>.");
+
+		String msgTxt = value.substring(1, (value.length() - 1));		// Strip braces.
+		StringBuffer msg = new StringBuffer("message("+ op.getOp() + ", \""+ msgTxt +"\");");  
+		
+		if(op.getName().equalsIgnoreCase("True Message")){
+			rule.append(msg);
+			return;
+		}
+		
+		if(op.getName().equalsIgnoreCase("False Message")){
+			rule.append(" else ");
+			rule.append(msg);
+			return;
+		}
+		
+		ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
+				new String("Message [" + value + "] unrecognized message type: ["+ op.getName() +"]. Valid PowerLookup message types are: 'True Message', 'False Message'.")));
+		return;
+		
+	}
+	
 	
 	protected void addLookupAction(String value, StringBuffer rule, VarOp op) {
 		ASTLookupDef lkup = ctx.getLookup(value);
@@ -110,18 +211,67 @@ public class PowerLookupRulesetBuilder {
 				new String("Lookup [" + value + "] definition is missing. Verify that the lookup is defined before using it in a PowerLookup.")));
 			return;
 		}
-		String xParam = ((SimpleNode)lkup.jjtGetChild(0)).getName();
+		String xParam = ((SimpleNode)lkup.jjtGetChild(0)).getName();	// FIXME: Lookup params should be cast.
 		String yParam = ((SimpleNode)lkup.jjtGetChild(1)).getName();
 		rule.append("lookup(\""+ value +"\", " + xParam + ", " + yParam + ");");
 	}
 	
 	protected boolean isActionOp(VarOp op){
-		if(op.getOp().equals("Assign") ||
-				op.getOp().equals("Lookup")){
-			return true;
+		if(	op.getOp().equals("Assign") ||
+			op.getOp().equals("Lookup") ||
+			op.getName().equalsIgnoreCase("True Message") ||
+			op.getName().equalsIgnoreCase("False Message") ||
+			op.getType().equalsIgnoreCase("Findings") ||
+			op.getType().equalsIgnoreCase("Exceptions")){	
+				return true;
 		}
 		return false;
 	}
+
+	
+	protected String stripCast(String value){
+		if((value.startsWith("DPM(") || value.startsWith("PPM(")) && 
+				value.endsWith(")")){
+			return value.substring(4, value.length() - 1);
+		}
+		
+		return value;
+		
+	}
+	
+	protected String normalizeValue(String value){
+		if(value.startsWith("DPM(") && value.endsWith(")")){
+			return genVar.lookupAndCast(stripCast(value), "DPM");
+		}
+		
+		if(value.startsWith("PPM(") && value.endsWith(")")){
+			return genVar.lookupAndCast(stripCast(value), "PPM");
+		}
+		
+		if(value.equalsIgnoreCase("TRUE")){
+			return "True";
+		}
+		
+		if(value.equalsIgnoreCase("FALSE")){
+			return "False";
+		}
+		
+		if(value.equalsIgnoreCase("NULL")){
+			return "NULL";
+		}
+		
+		if(value.contains("|")){
+			value = value.replaceAll("|", ",");
+		}
+		
+		if(value.length() > 0){
+			value = new String("\"" + value + "\"");
+		}
+
+		return value;
+	}
+
+	
 }
 
 /*

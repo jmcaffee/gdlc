@@ -16,6 +16,7 @@ public class IncludeVisitor extends DepthFirstVisitor {
 	static HashMap<String,String> includeFilesParsed = new HashMap<String, String>();
 	
 	static void 	trackIncludeFile(String incFile){
+		// FIXME: should include files be tracked in the context?
 		IncludeVisitor.includeFilesParsed.put(incFile, "");
 	}
 	static boolean	isFileTracked(String incFile){

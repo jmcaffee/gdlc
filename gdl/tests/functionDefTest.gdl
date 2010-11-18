@@ -48,7 +48,7 @@ anotherFunction(){
 }
 
 
-simpleFunctio2n(){
+aSimpleFunction2(){
 
 	rule FunctionRule()							// Define the rule.
 		if ( $arg1 == $arg1)		

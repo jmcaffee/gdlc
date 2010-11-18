@@ -47,7 +47,6 @@ import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTRuleRef;
 import runtime.parser.ASTRulesetDef;
 import runtime.parser.ASTRulesetRef;
-import runtime.parser.ASTVarCast;
 import runtime.parser.ASTVarDef;
 import runtime.parser.ASTVarRef;
 import runtime.parser.ASTVariableType;
@@ -376,14 +375,6 @@ public class DepthFirstVisitor implements GdlParserVisitor {
 	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTVarRef, java.lang.Object)
 	 */
 	public Object visit(ASTVarRef node, Object data) {
-		data = node.childrenAccept(this, data);
-		return data;
-	}
-
-	/* (non-Javadoc)
-	 * @see runtime.parser.GdlParserVisitor#visit(runtime.parser.ASTVarCast, java.lang.Object)
-	 */
-	public Object visit(ASTVarCast node, Object data) {
 		data = node.childrenAccept(this, data);
 		return data;
 	}

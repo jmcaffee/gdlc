@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-
 import runtime.compiler.CompileException;
 import runtime.compiler.CompilerContext;
 import runtime.compiler.GdlCompiler;
@@ -16,8 +15,8 @@ import runtime.main.Log;
 import runtime.main.ParseMgr;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTImport;
-import runtime.parser.GdlParser;
-import runtime.parser.ParseException;
+// import runtime.parser.GdlParser;
+// import runtime.parser.ParseException;
 import runtime.reader.CsvPowerLookupFile;
 
 public class ImportPowerLookupVisitor extends DepthFirstVisitor {
@@ -105,17 +104,6 @@ public class ImportPowerLookupVisitor extends DepthFirstVisitor {
 				ctx.addError(new CompileError(CompileError.errors.PARSEERROR,
 				new String("Parsing failed while parsing powerlookup ruleset: " + plName)));
 			}
-					
-
-////			parser = new GdlParser(inputStreamFromStringBuffer(pl));
-////		    try {
-//		    	tree = parser.CompilationUnit();
-//		    } catch (ParseException e) {
-//				ctx.addError(new CompileError(CompileError.errors.PARSEERROR,
-//						new String("Parsing failed while parsing powerlookup ruleset: " + e.toString())));
-//				continue;		// Try the next powerlookup.
-//		    }
-		    
 											// Compile generated, parsed source.
 			compileParseTree(ctx, tree);
 			tree = null;

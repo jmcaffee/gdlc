@@ -21,7 +21,8 @@ public class CompileError implements IProblem {
 		static public int MISSINGARG = 8;
 		static public int INCLUDEDIRPATH = 9;
 		static public int OUTPUTERROR = 10;
-		static public int LASTERR = 10;
+		static public int BADCAST = 11;
+		static public int LASTERR = 11;
 		
 		static String[] desc = {
 			"Unknown error has occurred",
@@ -35,6 +36,7 @@ public class CompileError implements IProblem {
 			"Argument missing",
 			"Check INCLUDE dir paths",
 			"An output error has occurred",
+			"Bad cast",
 		};
 
 		static String getErrorDesc(int id){

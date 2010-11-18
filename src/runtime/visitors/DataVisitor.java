@@ -49,7 +49,6 @@ import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTRuleRef;
 import runtime.parser.ASTRulesetDef;
 import runtime.parser.ASTRulesetRef;
-import runtime.parser.ASTVarCast;
 import runtime.parser.ASTVarDef;
 import runtime.parser.ASTVarRef;
 import runtime.parser.ASTVariableType;
@@ -560,19 +559,6 @@ public class DataVisitor implements GdlParserVisitor {
 	}
 
 	public Object visit(ASTVarRef node, Object data) {
-		// Dump node info
-		CompilerContext ctx = (CompilerContext)data;
-		int cnt = ctx.getTabCount();
-
-		Log.info(tabify(cnt,node.toString()));
-		
-		ctx.setTabCount(cnt+1);
-		node.childrenAccept(this, data);
-		ctx.setTabCount(cnt);
-		return ctx;
-	}
-
-	public Object visit(ASTVarCast node, Object data) {
 		// Dump node info
 		CompilerContext ctx = (CompilerContext)data;
 		int cnt = ctx.getTabCount();
