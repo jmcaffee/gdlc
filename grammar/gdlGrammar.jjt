@@ -146,6 +146,7 @@ TOKEN :  /* DPM Variable Types */
 | < NUMERIC:    "numeric">
 | < PERCENTAGE: "percentage">
 | < TEXT:       "text">
+| < DATETIME:   "datetime">
 }
 
 TOKEN :  /* PPM Variable Types */
@@ -443,6 +444,7 @@ String VarType() #void :
   | <NUMERIC>     { return new String("4");}
   | <PERCENTAGE>  { return new String("5");}
   | <TEXT>        { return new String("6");}
+  | <DATETIME>    { return new String("7");}
 } 
 
 
@@ -464,6 +466,7 @@ String VarDataType() #void :
   | <NUMERIC>     { return new String("Numeric");}
   | <PERCENTAGE>  { return new String("Percentage");}
   | <TEXT>        { return new String("Text");}
+  | <DATETIME>    { return new String("DateTime");}
 } 
 
 

@@ -80,8 +80,10 @@ public class VarDpm extends VarBase implements IVariable {
 		if(this.productType.equals("5")){
 			return new String("Percentage");
 		}
-
-		return new String("Text");
+		if(this.productType.equals("6")){
+			return new String("Text");
+		}
+		return new String("DateTime");
 	}
 
 
