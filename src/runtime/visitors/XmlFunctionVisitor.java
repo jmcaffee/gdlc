@@ -26,14 +26,29 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 		// Handle XML Function definition nodes
 		IProgramContext ctx = (IProgramContext)data;
 		String id 		= node.getData("Identifier");
+		int hash = 0;
 		
+		// We need to generate a hash of the function signature to see if it is
+		// the same definition, just included multiple times. If this IS the case, don't
+		// throw a warning.
+		// In short: Only throw warning when the signature is actually being changed.
+		
+		// Step 1: if the context already has a function with this ID, store the hashCode.
 		if(ctx.containsXmlFunction(id)){
-			ctx.addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
-					new String("XmlFunction [" + id + "] has been redefined.")));
-			Log.warning("Context already contains xmlfunc: " + id + ". Redef warning generated.");
+			hash = ctx.getXmlFunction(id).hashCode();
 		}
 		
+		// Step 2: go ahead and add the function.
 		ctx.addXmlFunction(id, node);
+		
+		// Step 3: if the hash is not 0, we know there was an existing func def,
+		// so grab the updated func's hashCode and compare them.
+		if(hash != 0 && hash != ctx.getXmlFunction(id).hashCode()){
+			ctx.addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION_XMLFUNC,
+					new String("XmlFunction [" + id + "] has been redefined.")));
+			//Log.warning("Context already contains xmlfunc: " + id + ". Redef warning generated.");
+		}
+		
 		return ctx;
 	}
 
@@ -46,10 +61,10 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 		String id 		= node.getData("Identifier");
 		
 		if(!ctx.containsXmlFunction(id)){
-			ctx.addError(new CompileError(CompileError.errors.DEFMISSING,
+			ctx.addError(new CompileError(CompileError.errors.DEFMISSING_XMLFUNC,
 					new String("XmlFunction [" + id + "] has not been defined.")));
 			
-			Log.error("Xmlfunc definition missing from context: " + id + ". Def missing error generated.");
+			//Log.error("Xmlfunc definition missing from context: " + id + ". Def missing error generated.");
 			return ctx;
 		}
 		

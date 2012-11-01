@@ -15,12 +15,14 @@ public class CompileWarning implements IProblem {
 		static public class warnings {
 			static public int UNKNOWN = 0;
 			static public int REDEFINITION = 1;
-			static public int CSVLINELENGTH = 2;
-			static public int LASTWARNING = 2;
+			static public int REDEFINITION_XMLFUNC = 2;
+			static public int CSVLINELENGTH = 3;
+			static public int LASTWARNING = 3;
 						
 			static String[] desc = {
-				"Unknown error has occurred",
-				"An object has been redefined",
+				"Unknown Error",
+				"Object Redefinition",
+				"xmlfunc Redefinition",
 				"CSV file contains inconsistent line lengths",
 			};
 

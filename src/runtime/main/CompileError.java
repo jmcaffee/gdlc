@@ -22,21 +22,23 @@ public class CompileError implements IProblem {
 		static public int INCLUDEDIRPATH = 9;
 		static public int OUTPUTERROR = 10;
 		static public int BADCAST = 11;
-		static public int LASTERR = 11;
+		static public int DEFMISSING_XMLFUNC = 12;
+		static public int LASTERR = 12;
 		
 		static String[] desc = {
-			"Unknown error has occurred",
-			"A reference to an undefined object has occurred",
-			"Data does not exist for this object",
-			"File not found",
-			"Unsupported operation",
-			"Import operation error",
-			"An error has occurred during parsing",
-			"Unexpected argument found",
-			"Argument missing",
+			"Unknown Error",
+			"Undefined Object Reference",
+			"No Data",
+			"File Not Found",
+			"Unsupported Operation",
+			"Import Error",
+			"Parse Error",
+			"Unexpected Argument",
+			"Argument Missing",
 			"Check INCLUDE dir paths",
-			"An output error has occurred",
-			"Bad cast",
+			"Output Error",
+			"Bad Cast",
+			"Undefined xmlfunc Reference",
 		};
 
 		static String getErrorDesc(int id){

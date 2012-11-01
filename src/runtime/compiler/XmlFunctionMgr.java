@@ -52,6 +52,25 @@ public class XmlFunctionMgr implements IXmlFunctionContext {
 				this.argCount++;
 			}
 		}
+		
+		public int hashCode(){
+			int code = 37;
+			code += this.identifier.hashCode();
+			
+			ASTXmlFuncDefArgList argList = (ASTXmlFuncDefArgList)(node.jjtGetChild(0));
+			ASTXmlFuncDefArg arg = null;
+			
+			// For XmlFunctions, we just want a count of the args.
+			// We'll use the count to verify that XmlFuncRefs are called correctly.
+			for(int i = 0; i < argList.jjtGetNumChildren(); i++){
+				arg = (ASTXmlFuncDefArg)argList.jjtGetChild(i);
+				if(null == arg) break;
+				
+				code += arg.toString().hashCode();
+			}
+			
+			return code;
+		}
 	}
 	
 	/* (non-Javadoc)

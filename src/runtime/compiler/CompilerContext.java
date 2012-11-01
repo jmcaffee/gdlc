@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -254,7 +255,7 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 	 */
 	public boolean hasWarnings() { return (!warnings.isEmpty()); }
 	
-	public int getWarningCount(){ return warnings.size(); }
+	public int getWarningCount(){ return (getUniqueWarnings().size()); }
 	
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addError(runtime.main.IProblem)
@@ -307,13 +308,26 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 		ruleset.dumpRules();
 	}
 	
+	protected Set<String> getUniqueWarnings(){
+		Set<String> warningSet = new HashSet<String>();
+		for(IProblem me : warnings) {
+			warningSet.add("Warning (W" + me.getId() + "): " + me.getDesc() + ". " + me.getMsg());
+		}
+		
+		return warningSet;
+	}
+	
 	public void dumpWarnings() {
-		Log.warning("Warnings: " + warnings.size());
 		if(hasWarnings()){
-			for(IProblem me : warnings) {
-				Log.warning("Warning (W" + me.getId() + "): " + me.getDesc() + ". " + me.getMsg());
+			Set<String> warningSet = getUniqueWarnings();
+			Log.warning("Warnings: " + warningSet.size());
+			
+			for(String w : warningSet) {
+				Log.warning(w);
 			}
-		} 
+		} else {
+			Log.warning("Warnings: 0");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -326,9 +340,9 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 		errs.append("Errors: " + errors.size() + newLine);
 		if(hasErrors()){
 			for(IProblem me : errors) {
-				errs.append("Error (E" + me.getId() + "): " + me.getDesc() + ". " + newLine);
-				errs.append(me.getMsg()+ newLine + newLine);
+				errs.append("Error (E" + me.getId() + "): " + me.getDesc() + ". " + me.getMsg() + newLine);
 			}
+			errs.append(newLine);
 		} 
 		
 		return errs.toString();

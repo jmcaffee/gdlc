@@ -159,12 +159,14 @@ public class CompileMgr {
 		}
 					// Write file to destination.
 		
+		Log.out("########################################");
 		if(this.writeXmlToFile(output)){
 			Log.out("XML written to file [" + output + "].");
 		}
 		else{
 			Log.error("Errors occurred while writing XML [" + output + "].");
 		}
+		Log.out("########################################");
 	}
 
 	  
