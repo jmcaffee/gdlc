@@ -1,0 +1,8 @@
+# .gitignore
+#
+
+src/runtime/parser/
+grammar/build/
+dist/
+build/
+backup/
