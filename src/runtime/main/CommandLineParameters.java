@@ -13,8 +13,13 @@ public class CommandLineParameters {
 
 	public void process(String args[]) {
 		for(String arg : args){
-			if(arg.startsWith("/")){
+			if( arg.startsWith("/") ){
 				parameters.add(arg.substring(1));
+				continue;
+			}
+
+			if( arg.startsWith("--") ){
+				parameters.add(arg.substring(2));
 				continue;
 			}
 
