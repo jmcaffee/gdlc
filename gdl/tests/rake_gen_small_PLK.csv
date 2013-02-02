@@ -1,0 +1,28 @@
+PowerLookup,,,
+,SetStageAlias PLK,Execution Type,Continue
+,,Current Loan Stage,_wfaction_DTS_Stage Alias
+,,PPM,DPM
+,,==,Assign
+,,01 New File,NULL
+,,05 Application Start and Eligibility,NULL
+,,10 Customer Input,NULL
+,,20 Pending Docs,Pending Documents
+,,22 Docs Verification,Application In Review
+,,23 Docs Received,Application In Review
+,,25 Underwriting Review,Application In Review
+,,27 BPO Pending,Application In Review
+,,30 Trial Period Decision,Application In Review
+,,35 In Trial,Trial Period
+,,40 Trial Complete,Trial Payments Received
+,,45 Pending Mod,Pending Modification Agreement
+,,50 Mod Resend,Pending Modification Agreement
+,,52 Escrow Disbursement,Updating Your Loan with Modified Terms
+,,55 Pending Activation,Updating Your Loan with Modified Terms
+,,57 Pending Re-age/Escrow Set-up,Updating Your Loan with Modified Terms
+,,NA-60 Reconsideration Exceptions/Overrides,
+,,NA-65 Approved Consideration,
+,,90 Mod Activation,Congratulations! Your loan has been modified
+,,95 Exclude Application,NULL
+,,96 Withdrawn,Application Withdrawn
+,,NA-98 Archive,
+,,99 Decline Application,Denied

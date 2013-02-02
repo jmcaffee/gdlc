@@ -50,7 +50,10 @@ public class CsvPowerLookupFile {
 			}
 		}
 		
-		if(!plk.isLookupComplete()){
+		// If plk IS dirty, but not yet complete, we need to close it out.
+		// On the gripping hand, if plk is NOT dirty, there's nothing to close out,
+		// so skip it.
+		if(plk.isDirty && !plk.isLookupComplete()){
 			plk.endOfData();					// Tell Data object that we are finished.
 			map.put(plk.getName(), plk.getData());
 		}

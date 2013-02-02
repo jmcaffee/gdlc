@@ -1,0 +1,11 @@
+PowerLookup,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,Step Mod New Maturity Date PLK,Execution Type,Continue,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Program Name,Execution Flag,Investor Code,Maturity Date Required,New Maturity Date,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,DPM,DPM,PPM,DPM,DPM,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,IN,==,IN,==,Assign,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Step Modification|Foreclosure (REO),Rate Reduction Failed,22600|22700|456,,10/01/2037,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Step Modification|Foreclosure (REO),Rate Reduction Failed,22300,,02/25/2032,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Step Modification|Foreclosure (REO),Rate Reduction Failed,22400,,07/25/2032,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Step Modification|Foreclosure (REO),Rate Reduction Failed,22500,,06/01/2033,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,Step Modification,Rate Reduction Failed,,Y,DPM(InvestorMatrix Maturity Date),,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+

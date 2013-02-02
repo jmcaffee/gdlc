@@ -13,7 +13,7 @@ import runtime.helpers.TestHelper;
 import runtime.parser.ASTInclude;
 
 public class ImportVisitorTester extends TestHelper  {
-	String		TESTDIR				= "r:/tools/java/com.ktechsystems.gdlc/gdl/tests";
+	String		TESTDIR				= "c:/Users/Jeff/projects/java/gdlc/gdl/tests";
 	String		TEST_INCLUDE_FILE 	= TESTDIR+"/importTest-dpms.gdl";
 	
 	ImportPowerLookupVisitor 	visitor = null;
@@ -52,6 +52,34 @@ public class ImportVisitorTester extends TestHelper  {
 	public void testImportPowerLookups20() {
 		String filename = "testPLK-2.0.csv";
 		String expected = "Step Mod New Maturity Date PLK";
+		
+		visitor.importPowerLookups(ctx, filename);
+		
+		assertTrue("expected plData to contain ruleset alias '"+expected+"'.", visitor.plData.containsKey(expected));
+
+		// Context WILL have errors because DPMs and PPMs have not been parsed yet.
+//		assertIfContextHasError(ctx);
+
+	}
+
+	@Test
+	public void testImportRakeGeneratedPlkCsvs() {
+		String filename = "rake_generated.csv";
+		String expected = "Order BPO PLK";
+		
+		visitor.importPowerLookups(ctx, filename);
+		
+		assertTrue("expected plData to contain ruleset alias '"+expected+"'.", visitor.plData.containsKey(expected));
+
+		// Context WILL have errors because DPMs and PPMs have not been parsed yet.
+//		assertIfContextHasError(ctx);
+
+	}
+
+	@Test
+	public void testImportSmallRakeGeneratedPlkCsvs() {
+		String filename = "rake_gen_test PLK.csv";
+		String expected = "SetStageAlias PLK";
 		
 		visitor.importPowerLookups(ctx, filename);
 		

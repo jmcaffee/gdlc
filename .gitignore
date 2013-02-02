@@ -6,3 +6,4 @@ grammar/build/
 dist/
 build/
 backup/
+*.log

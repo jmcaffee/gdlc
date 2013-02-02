@@ -1,0 +1,8 @@
+PowerLookup,,,
+,SetStageAlias PLK,Execution Type,Continue
+,,Current Loan Stage,_wfaction_DTS_Stage Alias
+,,PPM,DPM
+,,==,Assign
+,,NA-98 Archive,
+,,99 Decline Application,Denied
+,,,
