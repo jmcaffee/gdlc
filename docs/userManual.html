@@ -1,40 +1,40 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-	<head>
-		<title>Guideline Compiler User Manual</title>
-		<style type="text/css" media="all">@import "./style.css";</style>
-	</head>
+  <head>
+    <title>Guideline Compiler User Manual</title>
+    <style type="text/css" media="all">@import "./style.css";</style>
+  </head>
 
-	<body>
-	<div id='header'>
-	</div>
-	
-	<div id='main'>
+  <body>
+  <div id='header'>
+  </div>
 
-		<h1>Guideline Compiler User Manual</h1>
-		
+  <div id='main'>
+
+    <h1>Guideline Compiler User Manual</h1>
+
 <div class='section'>
-		<h2>Summary</h2>
-			<p>
-				GDLC is a guideline compiler. It was created to allow guidelines to be written using text files and a simple language.
-				The compiler parses and compiles the text files (called source files) into an XML version of the guideline. This XML
-				file can be uploaded directly into the application using the normal upload procedure.
-			</p>
-		
+    <h2>Summary</h2>
+      <p>
+        GDLC is a guideline compiler. It was created to allow guidelines to be written using text files and a simple language.
+        The compiler parses and compiles the text files (called source files) into an XML version of the guideline. This XML
+        file can be uploaded directly into the application using the normal upload procedure.
+      </p>
+
 
 </div>
 
 <div class='section'>
-		<h2>Running GDLC from the command line</h2>
+    <h2>Running GDLC from the command line</h2>
 
-			<div class='desc'>
-				<p>
-					Typing GDLC without any parameters (or with the -h option) will result in the following usage message:
-				</p>
+      <div class='desc'>
+        <p>
+          Typing GDLC without any parameters (or with the -h option) will result in the following usage message:
+        </p>
 
-				<p>
-					<pre>
+        <p>
+          <pre>
         ======================================================================
         GDLC GuideLine Compiler
         Usage:  GDLC inFile [outFile] [-switch]* [/I]*
@@ -61,140 +61,140 @@
                 /Ipath        path to include dir.
 
         ======================================================================
-					</pre>
-				</p>
+          </pre>
+        </p>
 
-				<p>
-					The -raw option is not available at this time.
-				</p>
+        <p>
+          The -raw option is not available at this time.
+        </p>
 
-			</div>
-
-</div>
-
-
-<div class='section'>
-		<h2>Documentation Conventions</h2>
-			<p>
-				Text surrounded with square brackets [] is optional.<br />
-				Bold text colored like <span class='keyword'>this</span> indicates a keyword.
-			</p>
-		
-
-</div>
-
-<div class='section'>
-		<h2>GDL Syntax</h2>
-
-			<div class='desc'>
-				<p>
-				Notes:
-					<ul>
-						<li>GDL is CaSe sEnSitiVe.</li>
-						<li>Most reference statements must be terminated with ;</li>
-						<li>Rule, Ruleset, and Guideline definition statements must be terminated with <span class='keyword'>end</span>.</li>
-						<li></li>
-					</ul>
-				</p>
-
-				<p><strong>Comments</strong><br />
-				Comments may be placed into the guideline source code in one of two ways:<br />
-				<ul>
-					<li>Single line comments: Any text from <span class='keyword'>//</span> to the end of a line is considered a comment</li>
-					<li>Multi line comments: All text within a <span class='keyword'>/*</span> ... <span class='keyword'>*/</span> pair is considered a comment.</li>
-				</ul>
-				
-				</p>
-			</div>
+      </div>
 
 </div>
 
 
 <div class='section'>
-		<h2>Keywords</h2>
-			<div class='desc'>
+    <h2>Documentation Conventions</h2>
+      <p>
+        Text surrounded with square brackets [] is optional.<br />
+        Bold text colored like <span class='keyword'>this</span> indicates a keyword.
+      </p>
 
-			</div>
-			<table class='keywordTable'>
-				<tr>
-					<td><span class='keyword'><a href="#alias">alias</a></span></td>
-					<td><span class='keyword'><a href="#ppm">app</a></span></td>
-					<td><span class='keyword'><a href="#dpm">boolean</a></span></td>
-					<td><span class='keyword'><a href="#condition">condition</a></span></td>
-					<td><span class='keyword'><a href="#ruleset">continue</a></span></td>
-
-				</tr>
-
-				<tr>
-					<td><span class='keyword'><a href="#ppm">crd</a></span></td>
-					<td><span class='keyword'><a href="#dpm">date</a></span></td>
-					<td><span class='keyword'><a href="#dsm">decision</a></span></td>
-					<td><span class='keyword'><a href="#dpm">dpm</a></span></td>
-					<td><span class='keyword'><a href="#dsm">dsm</a></span></td>
-
-				</tr>
-
-				<tr>
-					<td><span class='keyword'><a href="#rule">else</a></span></td>
-					<td><span class='keyword'><a href="#rule">end</a></span></td>
-					<td><span class='keyword'><a href="#ruleset">false</a></span></td>
-					<td><span class='keyword'><a href="#guideline">guideline</a></span></td>
-					<td><span class='keyword'><a href="#rule">if</a></span></td>
-
-				</tr>
-				<tr>
-
-				</tr>
-
-				<tr>
-					<td><span class='keyword'><a href="#import">import</a></span></td>
-					<td><span class='keyword'><a href="#xmlfunc">IN</a></span></td>
-					<td><span class='keyword'><a href="#include">include</a></span></td>
-					<td><span class='keyword'><a href="#InsertPricingGuideline">InsertPricingGuideline</a></span></td>
-					<td><span class='keyword'><a href="#lookup">lookup</a></span></td>
-
-				</tr>
-
-				<tr>
-					<td><span class='keyword'><a href="#message">message</a></span></td>
-					<td><span class='keyword'><a href="#dpm">money</a></span></td>
-					<td><span class='keyword'><a href="#dpm">numeric</a></span></td>
-					<td><span class='keyword'><a href="#xmlfunc">OUT</a></span></td>
-					<td><span class='keyword'><a href="#dpm">percentage</a></span></td>
-
-				</tr>
-
-				<tr>
-					<td><span class='keyword'><a href="#ruleset">PL</a></span></td>
-					<td><span class='keyword'><a href="#powerlookup">powerlookup</a></span></td>
-					<td><span class='keyword'><a href="#ppm">ppm</a></span></td>
-					<td><span class='keyword'><a href="#ppm">prd</a></span></td>
-					<td><span class='keyword'><a href="#rule">rule</a></span></td>
-
-				</tr>
-
-				<tr>
-					<td><span class='keyword'><a href="#ruleset">ruleset</a></span></td>
-					<td><span class='keyword'><a href="#dpm">text</a></span></td>
-					<td><span class='keyword'><a href="#rule">then</a></span></td>
-					<td><span class='keyword'><a href="#ruleset">true</a></span></td>
-					<td><span class='keyword'><a href="#xmlfunc">xmlfunc</a></span></td>
-
-				</tr>
-			</table>
-			<p>
-			</p>
-			
 
 </div>
 
 <div class='section'>
-		<h2>Operators</h2>
-			<div class='desc'>
+    <h2>GDL Syntax</h2>
+
+      <div class='desc'>
+        <p>
+        Notes:
+          <ul>
+            <li>GDL is CaSe sEnSitiVe.</li>
+            <li>Most reference statements must be terminated with ;</li>
+            <li>Rule, Ruleset, and Guideline definition statements must be terminated with <span class='keyword'>end</span>.</li>
+            <li></li>
+          </ul>
+        </p>
+
+        <p><strong>Comments</strong><br />
+        Comments may be placed into the guideline source code in one of two ways:<br />
+        <ul>
+          <li>Single line comments: Any text from <span class='keyword'>//</span> to the end of a line is considered a comment</li>
+          <li>Multi line comments: All text within a <span class='keyword'>/*</span> ... <span class='keyword'>*/</span> pair is considered a comment.</li>
+        </ul>
+
+        </p>
+      </div>
+
+</div>
+
+
+<div class='section'>
+    <h2>Keywords</h2>
+      <div class='desc'>
+
+      </div>
+      <table class='keywordTable'>
+        <tr>
+          <td><span class='keyword'><a href="#alias">alias</a></span></td>
+          <td><span class='keyword'><a href="#ppm">app</a></span></td>
+          <td><span class='keyword'><a href="#dpm">boolean</a></span></td>
+          <td><span class='keyword'><a href="#condition">condition</a></span></td>
+          <td><span class='keyword'><a href="#ruleset">continue</a></span></td>
+
+        </tr>
+
+        <tr>
+          <td><span class='keyword'><a href="#ppm">crd</a></span></td>
+          <td><span class='keyword'><a href="#dpm">date</a></span></td>
+          <td><span class='keyword'><a href="#dsm">decision</a></span></td>
+          <td><span class='keyword'><a href="#dpm">dpm</a></span></td>
+          <td><span class='keyword'><a href="#dsm">dsm</a></span></td>
+
+        </tr>
+
+        <tr>
+          <td><span class='keyword'><a href="#rule">else</a></span></td>
+          <td><span class='keyword'><a href="#rule">end</a></span></td>
+          <td><span class='keyword'><a href="#ruleset">false</a></span></td>
+          <td><span class='keyword'><a href="#guideline">guideline</a></span></td>
+          <td><span class='keyword'><a href="#rule">if</a></span></td>
+
+        </tr>
+        <tr>
+
+        </tr>
+
+        <tr>
+          <td><span class='keyword'><a href="#import">import</a></span></td>
+          <td><span class='keyword'><a href="#xmlfunc">IN</a></span></td>
+          <td><span class='keyword'><a href="#include">include</a></span></td>
+          <td><span class='keyword'><a href="#InsertPricingGuideline">InsertPricingGuideline</a></span></td>
+          <td><span class='keyword'><a href="#lookup">lookup</a></span></td>
+
+        </tr>
+
+        <tr>
+          <td><span class='keyword'><a href="#message">message</a></span></td>
+          <td><span class='keyword'><a href="#dpm">money</a></span></td>
+          <td><span class='keyword'><a href="#dpm">numeric</a></span></td>
+          <td><span class='keyword'><a href="#xmlfunc">OUT</a></span></td>
+          <td><span class='keyword'><a href="#dpm">percentage</a></span></td>
+
+        </tr>
+
+        <tr>
+          <td><span class='keyword'><a href="#ruleset">PL</a></span></td>
+          <td><span class='keyword'><a href="#powerlookup">powerlookup</a></span></td>
+          <td><span class='keyword'><a href="#ppm">ppm</a></span></td>
+          <td><span class='keyword'><a href="#ppm">prd</a></span></td>
+          <td><span class='keyword'><a href="#rule">rule</a></span></td>
+
+        </tr>
+
+        <tr>
+          <td><span class='keyword'><a href="#ruleset">ruleset</a></span></td>
+          <td><span class='keyword'><a href="#dpm">text</a></span></td>
+          <td><span class='keyword'><a href="#rule">then</a></span></td>
+          <td><span class='keyword'><a href="#ruleset">true</a></span></td>
+          <td><span class='keyword'><a href="#xmlfunc">xmlfunc</a></span></td>
+
+        </tr>
+      </table>
+      <p>
+      </p>
+
+
+</div>
+
+<div class='section'>
+    <h2>Operators</h2>
+      <div class='desc'>
         These operators are available for use in the guidelines.
-			</div>
-			<p>
-			</p>
+      </div>
+      <p>
+      </p>
 
   <div class='subsection'>
       <h2>Equality Operators</h2>
@@ -256,7 +256,7 @@
         </p>
 
   </div>
-			
+
   <div class='subsection'>
       <h2>Mathematical Operators</h2>
         <div class='desc'>
@@ -287,199 +287,199 @@
 </div>
 
 <div class='section'>
-		<h2>Identifiers</h2>
-			<div class='desc'>
-					<p>
-						Variable, rule, ruleset and condition identifiers (names) are limited to the string lengths listed below. Spaces and special characters 
-						(such as &amp;, *, @) are not allowed as part of the identifier. The only special characters that are allowed (other than alphanumeric
-						characters) are _ (the underscore) and - (the dash). Identifiers must start with a letter.
-					</p>	
-			</div>
-				
-					<table>
-						<tr><th>Item</th><th>Max Length (in chars)</th></tr>
-						<tr>
-							<td>DPM variable names/aliases</td>
-							<td>50</td>
-						</tr>
-						<tr>
-							<td>etc...</td>
-							<td>...</td>
-						</tr>
-					</table>
-				<p>
-				</p>
+    <h2>Identifiers</h2>
+      <div class='desc'>
+          <p>
+            Variable, rule, ruleset and condition identifiers (names) are limited to the string lengths listed below. Spaces and special characters
+            (such as &amp;, *, @) are not allowed as part of the identifier. The only special characters that are allowed (other than alphanumeric
+            characters) are _ (the underscore) and - (the dash). Identifiers must start with a letter.
+          </p>
+      </div>
+
+          <table>
+            <tr><th>Item</th><th>Max Length (in chars)</th></tr>
+            <tr>
+              <td>DPM variable names/aliases</td>
+              <td>50</td>
+            </tr>
+            <tr>
+              <td>etc...</td>
+              <td>...</td>
+            </tr>
+          </table>
+        <p>
+        </p>
 </div>
 
 <div class='section'>
-		<h2>Variables</h2>
-		<div class="desc">
-			<p>
-				All variable definition statements must be terminated with a ';'.
-			</p>
-		</div>
-		
-		<div id="ppm" class='subsection'>
-			<h2>PPM Variables</h2>
-				<h5><span class='keyword'>ppm</span> valueType ppmType identifier ["alias"];</h5>
+    <h2>Variables</h2>
+    <div class="desc">
+      <p>
+        All variable definition statements must be terminated with a ';'.
+      </p>
+    </div>
 
-				<div class='desc'>
-					<p>
-					valueTypes (type of data variable will contain): <br />
-						<ul>
-							<li><span class='keyword'>boolean</span></li>
-							<li><span class='keyword'>date</span></li>
-							<li><span class='keyword'>money</span></li>
-							<li><span class='keyword'>numeric</span></li>
-							<li><span class='keyword'>percentage</span></li>
-							<li><span class='keyword'>text</span></li>
-						</ul>
-					</p>	
-          
-					<p>
-					ppmTypes: <br />
-						<ul>
-							<li><span class='keyword'>app</span>: application</li>
-							<li><span class='keyword'>prd</span>: product</li>
-							<li><span class='keyword'>crd</span>: credit</li>
-						</ul>
-					</p>	
-					
-					<p>
-					PPM variables are primary parameter variables. They are considered read only by the application. 
-					The application initializes PPM variables with values from the engine based on their XPath definition.
-					</p>		
-				</div>
-				
-				<p class='example'>
-					<span class='keyword'>ppm</span> <span class='keyword'>text</span> <span class='keyword'>prd</span>     pProgramName                    "Program Name";			<br />
-					<span class='keyword'>ppm</span> <span class='keyword'>text</span> <span class='keyword'>app</span>     pUserType                       "User Type";				<br />
-					<span class='keyword'>ppm</span> <span class='keyword'>money</span> <span class='keyword'>crd</span>     pMortgagePayoffs                "Mortgage Payoffs";	<br />
-				</p>
+    <div id="ppm" class='subsection'>
+      <h2>PPM Variables</h2>
+        <h5><span class='keyword'>ppm</span> valueType ppmType identifier ["alias"];</h5>
 
-		</div>
+        <div class='desc'>
+          <p>
+          valueTypes (type of data variable will contain): <br />
+            <ul>
+              <li><span class='keyword'>boolean</span></li>
+              <li><span class='keyword'>date</span></li>
+              <li><span class='keyword'>money</span></li>
+              <li><span class='keyword'>numeric</span></li>
+              <li><span class='keyword'>percentage</span></li>
+              <li><span class='keyword'>text</span></li>
+            </ul>
+          </p>
 
-		<div id="dpm" class='subsection'>
-			<h2>DPM Variables</h2>
-				<h5><span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
+          <p>
+          ppmTypes: <br />
+            <ul>
+              <li><span class='keyword'>app</span>: application</li>
+              <li><span class='keyword'>prd</span>: product</li>
+              <li><span class='keyword'>crd</span>: credit</li>
+            </ul>
+          </p>
 
-				<div class='desc'>
-					<p>
-					valueTypes (type of data variable will contain): <br />
-						<ul>
-							<li><span class='keyword'>boolean</span></li>
-							<li><span class='keyword'>date</span></li>
-							<li><span class='keyword'>money</span></li>
-							<li><span class='keyword'>numeric</span></li>
-							<li><span class='keyword'>percentage</span></li>
-							<li><span class='keyword'>text</span></li>
-						</ul>
-					</p>	
-					
-					<p>
-					DPM variables are derived parameter variables. These variables are considered read/write by the application 
-					(the value that they contain can be modified by guideline rules). The guidelines <em>must</em> initialize a DPM variable
-					to a value before it is referenced in any way, other than an assignment, or an application lever error will be thrown.
-					</p>		
-				</div>
-				
-				<p class='example'>
-					<span class='keyword'>dpm</span> <span class='keyword'>numeric</span>     creditGradeScore;<br />
-					<span class='keyword'>dpm</span> <span class='keyword'>text</span>     docTypeAbbrev;<br />
-					<span class='keyword'>dpm</span> <span class='keyword'>money</span>     loanAmount 	"Loan Amount";<br />
-				</p>
+          <p>
+          PPM variables are primary parameter variables. They are considered read only by the application.
+          The application initializes PPM variables with values from the engine based on their XPath definition.
+          </p>
+        </div>
 
-		</div>
+        <p class='example'>
+          <span class='keyword'>ppm</span> <span class='keyword'>text</span> <span class='keyword'>prd</span>     pProgramName                    "Program Name";     <br />
+          <span class='keyword'>ppm</span> <span class='keyword'>text</span> <span class='keyword'>app</span>     pUserType                       "User Type";        <br />
+          <span class='keyword'>ppm</span> <span class='keyword'>money</span> <span class='keyword'>crd</span>     pMortgagePayoffs                "Mortgage Payoffs";  <br />
+        </p>
 
-		<div id="dsm" class='subsection'>
-			<h2>DSM Variables</h2>
-				<h5><span class='keyword'>decision</span> <span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
-				<div class='desc'>
-					<p>
-					DSM variables are a special subset of DPM variables. They are indicated by the <span class='keyword'>decision</span> keyword that begins the 
-					variable definition. Refer to the DPM variable description for further restrictions/applications.
-					</p>		
-				</div>
+    </div>
 
-				<p class='example'>
-					<span class='keyword'>decision</span> <span class='keyword'>dpm</span> <span class='keyword'>numeric</span> testDsm "Test DSM Alias";
-				</p>
+    <div id="dpm" class='subsection'>
+      <h2>DPM Variables</h2>
+        <h5><span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
 
-		</div>
+        <div class='desc'>
+          <p>
+          valueTypes (type of data variable will contain): <br />
+            <ul>
+              <li><span class='keyword'>boolean</span></li>
+              <li><span class='keyword'>date</span></li>
+              <li><span class='keyword'>money</span></li>
+              <li><span class='keyword'>numeric</span></li>
+              <li><span class='keyword'>percentage</span></li>
+              <li><span class='keyword'>text</span></li>
+            </ul>
+          </p>
+
+          <p>
+          DPM variables are derived parameter variables. These variables are considered read/write by the application
+          (the value that they contain can be modified by guideline rules). The guidelines <em>must</em> initialize a DPM variable
+          to a value before it is referenced in any way, other than an assignment, or an application lever error will be thrown.
+          </p>
+        </div>
+
+        <p class='example'>
+          <span class='keyword'>dpm</span> <span class='keyword'>numeric</span>     creditGradeScore;<br />
+          <span class='keyword'>dpm</span> <span class='keyword'>text</span>     docTypeAbbrev;<br />
+          <span class='keyword'>dpm</span> <span class='keyword'>money</span>     loanAmount  "Loan Amount";<br />
+        </p>
+
+    </div>
+
+    <div id="dsm" class='subsection'>
+      <h2>DSM Variables</h2>
+        <h5><span class='keyword'>decision</span> <span class='keyword'>dpm</span> valueType identifier ["alias"];</h5>
+        <div class='desc'>
+          <p>
+          DSM variables are a special subset of DPM variables. They are indicated by the <span class='keyword'>decision</span> keyword that begins the
+          variable definition. Refer to the DPM variable description for further restrictions/applications.
+          </p>
+        </div>
+
+        <p class='example'>
+          <span class='keyword'>decision</span> <span class='keyword'>dpm</span> <span class='keyword'>numeric</span> testDsm "Test DSM Alias";
+        </p>
+
+    </div>
 
 </div>
 
 <div id="lookup" class='section'>
-		<h2>Lookup Definitions/References</h2>
-				<h5><span class='keyword'>lookup</span>("Lookup Name", xParameterVariable, yParameterVariable);</h5>
+    <h2>Lookup Definitions/References</h2>
+        <h5><span class='keyword'>lookup</span>("Lookup Name", xParameterVariable, yParameterVariable);</h5>
 
-				<div class='desc'>
-					<p>
-					This statement defines a lookup and returns the looked-up value. It can be used on the right hand side of an assignment ( = ) statement.
-					When a lookup is defined, the compiler searches for the lookup data in memory. An error will be thrown if the data does not exist.
-					See the <span class='keyword'><a href="#import">import</a></span> statement for how to load lookup data.
-					</p>		
+        <div class='desc'>
+          <p>
+          This statement defines a lookup and returns the looked-up value. It can be used on the right hand side of an assignment ( = ) statement.
+          When a lookup is defined, the compiler searches for the lookup data in memory. An error will be thrown if the data does not exist.
+          See the <span class='keyword'><a href="#import">import</a></span> statement for how to load lookup data.
+          </p>
 
-					<p>
-						All lookup definition/reference statements must be terminated with a ';'.
-					</p>
-				</div>
+          <p>
+            All lookup definition/reference statements must be terminated with a ';'.
+          </p>
+        </div>
 
-			<p class='example'>
+      <p class='example'>
 aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPropertyState, globalParam);
 
-			</p>
+      </p>
 
 </div>
 
 <div id="powerlookup" class='section'>
-		<h2>PowerLookup Definitions/References</h2>
+    <h2>PowerLookup Definitions/References</h2>
 
-			<div class='desc'>
-				<p>
-				Need more info here.
-				</p>		
-			</div>
+      <div class='desc'>
+        <p>
+        Need more info here.
+        </p>
+      </div>
 
-			<p class='example'>
-			Example needed.
-			</p>
+      <p class='example'>
+      Example needed.
+      </p>
 
 </div>
 
 <div id="rule" class='section'>
-		<h2>Rule Definitions/References</h2>
+    <h2>Rule Definitions/References</h2>
 
-			<div class='desc'>
-				<p>
-				Need more info here.
-				</p>		
+      <div class='desc'>
+        <p>
+        Need more info here.
+        </p>
 
-			</div>
+      </div>
 
-			<p class='example'>
-		<span class='keyword'>rule</span> SetAppraisedValue()<br />
-		&nbsp;&nbsp;<span class='keyword'>if</span>(pReviewValue != 0)<br />
-		&nbsp;&nbsp;<span class='keyword'>then</span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = pReviewValue;<br />
-		&nbsp;&nbsp;<span class='keyword'>else</span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = purchasePrice;<br />
-		&nbsp;&nbsp;<span class='keyword'>end</span><br />
+      <p class='example'>
+    <span class='keyword'>rule</span> SetAppraisedValue()<br />
+    &nbsp;&nbsp;<span class='keyword'>if</span>(pReviewValue != 0)<br />
+    &nbsp;&nbsp;<span class='keyword'>then</span><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = pReviewValue;<br />
+    &nbsp;&nbsp;<span class='keyword'>else</span><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = purchasePrice;<br />
+    &nbsp;&nbsp;<span class='keyword'>end</span><br />
     <span class='keyword'>end</span><br />
-			</p>
+      </p>
 
 </div>
 
 <div id="ruleset" class='section'>
-		<h2>Ruleset Definitions/References</h2>
+    <h2>Ruleset Definitions/References</h2>
 
-			<div class='desc'>
-				<p>
-				<i>Missing info about 'PL' modifier keyword.</i>
-				</p>		
-			</div>
+      <div class='desc'>
+        <p>
+        <i>Missing info about 'PL' modifier keyword.</i>
+        </p>
+      </div>
 
-			<p class='example'>
+      <p class='example'>
 <span class='keyword'>ruleset</span> InitAppraisedValue(<span class='keyword'>continue</span>)<br />
 <br />
 &nbsp;&nbsp;<span class='keyword'>rule</span> SetAppraisedValue()<br />
@@ -500,16 +500,16 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
 <br />
 <span class='keyword'>end</span><br />
 <br />
-			</p>
+      </p>
 
 </div>
 
 <div id="condition" class='section'>
-		<h2>Condition Message Definitions/References</h2>
+    <h2>Condition Message Definitions/References</h2>
 
       <h5><span class='keyword'>condition</span> identifier("SystemName", ConditionType, PriorToType, "Image Doc Name", "Condition message");</h5>
 
-			<div class='desc'>
+      <div class='desc'>
         <p>
         "SystemName": Name of the condition when displayed in the GUI conditions interface.<br />
         <br />
@@ -530,44 +530,44 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
         "Image Doc Name": Name of image document that condition is tied to.<br />
         <br />
         "Condition message.": Actual text of the condition.<br />
-        </p>	
-        
+        </p>
+
         <p>
         Condition definition and reference statements must be terminated with a ';'.
         </p>
-        
-				<p>
-				Condition messages are used by the system to generate 'underwriter' conditions. If a condition message is redefined
+
+        <p>
+        Condition messages are used by the system to generate 'underwriter' conditions. If a condition message is redefined
         only the last definition will be used (uploaded) regardless of where the definition occurred within the guideline.
-				</p>		
+        </p>
 
-				<p>
-				Condition message definitions contain a number of required parameters used by the system to generate 'underwriter' conditions. If a condition message is redefined
+        <p>
+        Condition message definitions contain a number of required parameters used by the system to generate 'underwriter' conditions. If a condition message is redefined
         only the last definition will be used (uploaded) regardless of where the definition occurred within the guideline.
-				</p>		
+        </p>
 
-				<p>
-				Condition message <em>references</em> can only be used within the 'if-true' or 'if-false' sections of rule definitions.
-				</p>		
+        <p>
+        Condition message <em>references</em> can only be used within the 'if-true' or 'if-false' sections of rule definitions.
+        </p>
 
-			</div>
+      </div>
 
-			<p class='example'>
+      <p class='example'>
       Definition:<br />
         <span class='keyword'>condition</span> requiredCond-W2 ("W2Condition", income, docs, "HUD", "W2s for last 2 years.");<br />
         <br />
       Reference:<br />
         <span class='keyword'>condition</span> requiredCond-W2();<br />
-			</p>
+      </p>
 
 </div>
 
 <div id="message" class='section'>
-		<h2>Message Definitions</h2>
+    <h2>Message Definitions</h2>
 
       <h5><span class='keyword'>message</span> (messageType, "Message text to display.");</h5>
 
-			<div class='desc'>
+      <div class='desc'>
         <p>
         messageType: Exception type messages are used to indicate a <em>failure</em> of some sort. Exception messages are displayed on the decision results.
         Message types other than exceptions are used to convey information to the user. The following types are available:<br />
@@ -581,314 +581,323 @@ aValue = <span class='keyword'>lookup</span>("FHA-ClosingCostState", pSubjectPro
         <br />
         DPM variable values can be incorporated into the message text by surrounding the variable name with &lt;DPM&gt; &lt;/DPM&gt; tags.<br />
         When using DPM variables within messages, if the DPM/DSM has an <a href="#alias">alias</a> defined, the alias <em>must</em> be used; the engine only recognizes/knows about the alias.
-        </p>	
-        
+        </p>
+
         <p>
         Message definition statements must be terminated with a ';'.
         </p>
-        
-				<p>
-				Message definitions can only be used within the 'if-true' or 'if-false' sections of rule definitions.
-				</p>		
 
-			</div>
+        <p>
+        Message definitions can only be used within the 'if-true' or 'if-false' sections of rule definitions.
+        </p>
 
-			<p class='example'>
+      </div>
+
+      <p class='example'>
         Exception message:<br />
         <span class='keyword'>message</span>(exception, "LTV of &lt;DPM&gt;LTV&lt;/DPM&gt; is greater than 70%.");<br />
         <br />
         Informational message:<br />
         <span class='keyword'>message</span>(findings, "The borrower has a payoff on their credit report.");<br />
-			</p>
+      </p>
 
 </div>
 
 <div id="alias" class='section'>
-		<h2>Aliases</h2>
-			<div class='desc'>
-				<p>
-				Aliases were designed so the developer could write GDL code using valid identifier names even though the application
-				is expecting an identifier that contains spaces. This is especially important for PPMs (because they cannot be renamed in the system).
-				Aliases are also used with DSMs for the same reasons. 
-				</p>
-				<p>
-				For example, application expects a DSM named "Price Adj-Total". With an alias, this is no problem. The rules can reference a dpm named <em>priceAdj-total</em>
-				(notice there are no spaces) and the uploaded XML will reference the dpm as <em>"Price Adj-Total"</em>.
-				</p>		
-				<p>
-				Aliases can be used with variables, rulesets and rule indentifiers. Please note that the alias itself must be in quotes in all cases.
-				</p>	
-				
-				<p>
-					All alias statements must be terminated with a ';'.
-				</p>
-			</div>
+    <h2>Aliases</h2>
+      <div class='desc'>
+        <p>
+        Aliases were designed so the developer could write GDL code using valid identifier names even though the application
+        is expecting an identifier that contains spaces. This is especially important for PPMs (because they cannot be renamed in the system).
+        Aliases are also used with DSMs for the same reasons.
+        </p>
+        <p>
+        For example, application expects a DSM named "Price Adj-Total". With an alias, this is no problem. The rules can reference a dpm named <em>priceAdj-total</em>
+        (notice there are no spaces) and the uploaded XML will reference the dpm as <em>"Price Adj-Total"</em>.
+        </p>
+        <p>
+        Aliases can be used with variables, rulesets and rule indentifiers. Please note that the alias itself must be in quotes in all cases.
+        </p>
 
-		<div class='subsection'>
-			<h2>Variable Aliases</h2>
+        <p>
+          All alias statements must be terminated with a ';'.
+        </p>
+      </div>
 
-				<div class='desc'>
-					<p>
-					Variable aliases are created during variable definition. The alias part of the definition has been emphasized.
-					</p>		
-				</div>
+    <div class='subsection'>
+      <h2>Variable Aliases</h2>
 
-				<p class='example'>
-					<span class='keyword'>dpm</span>	<span class='keyword'>numeric</span>	testDpm <span class='exEm'>"Test DPM Alias"</span>;<br />
-					<span class='keyword'>decision</span> <span class='keyword'>dpm</span>	<span class='keyword'>money</span>	testDsm <span class='exEm'>"TestDSM Alias"</span>;<br />
-					<span class='keyword'>ppm</span>	<span class='keyword'>crd</span>	pCreditScore <span class='exEm'>"Credit Score"</span>;<br />
-				</p>
+        <div class='desc'>
+          <p>
+          Variable aliases are created during variable definition. The alias part of the definition has been emphasized.
+          </p>
+        </div>
 
-		</div>
+        <p class='example'>
+          <span class='keyword'>dpm</span>  <span class='keyword'>numeric</span>  testDpm <span class='exEm'>"Test DPM Alias"</span>;<br />
+          <span class='keyword'>decision</span> <span class='keyword'>dpm</span>  <span class='keyword'>money</span>  testDsm <span class='exEm'>"TestDSM Alias"</span>;<br />
+          <span class='keyword'>ppm</span>  <span class='keyword'>crd</span>  pCreditScore <span class='exEm'>"Credit Score"</span>;<br />
+        </p>
 
-		<div class='subsection'>
-			<h2>Rule Aliases</h2>
-				<h5><span class='keyword'>alias</span> ( <span class='keyword'>rule</span>, Identifier, "Alias name" );</h5>
+    </div>
 
-				<div class='desc'>
-					<p>
-					A rule alias statement consists of the alias keyword, an alias type of rule, the rule identifier and the rule alias. 
-					</p>		
-				</div>
+    <div class='subsection'>
+      <h2>Rule Aliases</h2>
+        <h5><span class='keyword'>alias</span> ( <span class='keyword'>rule</span>, Identifier, "Alias name" );</h5>
 
-				<p class='example'>
-					<span class='keyword'>alias</span>(<span class='keyword'>rule</span>, SimpleAliasRule1, "Alias Rule 1");
-				</p>
+        <div class='desc'>
+          <p>
+          A rule alias statement consists of the alias keyword, an alias type of rule, the rule identifier and the rule alias.
+          </p>
+        </div>
 
-		</div>
+        <p class='example'>
+          <span class='keyword'>alias</span>(<span class='keyword'>rule</span>, SimpleAliasRule1, "Alias Rule 1");
+        </p>
 
-		<div class='subsection'>
-			<h2>Ruleset Aliases</h2>
-				<h5><span class='keyword'>alias</span> ( <span class='keyword'>ruleset</span>, Identifier, "Alias name" );</h5>
+    </div>
 
-				<div class='desc'>
-					<p>
-					A ruleset alias statement consists of the alias keyword, an alias type of ruleset, the ruleset identifier and the ruleset alias. 
-					</p>		
-				</div>
+    <div class='subsection'>
+      <h2>Ruleset Aliases</h2>
+        <h5><span class='keyword'>alias</span> ( <span class='keyword'>ruleset</span>, Identifier, "Alias name" );</h5>
 
-				<p class='example'>
-					<span class='keyword'>alias</span>(<span class='keyword'>ruleset</span>, SimpleAliasRuleset1, "Alias Ruleset 1");
-				</p>
-		</div>
+        <div class='desc'>
+          <p>
+          A ruleset alias statement consists of the alias keyword, an alias type of ruleset, the ruleset identifier and the ruleset alias.
+          </p>
+        </div>
+
+        <p class='example'>
+          <span class='keyword'>alias</span>(<span class='keyword'>ruleset</span>, SimpleAliasRuleset1, "Alias Ruleset 1");
+        </p>
+    </div>
 </div>
 
 <div id="guideline" class='section'>
-		<h2>Guideline Definitions</h2>
-				<h5><span class='keyword'>guideline</span>("Guideline Name") ... <span class='keyword'>end</span></h5>
+    <h2>Guideline Definitions</h2>
+        <h5><span class='keyword'>guideline</span>("Guideline Name") ... <span class='keyword'>end</span></h5>
 
-				<div class='desc'>
-					<p>
-					The guideline statement defines the rules, rulesets, powerlookups and lookups that are within a guideline object.
-					The order of all contained statements will be preserved.
-					</p>		
+        <div class='desc'>
+          <p>
+          The guideline statement defines the rules, rulesets, powerlookups and lookups that are within a guideline object.
+          The order of all contained statements will be preserved.
+          </p>
 
-					<p>
-					The guideline is the main vehicle for outputting XML. When the compiler is run in its default mode (no output file specified),
-					the guideline name will be used as the filename of the output file. An extension of .XML will be added as a suffix.
-					</p>		
+          <p>
+          The guideline is the main vehicle for outputting XML. When the compiler is run in its default mode (no output file specified),
+          the guideline name will be used as the filename of the output file. An extension of .XML will be added as a suffix.
+          </p>
 
-					<p>
-					The guideline statement must have a matching <span class='keyword'>end</span> statement to terminate the guideline definition.
-					</p>		
+          <p>
+          The guideline statement must have a matching <span class='keyword'>end</span> statement to terminate the guideline definition.
+          </p>
 
-				</div>
+        </div>
 
-			<p class='example'>
-				Example needed.
-			</p>
+      <p class='example'>
+        Example needed.
+      </p>
 </div>
 
 <div id="include" class='section'>
-		<h2>Including Source Files</h2>
-				<h5><span class='keyword'>include</span>("includeFileName");</h5>
-				<div class='desc'>
-					<p>
-					Included files must be on the include path. The include path is set using the /I command line parameter.
-					Multiple directories can be added to the include path with repeated use of the I flag.
-					</p>		
+    <h2>Including Source Files</h2>
+        <h5><span class='keyword'>include</span>("includeFileName");</h5>
+        <div class='desc'>
+          <p>
+          Included files must be on the include path. The include path is set using the /I command line parameter.
+          Multiple directories can be added to the include path with repeated use of the I flag.
+          </p>
 
-					<p>
-					Included files are parsed and compiled at the point that they are included within the parent file. Including a file more
-					than once will only result in the file being parsed one time. It will be ignored if included again.
-					</p>		
+          <p>
+          Included files are parsed and compiled at the point that they are included within the parent file. Including a file more
+          than once will only result in the file being parsed one time. It will be ignored if included again.
+          </p>
 
-					<p>
-						The include statement must be terminated with a ';'.
-					</p>
-				</div>
+          <p>
+            The include statement must be terminated with a ';'.
+          </p>
+        </div>
 
-				<p class='example'>
-					Example needed.
-				</p>
+        <p class='example'>
+          Example needed.
+        </p>
 </div>
-		
+
 <div id="import" class='section'>
-		<h2>Importing Files</h2>
-				<h5><span class='keyword'>import</span>( importType, "csvFileToImport" );</h5>
+    <h2>Importing Files</h2>
+        <h5><span class='keyword'>import</span>( importType, "csvFileToImport" );</h5>
 
-				<div class='desc'>
-					<p>
-					Imported files must be on the include path. The include path is set using the /I command line parameter.
-					Multiple directories can be added to the include path with repeated use of the I flag.
-					</p>		
+        <div class='desc'>
+          <p>
+          Imported files must be on the include path. The include path is set using the /I command line parameter.
+          Multiple directories can be added to the include path with repeated use of the I flag.
+          </p>
 
-					<p>
-					The import statement is used to load lookup and powerlookup data into the compiler. Lookup data must be imported before a lookup
-					definition statement referencing the data is instantiated. The compiler will flag this as an error.
-					</p>		
+          <p>
+          The import statement is used to load lookup and powerlookup data into the compiler. Lookup data must be imported before a lookup
+          definition statement referencing the data is instantiated. The compiler will throw an error if the lookup is referenced prior to import.
+          </p>
 
-					<p>
-					Import can only load CSV files. Non CSV files should not be referenced by the import statement.<br />
-					</p>		
+          <p>
+          Import can only load CSV files. Non CSV files should not be referenced by the import statement.<br />
+          </p>
 
-					<p>
-					The CSV file extension must be part of the filename.<br />
-					The import statement must be terminated with a ';'.
-					</p>
-				</div>
+          <p>
+          The CSV file extension must be part of the filename.<br />
+          The import statement must be terminated with a ';'.
+          </p>
 
+          <p>
+          When a powerlookup is imported, its name is converted to a GDLC friendly representation
+          as a result of a generated alias. Basically, this means that spaces are removed.
+          </p>
 
-		<div class='subsection'>
-					<h2>Lookup Files</h2>
-
-						<div class='desc'>
-							<p>
-							Need more info here.
-							</p>		
-
-						</div>
-
-						<p class='example'>
-							<span class='keyword'>import</span>( <span class='keyword'>lookup</span>, "TestLookups.csv");<br />
-						</p>
-
-		</div>
+          <p>
+          For example, a PLK named My Awesome Ruleset PLK will result in an alias of MyAwesomeRulesetPlk().
+          </p>
+        </div>
 
 
-			<div class='subsection'>
-						<h2>PowerLookup Files</h2>
+    <div class='subsection'>
+          <h2>Lookup Files</h2>
 
-							<div class='desc'>
-								<p>
-								Need more info here.
-								</p>		
-							</div>
+            <div class='desc'>
+              <p>
+              Need more info here.
+              </p>
 
-							<p class='example'>
-								<span class='keyword'>import</span>( <span class='keyword'>powerlookup</span>, "TestPowerLookups.csv");
-							</p>
+            </div>
 
-			</div>
+            <p class='example'>
+              <span class='keyword'>import</span>( <span class='keyword'>lookup</span>, "TestLookups.csv");<br />
+            </p>
 
-		</div>
+    </div>
+
+
+      <div class='subsection'>
+            <h2>PowerLookup Files</h2>
+
+              <div class='desc'>
+                <p>
+                Need more info here.
+                </p>
+              </div>
+
+              <p class='example'>
+                <span class='keyword'>import</span>( <span class='keyword'>powerlookup</span>, "TestPowerLookups.csv");
+              </p>
+
+      </div>
+
+    </div>
 
 <div id="xmlfunc" class='section'>
-		<h2>XML Functions</h2>
-				<h5><span class='keyword'>xmlfunc</span> identifier( [IN|OUT] dpmVariable, [IN|OUT] "constant", [IN|OUT] 15.5 );</h5>
+    <h2>XML Functions</h2>
+        <h5><span class='keyword'>xmlfunc</span> identifier( [IN|OUT] dpmVariable, [IN|OUT] "constant", [IN|OUT] 15.5 );</h5>
 
-				<div class='desc'>
-					<p>
-					XML Functions are defined and provided by the engine. The compiler does not know whether or not a function is
+        <div class='desc'>
+          <p>
+          XML Functions are defined and provided by the engine. The compiler does not know whether or not a function is
           available. It is up to the user to verify the function exists before using it in your guideline.
-					</p>		
+          </p>
 
-					<p>
-					To use an XML function, it must first be defined. The compiler does check the argument count against the function definition
+          <p>
+          To use an XML function, it must first be defined. The compiler does check the argument count against the function definition
           when it is referenced within a rule. Errors will be thrown if the argument count doesn't match.
-					</p>		
+          </p>
 
-					<p>
-					In both definitions and references, the IN and OUT keywords can be used in front of each argument. These keywords are optional.
-          They affect nothing and are only used as an indicator for the user as to whether the variable is used for INput to the 
+          <p>
+          In both definitions and references, the IN and OUT keywords can be used in front of each argument. These keywords are optional.
+          They affect nothing and are only used as an indicator for the user as to whether the variable is used for INput to the
           function or OUTput from the function. IN and OUT can be used in either definitions, or references, or both.
-					</p>		
+          </p>
 
-					<p>
-					DPM variables, PPM variables, numbers and constants (values surrounded with quotes) can be used as arguments. Inline expressions are not allowed
+          <p>
+          DPM variables, PPM variables, numbers and constants (values surrounded with quotes) can be used as arguments. Inline expressions are not allowed
           as arguments to the function. Assigning values to variables before using them within a function can be done within the same rule.
-					</p>		
+          </p>
 
-					<p>
-					Function definition statements must be terminated with a ';'.<br />
+          <p>
+          Function definition statements must be terminated with a ';'.<br />
           Function reference statements must also be termined with ; (the same as any other assignment operation).
-					</p>
-				</div>
+          </p>
+        </div>
 
 
-		<div class='subsection'>
-					<h2>XML Function Definition Example:</h2>
+    <div class='subsection'>
+          <h2>XML Function Definition Example:</h2>
 
-						<div class='desc'>
-							<p>
+            <div class='desc'>
+              <p>
               Argument <em>types</em> are not checked by the compiler. Because of this, it is usually helpful to use constants in the argument
               list of the definition that describe what the argument should be.
-							</p>		
+              </p>
 
-						</div>
+            </div>
 
-						<p class='example'>
-							<span class='keyword'>xmlfunc</span> Floor( <span class='keyword'>IN</span> "NumToBeFloored", <span class='keyword'>IN</span> "Multiple" );<br />
-						</p>
+            <p class='example'>
+              <span class='keyword'>xmlfunc</span> Floor( <span class='keyword'>IN</span> "NumToBeFloored", <span class='keyword'>IN</span> "Multiple" );<br />
+            </p>
 
-		</div>
+    </div>
 
 
-			<div class='subsection'>
-					<h2>XML Function Reference Example:</h2>
+      <div class='subsection'>
+          <h2>XML Function Reference Example:</h2>
 
-							<div class='desc'>
-								<p>
-								XML function references are used on the right hand side of assignment operations. The <span class='keyword'>xmlfunc</span> keyword
+              <div class='desc'>
+                <p>
+                XML function references are used on the right hand side of assignment operations. The <span class='keyword'>xmlfunc</span> keyword
                 is not used in references.
-								</p>		
-							</div>
+                </p>
+              </div>
 
-							<p class='example'>
+              <p class='example'>
 <span class='keyword'>rule</span> SetAppraisedValue()<br />
-		&nbsp;&nbsp;<span class='keyword'>if</span>(pReviewValue != 0)<br />
-		&nbsp;&nbsp;<span class='keyword'>then</span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = <b>Floor( <span class='keyword'>IN</span> pReviewValue, <span class='keyword'>IN</span> 100 )</b>;<br />
-		&nbsp;&nbsp;<span class='keyword'>else</span><br />
-		&nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = purchasePrice;<br />
-		&nbsp;&nbsp;<span class='keyword'>end</span><br />
+    &nbsp;&nbsp;<span class='keyword'>if</span>(pReviewValue != 0)<br />
+    &nbsp;&nbsp;<span class='keyword'>then</span><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = <b>Floor( <span class='keyword'>IN</span> pReviewValue, <span class='keyword'>IN</span> 100 )</b>;<br />
+    &nbsp;&nbsp;<span class='keyword'>else</span><br />
+    &nbsp;&nbsp;&nbsp;&nbsp;appraisedValue = purchasePrice;<br />
+    &nbsp;&nbsp;<span class='keyword'>end</span><br />
     <span class='keyword'>end</span><br />
-									</p>
+                  </p>
 
-			</div>
+      </div>
 
-		</div>
+    </div>
 
-		<div class='section'>
-				<h2>Miscellaneous</h2>
-				<div id="InsertPricingGuideline" class='subsection'>
-					<h2>Inserting a Pricing Guideline (special rule)</h2>
-						<h5><span class='keyword'>InsertPricingGuideline</span>();</h5>
+    <div class='section'>
+        <h2>Miscellaneous</h2>
+        <div id="InsertPricingGuideline" class='subsection'>
+          <h2>Inserting a Pricing Guideline (special rule)</h2>
+            <h5><span class='keyword'>InsertPricingGuideline</span>();</h5>
 
-						<div class='desc'>
-							<p>
-							Need more info here.
-							</p>		
-						</div>
+            <div class='desc'>
+              <p>
+              This keyword is LOS specific. Non-LOS implementations do not support pricing guidelines.
+              </p>
+            </div>
 
-						<p class='example'>
-							<span class='keyword'>InsertPricingGuideline</span>();
-						</p>
+            <p class='example'>
+              <span class='keyword'>InsertPricingGuideline</span>();
+            </p>
 
-				</div>
+        </div>
 
-		</div>
+    </div>
 
 
-	
-	</div>
-	
-	<div id ='footer'>
-	
-	</div>
-	
 
-	</body>
+  </div>
+
+  <div id ='footer'>
+
+  </div>
+
+
+  </body>
 
 </html>
 
