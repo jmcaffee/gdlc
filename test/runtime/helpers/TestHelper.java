@@ -16,7 +16,7 @@ public class TestHelper {
 	
 	public TestHelper() {
 		super();
-		rootDir = "r:/tools/java/com.ktechsystems.gdlc";
+		rootDir = "c:/Users/Jeff/projects/java/gdlc";
 	}
 
 	/**
