@@ -7,3 +7,4 @@ dist/
 build/
 backup/
 *.log
+gdl/tests/output/*.xml
