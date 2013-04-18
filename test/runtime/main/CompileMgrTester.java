@@ -650,12 +650,12 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertTrue("Output file not created", f.exists());
 		
-		//String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\" Visibility=\"Internal\"><![CDATA[Test PriorTo docs condition message.]]></Message>";
-		String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo docs condition message.]]></Message>";
-		//String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\" Visibility=\"\"><![CDATA[Test PriorTo funding condition message.]]></Message>";
-		String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\"><![CDATA[Test PriorTo funding condition message.]]></Message>";
-		//String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\" Visibility=\"\"><![CDATA[Test PriorTo approval condition message.]]></Message>";
-		String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo approval condition message.]]></Message>";
+		String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\" Visibility=\"\"><![CDATA[ Test PriorTo docs condition message.  ]]></Message>";
+		//String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo docs condition message.]]></Message>";
+		String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\" Visibility=\"Internal\"><![CDATA[ Test PriorTo funding condition message.  ]]></Message>";
+		//String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\"><![CDATA[Test PriorTo funding condition message.]]></Message>";
+		String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\" Visibility=\"External\"><![CDATA[ Test PriorTo approval condition message.  ]]></Message>";
+		//String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo approval condition message.]]></Message>";
 		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef1));
 		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef2));
 		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef3));

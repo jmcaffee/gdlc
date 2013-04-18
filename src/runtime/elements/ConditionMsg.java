@@ -16,6 +16,7 @@ public class ConditionMsg {
 	String				priorTo			= new String();
 	String				category		= new String();
 	String				imageDocType	= new String();
+	String				visibility		= new String();
 	StringBuffer		msg				= new StringBuffer();
 
 	ASTConditionMsgDef	node			= null;
@@ -54,6 +55,7 @@ public class ConditionMsg {
 		
 		this.name = new String(node.getData("Name"));
 		this.imageDocType = new String(node.getData("ImageDocType"));
+		this.visibility = new String(node.getData("Visibility"));
 		this.msg = new StringBuffer(node.getData("value"));
 
 	}
@@ -117,7 +119,7 @@ public class ConditionMsg {
 	public Object buildXmlDefElement(){
 		XmlElem me = new XmlElem("Message");
 
-		String[] attribs = {"Type", "Id", "Name", "PriorTo", "Category", "ImageDocType"};
+		String[] attribs = {"Type", "Id", "Name", "PriorTo", "Category", "ImageDocType", "Visibility"};
 		me.setAttributeOrder(attribs);
 		
 		me.putAttribute("Type", "Condition");
@@ -126,11 +128,13 @@ public class ConditionMsg {
 		me.putAttribute("PriorTo", this.priorTo);
 		me.putAttribute("Category", this.category);
 		me.putAttribute("ImageDocType", this.imageDocType);
+		me.putAttribute("Visibility", this.visibility);
 
 		StringBuffer msgText = new StringBuffer();
 		StringBuffer msg = new StringBuffer(this.msg);
 		
-		msgText.append("<![CDATA[").append(msg).append("]]>");
+		// AMS outputs condition message with one leading space and 2 trailing spaces (inside CDATA element).
+		msgText.append("<![CDATA[ ").append(msg).append("  ]]>");
 		me.appendXml(msgText.toString());
 
 		return me;

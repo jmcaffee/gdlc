@@ -70,20 +70,20 @@ SKIP :
 | "\r"
 | "\n"
 | <"//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
-// | <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/">	// Disabling this and setting up the following...
+// | <"/*" (~["*"])* "*" (~["/"] (~["*"])* "*")* "/"> // Disabling this and setting up the following...
 }
 
 
 SKIP :
-{														// This changes the lexical state so that tokens are
-<"/*">: INSIDE_COMMENT									// not matched (the tokens only match in the DEFAULT
-}														// state). This method does NOT allow nested multi-line comments.
+{                           // This changes the lexical state so that tokens are
+<"/*">: INSIDE_COMMENT                  // not matched (the tokens only match in the DEFAULT
+}                           // state). This method does NOT allow nested multi-line comments.
 
 <INSIDE_COMMENT>
 SKIP:
-{														// This sets the state back to DEFAULT when the ending
-        <"*/">: DEFAULT									// tag for the multi-line comment is parsed.
-|       <~[]>											// See http://www.cs.utsa.edu/~danlo/teaching/cs4713/lecture/node16.html
+{                           // This sets the state back to DEFAULT when the ending
+        <"*/">: DEFAULT                 // tag for the multi-line comment is parsed.
+|       <~[]>                     // See http://www.cs.utsa.edu/~danlo/teaching/cs4713/lecture/node16.html
 }
 
 
@@ -107,8 +107,8 @@ TOKEN :  /* GDL Keywords 2 */
 
 TOKEN :  /* GDL Keywords 3 */
 {
-  < LOOKUP:			"lookup">
-| < POWERLOOKUP: 	"powerlookup">
+  < LOOKUP:     "lookup">
+| < POWERLOOKUP:  "powerlookup">
 }
 
 
@@ -173,7 +173,7 @@ TOKEN :  /* Guideline Keywords */
 | < TRUE:       ( "true" | "True" | "TRUE" ) >
 | < FALSE:      ( "false" | "False" | "FALSE" ) >
 | < CONTINUE:   "continue">
-| < XMLFUNC:   	"xmlfunc">
+| < XMLFUNC:    "xmlfunc">
 }
 
 
@@ -190,27 +190,27 @@ TOKEN :  /* Guideline 'Message' Keywords */
 
 TOKEN :  /* Guideline Condition Message 'ConditionType' Keywords */
 {
-  < CONDTYPE_ASSET:  	"asset">
-| < CONDTYPE_INCOME:  	"income">
+  < CONDTYPE_ASSET:   "asset">
+| < CONDTYPE_INCOME:    "income">
 | < CONDTYPE_PROPERTY:  "property">
 | < CONDTYPE_PURCHASE:  "purchase">
-| < CONDTYPE_TITLE:  	"title">
+| < CONDTYPE_TITLE:   "title">
 }
 
 
 
 TOKEN :  /* Guideline Condition Message 'PriorTo' Keywords */
 {
-  < CONDPRIORTO_DOCS:  		"docs">
-| < CONDPRIORTO_FUNDING:  	"funding">
-| < CONDPRIORTO_APPROVAL:  	"approval">
+  < CONDPRIORTO_DOCS:     "docs">
+| < CONDPRIORTO_FUNDING:    "funding">
+| < CONDPRIORTO_APPROVAL:   "approval">
 }
 
 
 
 TOKEN :  /* XML Function input/output var indicators */
 {
-  < IND_IN:		"IN">
+  < IND_IN:   "IN">
 | < IND_OUT:    "OUT">
 }
 
@@ -363,7 +363,7 @@ TOKEN :  /* Misc Symbols*/
 
 TOKEN :  /* Reserved Constants */
 {
-  < CONST_NULL:		( "NULL" | "Null" | "null" ) >
+  < CONST_NULL:   ( "NULL" | "Null" | "null" ) >
 }
   
 
@@ -407,32 +407,32 @@ ASTCompilationUnit CompilationUnit() :
 
 void VarDef() :
 {
-	String nm,dtyp,typ,als,prcsn;
-	Token t;
+  String nm,dtyp,typ,als,prcsn;
+  Token t;
 }
 {
   ( t=<DPM> typ=VarType(){
-	  		jjtThis.data.put("ProductType",typ);
-	  		if( null != t.specialToken ){
-	  			jjtThis.data.put("Type","DSM");
-	  		} else {
-	  			jjtThis.data.put("Type","DPM");
-	  		}
-	  		jjtThis.data.put("varType","DPM");
-	  	} (prcsn=Precision(){jjtThis.data.put("Precision",prcsn);})? 
-		nm=Name(){
-	  		jjtThis.data.put("Name",nm);
-	  	} 
-		(als=AliasOf(){jjtThis.data.put("Alias",als);})? EOS() )
+        jjtThis.data.put("ProductType",typ);
+        if( null != t.specialToken ){
+          jjtThis.data.put("Type","DSM");
+        } else {
+          jjtThis.data.put("Type","DPM");
+        }
+        jjtThis.data.put("varType","DPM");
+      } (prcsn=Precision(){jjtThis.data.put("Precision",prcsn);})? 
+    nm=Name(){
+        jjtThis.data.put("Name",nm);
+      } 
+    (als=AliasOf(){jjtThis.data.put("Alias",als);})? EOS() )
   | ( <PPM> dtyp=VarDataType(){
-	  		jjtThis.data.put("DataType",dtyp);
-  		} typ=PpmVarType(){
-	  		jjtThis.data.put("Type",typ);
-	  		jjtThis.data.put("varType","PPM");
-	  	} nm=Name(){
-	  		jjtThis.data.put("Name",nm);
-	  	} 
-		(als=AliasOf(){jjtThis.data.put("Alias",als);})? EOS() )
+        jjtThis.data.put("DataType",dtyp);
+      } typ=PpmVarType(){
+        jjtThis.data.put("Type",typ);
+        jjtThis.data.put("varType","PPM");
+      } nm=Name(){
+        jjtThis.data.put("Name",nm);
+      } 
+    (als=AliasOf(){jjtThis.data.put("Alias",als);})? EOS() )
 }
 
 String VarType() #void :
@@ -450,7 +450,7 @@ String VarType() #void :
 
 String Precision() #void :
 { 
-	Token t;
+  Token t;
 }
 {
   <LPAREN> t=<NUMERIC_CONSTANT> <RPAREN> { return t.image;} 
@@ -473,9 +473,9 @@ String VarDataType() #void :
 String PpmVarType() #void :
 {}
 {
-  <APPLICATION> 	{ return new String("APM");}
-  | <CREDIT>      	{ return new String("CRD");}
-  | <PRODUCT>     	{ return new String("PRD");}
+  <APPLICATION>   { return new String("APM");}
+  | <CREDIT>        { return new String("CRD");}
+  | <PRODUCT>       { return new String("PRD");}
 }
 
 
@@ -564,21 +564,21 @@ void GuidelineDef() :
 {
   <GUIDELINE> ( <LPAREN> nm=ParenStringLiteral() <RPAREN> ){jjtThis.data.put("Name",nm);jjtThis.data.put("GuidelineID","1");jjtThis.data.put("Version","1");jjtThis.data.put("StartDate","");}   
   ( 
-  	(
-  		InsertPricing()
-  		|
-  		FunctionRef()
-  		|
-	   	( LOOKAHEAD(4)
-	    		RulesetDef() 
-	  		| 	RulesetRef()  )
-	  	| 
-	  	( LOOKAHEAD(5)
-	    		RuleRef() 
-	  		| 	RuleDef() ) 
-	)+ 
+    (
+      InsertPricing()
+      |
+      FunctionRef()
+      |
+      ( LOOKAHEAD(4)
+          RulesetDef() 
+        |   RulesetRef()  )
+      | 
+      ( LOOKAHEAD(5)
+          RuleRef() 
+        |   RuleDef() ) 
+  )+ 
   )
-	
+  
   <END> 
 }
 
@@ -586,7 +586,7 @@ void GuidelineDef() :
 void InsertPricing() :
 {}
 {
-	<INSERT_PRICING_GUIDELINE> <DEREFERENCE> EOS()
+  <INSERT_PRICING_GUIDELINE> <DEREFERENCE> EOS()
 }
 
 String StringLiteral() #void : 
@@ -625,7 +625,7 @@ void FunctionRef() :
 void FunctionRefArgList() :
 {}
 {
-	FunctionRefArg() ( "," FunctionRefArg() )*
+  FunctionRefArg() ( "," FunctionRefArg() )*
 }
 
 
@@ -634,9 +634,9 @@ void FunctionRefArg() :
 { Token t; String str;}
 {
   ( t=<NUMERIC_CONSTANT>
-  | t=<CHARACTER_LITERAL> )	{ jjtThis.data.put("value",t.image ); }
-  | str=StringLiteral()		{ jjtThis.data.put("value",str ); }
-  |	str=Name()				{ jjtThis.data.put("value",str ); } 		 
+  | t=<CHARACTER_LITERAL> ) { jjtThis.data.put("value",t.image ); }
+  | str=StringLiteral()   { jjtThis.data.put("value",str ); }
+  | str=Name()        { jjtThis.data.put("value",str ); }      
 }
 
 
@@ -651,7 +651,7 @@ void FunctionDef() :
 void FunctionDefArgList() :
 {}
 {
-	FunctionDefArg() ("," FunctionDefArg())*
+  FunctionDefArg() ("," FunctionDefArg())*
 }
 
 
@@ -659,15 +659,15 @@ void FunctionDefArgList() :
 void FunctionDefArg() :
 {Token t;}
 {
-	<STRING>t=<IDENTIFIER>{jjtThis.data.put("value", "$" + t.image);}
+  <STRING>t=<IDENTIFIER>{jjtThis.data.put("value", "$" + t.image);}
 }
 
 
 
 String CodeBlock() :
 {Token t;}
-{							
-	t=<CODE_BLOCK> {return t.image.substring(1,(t.image.length()-1));}
+{             
+  t=<CODE_BLOCK> {return t.image.substring(1,(t.image.length()-1));}
 }
 
 
@@ -683,7 +683,7 @@ void XmlFuncDef() :
 void XmlFuncDefArgList() :
 {}
 {
-	XmlFuncDefArg() ( "," XmlFuncDefArg() )*
+  XmlFuncDefArg() ( "," XmlFuncDefArg() )*
 }
 
 
@@ -691,8 +691,8 @@ void XmlFuncDefArgList() :
 void XmlFuncDefArg() :
 {}
 {  
-  (	LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? Constant()
-	| LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? VarRef()
+  ( LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? Constant()
+  | LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? VarRef()
   )
 }
 
@@ -709,7 +709,7 @@ void XmlFuncRef() :
 void XmlFuncRefArgList() :
 {}
 {
-	XmlFuncRefArg() ( "," XmlFuncRefArg() )*
+  XmlFuncRefArg() ( "," XmlFuncRefArg() )*
 }
 
 
@@ -717,8 +717,8 @@ void XmlFuncRefArgList() :
 void XmlFuncRefArg() :
 {}
 {  
-  (	LOOKAHEAD(3) ( <IND_IN> | <IND_OUT> )? Constant()
-	| ( <IND_IN> | <IND_OUT> )? VarRef()
+  ( LOOKAHEAD(3) ( <IND_IN> | <IND_OUT> )? Constant()
+  | ( <IND_IN> | <IND_OUT> )? VarRef()
   )
 }
 
@@ -801,39 +801,39 @@ Expression  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 Co
 void Expression() :
 {}  
 {
-	LogExpr()
+  LogExpr()
 }
 
 void LogExpr() #LogicalCompute(>1) :
 {}
 {
-	LogTerm() (LogicalOperator() LogTerm())*
+  LogTerm() (LogicalOperator() LogTerm())*
 }
 
 
 void LogTerm() #void :
 {}
 {
-	LOOKAHEAD(2)
-	EqExpr()
-	|
-	LOOKAHEAD(BraceLookAhead())
-	Brace()
-	
+  LOOKAHEAD(2)
+  EqExpr()
+  |
+  LOOKAHEAD(BraceLookAhead())
+  Brace()
+  
 }
 
 void BraceLookAhead() #void :
 {}
 {
-	<LPAREN> LogTerm() LogicalOperator()
+  <LPAREN> LogTerm() LogicalOperator()
 }
 
 void EqExpr() #EqualityCompute(>1) :
 {}
 {
-	CompTerm() (EqualityOperator() CompTerm())*
-	|
-	"(" CompTerm() (EqualityOperator() CompTerm())* ")"
+  CompTerm() (EqualityOperator() CompTerm())*
+  |
+  "(" CompTerm() (EqualityOperator() CompTerm())* ")"
 }
 
 
@@ -852,10 +852,10 @@ void Compute() #LogicalCompute(3) :
 void LogicalOperator() :
 { Token t; }
 {
-  t=<AND1>		{ jjtThis.data.put("value", new String("AND")); }
-  | t=<AND2>	{ jjtThis.data.put("value", new String("AND")); }
-  | t=<OR1>		{ jjtThis.data.put("value", new String("OR")); }
-  | t=<OR2> 	{ jjtThis.data.put("value", new String("OR")); }
+  t=<AND1>    { jjtThis.data.put("value", new String("AND")); }
+  | t=<AND2>  { jjtThis.data.put("value", new String("AND")); }
+  | t=<OR1>   { jjtThis.data.put("value", new String("OR")); }
+  | t=<OR2>   { jjtThis.data.put("value", new String("OR")); }
 }
 
 
@@ -885,15 +885,15 @@ void CompTerm() #EqualityCompute(>1) :
 void EqualityOperator() :
 { Token t; }
 {
-  t=<LT> 		{ jjtThis.data.put("value", new String("&lt;") ); }
-  | t=<GT>		{ jjtThis.data.put("value", new String("&gt;") ); }
-  | t=<NEQ1>	{ jjtThis.data.put("value", new String("&lt;&gt;") ); }
-  | t=<NEQ2>	{ jjtThis.data.put("value", new String("&lt;&gt;") ); }
-  | t=<EQU>		{ jjtThis.data.put("value", new String("==") ); }
-  | t=<LEQ>		{ jjtThis.data.put("value", new String("&lt;=") ); }
-  | t=<GEQ>  	{ jjtThis.data.put("value", new String("&gt;=") ); }
-  | t=<IN1>  	{ jjtThis.data.put("value", new String("??") ); }
-  | t=<IN2>  	{ jjtThis.data.put("value", new String("??") ); }
+  t=<LT>    { jjtThis.data.put("value", new String("&lt;") ); }
+  | t=<GT>    { jjtThis.data.put("value", new String("&gt;") ); }
+  | t=<NEQ1>  { jjtThis.data.put("value", new String("&lt;&gt;") ); }
+  | t=<NEQ2>  { jjtThis.data.put("value", new String("&lt;&gt;") ); }
+  | t=<EQU>   { jjtThis.data.put("value", new String("==") ); }
+  | t=<LEQ>   { jjtThis.data.put("value", new String("&lt;=") ); }
+  | t=<GEQ>   { jjtThis.data.put("value", new String("&gt;=") ); }
+  | t=<IN1>   { jjtThis.data.put("value", new String("??") ); }
+  | t=<IN2>   { jjtThis.data.put("value", new String("??") ); }
 }
 
 
@@ -909,15 +909,15 @@ Operand   --> NUMERIC_CONSTANT
 void LhOperand() #void :
 {}
 {
-	VarRef()
+  VarRef()
 }
 
 
 void Operand() #void :
 {}
 {
-	LOOKAHEAD(1)
-	VarRef() 
+  LOOKAHEAD(1)
+  VarRef() 
     | 
     Constant()
 }
@@ -926,7 +926,7 @@ void Operand() #void :
 void Brace() :
 {}
 {
-	<LPAREN> LogExpr() <RPAREN>
+  <LPAREN> LogExpr() <RPAREN>
 }
 
 void LogicalBrace() #Brace :
@@ -950,12 +950,12 @@ void EqualityBrace() #void :
 void Constant() :
 { Token t; String str; }
 {
-	t=<NUMERIC_CONSTANT> 	{ jjtThis.data.put("value",t.image ); }
-	| t=<CONST_NULL>		{ jjtThis.data.put("value","NULL" ); }
-	| t=<TRUE>				{ jjtThis.data.put("value","True" ); }
-	| t=<FALSE> 			{ jjtThis.data.put("value","False" ); }
-  	| 
-  	str=StringLiteral()  	{ jjtThis.data.put("value",str); }
+  t=<NUMERIC_CONSTANT>  { jjtThis.data.put("value",t.image ); }
+  | t=<CONST_NULL>    { jjtThis.data.put("value","NULL" ); }
+  | t=<TRUE>        { jjtThis.data.put("value","True" ); }
+  | t=<FALSE>       { jjtThis.data.put("value","False" ); }
+    | 
+    str=StringLiteral()   { jjtThis.data.put("value",str); }
 }
 
 
@@ -1108,8 +1108,8 @@ void IfActions() :
     Assign() 
   | Message()
   | ( LOOKAHEAD(4)
-		ConditionMsgDef() 
-	| 	ConditionMsgRef()  )
+    ConditionMsgDef() 
+  |   ConditionMsgRef()  )
   )* 
 }
 
@@ -1120,8 +1120,8 @@ void ElseActions() :
     Assign() 
   | Message() 
   | ( LOOKAHEAD(4)
-		ConditionMsgDef() 
-	| 	ConditionMsgRef()  )
+    ConditionMsgDef() 
+  |   ConditionMsgRef()  )
   )* 
 }
 
@@ -1143,9 +1143,9 @@ void AssignValue() :
 {}
 {
   (LOOKAHEAD(2) XmlFuncRef()
-	| (LOOKAHEAD(2) MathExpression()
-		| ConstantExpression()
-		| LookupDef() )
+  | (LOOKAHEAD(2) MathExpression()
+    | ConstantExpression()
+    | LookupDef() )
   )
 }
 
@@ -1185,9 +1185,9 @@ void ConditionMsgRef() :
 }
 
 void ConditionMsgDef() :
-{ String id; String nm; String idt; String msg;}
+{ String id; String nm; String idt; String vis; String msg;}
 {
-  "condition" id=Name(){jjtThis.data.put("Identifier",id);} <LPAREN> nm=StringLiteral(){jjtThis.data.put("Name",nm);} "," CondType() "," PriorTo() "," idt=StringLiteral(){jjtThis.data.put("ImageDocType",idt);} "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
+  "condition" id=Name(){jjtThis.data.put("Identifier",id);} <LPAREN> nm=StringLiteral(){jjtThis.data.put("Name",nm);} "," CondType() "," PriorTo() "," idt=StringLiteral(){jjtThis.data.put("ImageDocType",idt);} "," vis=StringLiteral(){jjtThis.data.put("Visibility",vis);} "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
 }
 
 
@@ -1209,36 +1209,36 @@ void PriorTo() :
 void VarRef() :
 {String nm;}
 {
-  nm=VarCastDpm()  				{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","dpm");}
-  | nm=VarCastPpm() 			{jjtThis.data.put("Name",nm);jjtThis.data.put("cast","ppm");}
-  | nm=Name()					{jjtThis.data.put("Name",nm);}
+  nm=VarCastDpm()         {jjtThis.data.put("Name",nm);jjtThis.data.put("cast","dpm");}
+  | nm=VarCastPpm()       {jjtThis.data.put("Name",nm);jjtThis.data.put("cast","ppm");}
+  | nm=Name()         {jjtThis.data.put("Name",nm);}
 }
 
 String VarCastDpm() #void :
 {Token t; String tmp;}
 {
-  t=<CAST_DPM> { 	tmp=t.image.substring(4,(t.image.length()-1)); 
-					if( tmp.substring(0,1).equals("\"") ){
-						if( tmp.substring((tmp.length()-1),(tmp.length())).equals("\"") ){
-							tmp=tmp.substring(1,(tmp.length()-1));
-						}
-					}
-					return tmp;
-			   }
+  t=<CAST_DPM> {  tmp=t.image.substring(4,(t.image.length()-1)); 
+          if( tmp.substring(0,1).equals("\"") ){
+            if( tmp.substring((tmp.length()-1),(tmp.length())).equals("\"") ){
+              tmp=tmp.substring(1,(tmp.length()-1));
+            }
+          }
+          return tmp;
+         }
 }
 
 
 String VarCastPpm() #void :
 {Token t; String tmp;}
 {
-  t=<CAST_PPM> { 	tmp=t.image.substring(4,(t.image.length()-1)); 
-					if( tmp.substring(0,1).equals("\"") ){
-						if( tmp.substring((tmp.length()-1),(tmp.length())).equals("\"") ){
-							tmp=tmp.substring(1,(tmp.length()-1));
-						}
-					}
-					return tmp;
-			   }
+  t=<CAST_PPM> {  tmp=t.image.substring(4,(t.image.length()-1)); 
+          if( tmp.substring(0,1).equals("\"") ){
+            if( tmp.substring((tmp.length()-1),(tmp.length())).equals("\"") ){
+              tmp=tmp.substring(1,(tmp.length()-1));
+            }
+          }
+          return tmp;
+         }
 }
 
 
