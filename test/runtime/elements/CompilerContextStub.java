@@ -97,6 +97,12 @@ public class CompilerContextStub implements IProgramContext {
 	public ConditionMsg getCondition(String key){return null;}
 	public ASTConditionMsgDef getAstCondition(String key){return conditions.get(key);}
 	
+	@Override
+	public ConditionMsg getConditionFromAlias(String alias) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#containsCondition(java.lang.String)
 	 */

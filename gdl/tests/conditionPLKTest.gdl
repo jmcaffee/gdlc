@@ -1,0 +1,38 @@
+/* **************************************************************************
+ *  File: conditionPLKTest.gdl
+ *
+ *  Description:
+ *    Import Condition PLK
+ *
+ ************************************************************************* */
+
+ppm numeric app     ppmVar;
+
+
+// Define conditions
+// keyword  identifier    sys name        category  priorto     Image Doc Type        Visibility  Condition Text
+condition testDocs      ("Test Docs",     asset,    docs,       "",                   "",         "Test PriorTo docs condition message."    );
+condition test-funding  ("Test Funding",  asset,    funding,    "My Image Doc Type",  "Internal", "Test PriorTo funding condition message." );
+condition TESTAPPROVAL  ("Test Approval", asset,    approval,   "",                   "External", "Test PriorTo approval condition message.");
+
+// Import conditions PLK
+import(powerlookup, "condition_test_plk.csv");
+
+
+rule SimpleConditionRule1()             // Define the rule.
+  if ( ppmVar == 1 )
+  then
+
+    // Reference pre-defined conditions
+    condition testDocs();
+    condition test-funding();
+    condition TESTAPPROVAL();
+  end
+end
+
+
+guideline ("ConditionPLKTestGuideline")
+
+  ruleset ConditionTestPLK();
+end
+

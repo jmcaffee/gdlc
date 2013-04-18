@@ -1,0 +1,9 @@
+PowerLookup,,,,
+,Condition Test PLK,Execution Type,Continue,Continue
+,,ppmVar,Condition,Condition
+,,PPM,Condition,Condition
+,,==,True Action:Condition,False Action:Condition
+,,PPM(ppmVar),Test Docs,
+,,PPM(ppmVar),,Test Funding
+,,PPM(ppmVar),Test Approval,
+,,,,

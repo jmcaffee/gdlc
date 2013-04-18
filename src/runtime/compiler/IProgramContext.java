@@ -30,6 +30,8 @@ public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncl
 
 	public abstract boolean 			containsCondition(String key);
 
+	public abstract ConditionMsg		getConditionFromAlias(String alias);
+	
 	public abstract void 				addWarning(IProblem warn);
 
 	public abstract boolean 			hasWarnings();

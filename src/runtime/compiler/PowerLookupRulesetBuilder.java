@@ -3,6 +3,7 @@ package runtime.compiler;
 import java.util.ArrayList;
 
 import runtime.compiler.PowerLookupData.VarOp;
+import runtime.elements.ConditionMsg;
 import runtime.main.CompileError;
 import runtime.main.Log;
 import runtime.parser.ASTLookupDef;
@@ -156,12 +157,29 @@ public class PowerLookupRulesetBuilder {
 		return false;
 	}
 	
+	protected boolean isConditionOp(VarOp op){
+		if(op.getName().equalsIgnoreCase("Condition")){
+			return true;
+		}
+		if(op.getName().equalsIgnoreCase("True Action:Condition")){
+			return true;
+		}
+		if(op.getName().equalsIgnoreCase("False Action:Condition")){
+			return true;
+		}
+		return false;
+	}
+	
 	protected void addAction(String value, StringBuffer rule, VarOp op) {
 		if(value.isEmpty()){
 			return;				// Don't add action if the value is blank. 
 		}
 		if(isMsgOp(op)){
 			addMessageAction(value, rule, op);
+			return;
+		}
+		if(isConditionOp(op)){
+			addConditionAction(value, rule, op);
 			return;
 		}
 		rule.append(""+ genVar.lookupAndCast(op.name, op.typ) +" = ");
@@ -204,6 +222,46 @@ public class PowerLookupRulesetBuilder {
 	}
 	
 	
+	protected void addConditionAction(String value, StringBuffer rule, VarOp op) {
+		ConditionMsg condition = ctx.getConditionFromAlias(value);
+		if(null == condition){
+			// Maybe we're actually using the GDLC ID?
+			condition = ctx.getCondition(value);
+		}
+		
+		// Still nothing? Throw an error.
+		if(null == condition){
+			ctx.addError(new CompileError(CompileError.errors.DEFMISSING,
+				new String("Condition [" + value + "] definition is missing. Verify that the condition is defined before using it in a PowerLookup.")));
+			return;
+		}
+		
+		// Ex output:
+		// condition ConditionId();
+
+		// Condition references use the identifier.
+		String condId = condition.getIdentifier();		
+		StringBuffer cond = new StringBuffer("condition " + condId + "();");
+		
+		if(op.getOp().equalsIgnoreCase("True Action:Condition")){
+			rule.append(cond);
+			return;
+		}
+		
+		if(op.getOp().equalsIgnoreCase("False Action:Condition")){
+			rule.append(" else ");
+			rule.append(cond);
+			return;
+		}
+		
+		// TODO: Add the current filename to the error messages.
+		ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
+				new String("Condition [" + value + "] unrecognized condition operation type: ["+ op.getName() +"]. Valid PowerLookup condition operation types are: 'True Action:Condition', 'False Action:Condition'.")));
+		return;
+		
+	}
+	
+	
 	protected void addLookupAction(String value, StringBuffer rule, VarOp op) {
 		ASTLookupDef lkup = ctx.getLookup(value);
 		if(null == lkup){
@@ -219,10 +277,17 @@ public class PowerLookupRulesetBuilder {
 	protected boolean isActionOp(VarOp op){
 		if(	op.getOp().equals("Assign") ||
 			op.getOp().equals("Lookup") ||
+			op.getOp().equals("Condition") ||
+			op.getOp().equals("True Action:Condition") ||
+			op.getOp().equals("False Action:Condition") ||
 			op.getName().equalsIgnoreCase("True Message") ||
 			op.getName().equalsIgnoreCase("False Message") ||
+			op.getName().equalsIgnoreCase("Condition") ||
 			op.getType().equalsIgnoreCase("Findings") ||
-			op.getType().equalsIgnoreCase("Exceptions")){	
+			op.getType().equalsIgnoreCase("Exceptions") ||
+			op.getType().equalsIgnoreCase("Condition") ||
+			op.getType().equalsIgnoreCase("True Action:Condition") ||
+			op.getType().equalsIgnoreCase("False Action:Condition") ){	
 				return true;
 		}
 		return false;

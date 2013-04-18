@@ -6,22 +6,19 @@
  *
  ************************************************************************* */
 
-//include ("simple.gdl");
 ppm numeric app     ppmVar;
 
-//import( lookup, "TestLookups.csv" );        // Import the lookup CSV file
 
 // Define conditions
-condition testDocs ("Test Docs", asset, docs, "", "", "Test PriorTo docs condition message.");
-condition test-funding ("Test Funding", asset, funding, "My Image Doc Type", "Internal", "Test PriorTo funding condition message.");
-condition TESTAPPROVAL ("Test Approval", asset, approval, "", "External", "Test PriorTo approval condition message.");
+// keyword  identifier    sys name        category  priorto     Image Doc Type        Visibility  Condition Text
+condition testDocs      ("Test Docs",     asset,    docs,       "",                   "",         "Test PriorTo docs condition message."    );
+condition test-funding  ("Test Funding",  asset,    funding,    "My Image Doc Type",  "Internal", "Test PriorTo funding condition message." );
+condition TESTAPPROVAL  ("Test Approval", asset,    approval,   "",                   "External", "Test PriorTo approval condition message.");
+
 
 rule SimpleConditionRule1()             // Define the rule.
   if ( ppmVar == 1 )
   then
-    //condition(asset, docs,    "Test PriorTo docs condition message.");
-    //condition(asset, funding,   "Test PriorTo funding condition message.");
-    //condition(asset, approval,  "Test PriorTo approval condition message.");
 
     // Reference pre-defined conditions
     condition testDocs();

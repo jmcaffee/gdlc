@@ -26,6 +26,21 @@ public class ConditionMsg {
 		this.identifier = identifier; 
 	}
 	
+	// Return the GDLC identifier of the condition.
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	// Return the name/alias of the condition.
+	public String getName() {
+		return name;
+	}
+
+	// Alias method to return the name/alias of the condition.
+	public String getAlias() {
+		return getName();
+	}
+
 	public int	getId() { return this.id; }
 	
 	public void	setId( int id ) { this.id = id; }

@@ -222,7 +222,7 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 		
 	}
 	
-/* (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#getCondition(java.lang.String)
 	 */
 	public ConditionMsg getCondition(String key){return this.conditions.get(key);}
@@ -232,6 +232,21 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 	 */
 	public boolean containsCondition(String key) { return this.conditions.containsKey(key);}
 	
+	/* (non-Javadoc)
+	 * @see runtime.compiler.IProgramContext#getConditionFromAlias(java.lang.String)
+	 */
+	public ConditionMsg getConditionFromAlias(String alias) {
+		if(conditions.isEmpty()){
+			return null;
+		}
+		for (ConditionMsg cond : conditions.values()) {
+			if(cond.getAlias().equalsIgnoreCase(alias)){
+				return cond;
+			}
+		}
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see runtime.compiler.IProgramContext#addGuideline(java.lang.String, runtime.parser.ASTGuidelineDef)
 	 */

@@ -628,6 +628,43 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
+	public void testConditionPLKMsgXmlOutput() {
+		String args[] = {new String(TESTDIR + "/conditionPLKTest.gdl"),
+						 new String("/I" + TESTDIR),
+						 new String("-nooutput"),};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		assertIfContextHasError(mgr.getContext()); 
+
+		String xml = mgr.getRuleXml("ConditionTestPLK-1");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/ConditionTestPLK-1.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+		xml = mgr.getRuleXml("ConditionTestPLK-2");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/ConditionTestPLK-2.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+		xml = mgr.getRuleXml("ConditionTestPLK-3");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/ConditionTestPLK-3.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+	}
+
+	@Test
 	public void testConditionsElementXmlOutput() {
 		String args[] = {new String(TESTDIR + "/conditionTest.gdl"),
 				new String("-nooutput"),};

@@ -54,8 +54,8 @@ public class GdlCompiler {
 	      compilePlugins.add(new VariablesPlugin());
 	      compilePlugins.add(new LookupImportsPlugin());
 	      compilePlugins.add(new LookupsPlugin());
-	      compilePlugins.add(new PowerLookupImportsPlugin()); //
-	      compilePlugins.add(new ConditionDefsPlugin());
+	      compilePlugins.add(new ConditionDefsPlugin());		// Must compile conditions before PLKs so their aliases are available
+	      compilePlugins.add(new PowerLookupImportsPlugin()); 	// when the PLKs are parsed.
 	      compilePlugins.add(new RuleDefsPlugin());
 	      compilePlugins.add(new RulesetDefsPlugin());
 	      compilePlugins.add(new RefResolverPlugin());
