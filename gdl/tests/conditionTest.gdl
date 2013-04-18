@@ -1,27 +1,37 @@
 /* **************************************************************************
- *	File: LookupTest.gdl
+ *  File: LookupTest.gdl
  *
- *	Description:
- *		These are guideline definitions for lookup testing.
+ *  Description:
+ *    These are guideline definitions for lookup testing.
  *
  ************************************************************************* */
- 
+
 //include ("simple.gdl");
-ppm	numeric	app     ppmVar;
+ppm numeric app     ppmVar;
 
-//import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
+//import( lookup, "TestLookups.csv" );        // Import the lookup CSV file
 
-rule SimpleConditionRule1()							// Define the rule.
-	if ( ppmVar == 1 )	
-	then
-		condition(asset, docs, 		"Test PriorTo docs condition message.");
-		condition(asset, funding, 	"Test PriorTo funding condition message.");
-		condition(asset, approval, 	"Test PriorTo approval condition message.");
-	end
+// Define conditions
+condition testDocs ("Test Docs", asset, docs, "", "Test PriorTo docs condition message.");
+condition test-funding ("Test Funding", asset, funding, "My Image Doc Type", "Test PriorTo funding condition message.");
+condition TESTAPPROVAL ("Test Approval", asset, approval, "", "Test PriorTo approval condition message.");
+
+rule SimpleConditionRule1()             // Define the rule.
+  if ( ppmVar == 1 )
+  then
+    //condition(asset, docs,    "Test PriorTo docs condition message.");
+    //condition(asset, funding,   "Test PriorTo funding condition message.");
+    //condition(asset, approval,  "Test PriorTo approval condition message.");
+
+    // Reference pre-defined conditions
+    condition testDocs();
+    condition test-funding();
+    condition TESTAPPROVAL();
+  end
 end
 
 
 guideline ("ConditionTestGuideline")
-	rule 			SimpleConditionRule1();
+  rule      SimpleConditionRule1();
 end
 

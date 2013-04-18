@@ -58,7 +58,7 @@ public class ConditionMsg {
 
 	}
 	
-	public String parseConditionCategory(ASTCondType category){
+	public String parseConditionCategory(ASTCondType node){
 		String value = node.getData("value");
 		
 		if(value.equalsIgnoreCase("asset")) {
