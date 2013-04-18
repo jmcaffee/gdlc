@@ -1,0 +1,4 @@
+To prevent this directory from being pruned by git, this file must
+exist (otherwise, git won't add the directory).
+
+This directory is used by the tests as a place to drop output files.
