@@ -85,6 +85,43 @@ public class TestHelper {
 	}
 	
 	/**
+	 * fileContains reads a file and searches for a given string, returning true if string is found
+	 * or false otherwise.
+	 * @param fname1 filename/path of file to search
+	 * @param searchFor string to search for
+	 * @return true/false
+	 */
+	protected boolean fileContains(String fname1, String searchFor){
+		boolean result = false;
+		
+		BufferedReader f1 = null;
+		String line;
+		
+		try{
+			f1 = new BufferedReader(new FileReader(fname1));
+
+			while(null != (line = f1.readLine())){
+				if(line.contains(searchFor)){
+					result = true;
+					f1.close();
+					break;
+				}
+			}
+		}
+		catch(FileNotFoundException e){
+			System.out.println("[FILECONTAINS = false] File not found: "+e.getMessage()+".");
+			return false;
+		}
+		catch(IOException e){
+			System.out.println("[FILECONTAINS = false] Read exception: "+e.getMessage()+".");
+			return false;
+		}
+		
+		return result;
+	}
+
+	
+	/**
 	 * fileContentsAreIdentical compares two text files and returns false if any errors occur,
 	 * either file is not found, or if any line does not match.
 	 * @param fname1 filename/path of file to compare

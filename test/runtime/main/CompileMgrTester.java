@@ -628,6 +628,41 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
+	public void testConditionsElementXmlOutput() {
+		String args[] = {new String(TESTDIR + "/conditionTest.gdl"),
+				new String("-nooutput"),};
+		String outFile = OUTPUTDIR + "/testConditionsElementXmlOutputToFile.xml";
+		deleteFileIfExists(outFile);
+
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		assertIfContextHasError(mgr.getContext()); 
+
+		writeXmlToFile(mgr, outFile);
+		
+			// Verify that the file was created.
+		File f=new File(outFile);
+		
+		assertTrue("Output file not created", f.exists());
+		
+		//String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\" Visibility=\"Internal\"><![CDATA[Test PriorTo docs condition message.]]></Message>";
+		String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo docs condition message.]]></Message>";
+		//String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\" Visibility=\"\"><![CDATA[Test PriorTo funding condition message.]]></Message>";
+		String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\"><![CDATA[Test PriorTo funding condition message.]]></Message>";
+		//String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\" Visibility=\"\"><![CDATA[Test PriorTo approval condition message.]]></Message>";
+		String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo approval condition message.]]></Message>";
+		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef1));
+		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef2));
+		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef3));
+		
+	}
+
+	@Test
 	public void testGuidelineXmlOutputToFile() {
 		String args[] = {new String(TESTDIR + "/LookupTest.gdl"),
 						 new String("/I" + TESTDIR),
@@ -784,7 +819,7 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
-		assertIfContextErrorNotExist(mgr.getContext(),"r:\\tools\\java\\com.ktechsystems.gdlc\\gdl\\tests\\badIncludeFile.gdl"); 
+		assertIfContextErrorNotExist(mgr.getContext(),"c:\\Users\\Jeff\\projects\\java\\gdlc\\gdl\\tests\\badIncludeFile.gdl"); 
 
 		writeXmlToFile(mgr, outFile);
 		
