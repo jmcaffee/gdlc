@@ -13,7 +13,7 @@ import runtime.helpers.TestHelper;
 import runtime.parser.ASTInclude;
 
 public class ImportVisitorTester extends TestHelper  {
-	String		TESTDIR				= "c:/Users/Jeff/projects/java/gdlc/gdl/tests";
+	String		TESTDIR				= "gdl/tests/import_visitor";
 	String		TEST_INCLUDE_FILE 	= TESTDIR+"/importTest-dpms.gdl";
 	
 	ImportPowerLookupVisitor 	visitor = null;
