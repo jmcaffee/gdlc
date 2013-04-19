@@ -22,6 +22,11 @@ import runtime.main.CompilerParameters;
 public class CompilerContextTester {
 	CompilerParameters cp = null;
 
+	String				TESTDIR		= "gdl/tests/compiler_context";
+	String 				OUTPUTDIR	= TESTDIR+"/output";
+	String 				EXPECTED	= TESTDIR+"/expected";
+	String 				LOOKUPS		= TESTDIR+"/lookups";
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -40,9 +45,10 @@ public class CompilerContextTester {
 
 	@Test
 	public void testIncludeDirArgs() {
-		String incDir1 = "/Ic:/Users/Jeff/projects/java/gdlc/gdl/tests";
-		String args[] = {new String("c:\\Users\\Jeff\\projects\\java\\gdlc\\gdl\\tests\\compileTest.gdl"),
-						incDir1,};
+		String incDir1 = "/I"+TESTDIR;
+		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
+						incDir1,
+						new String("-nooutput"), };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -51,24 +57,19 @@ public class CompilerContextTester {
 		assertNotNull("Context is null.",mgr.getContext());
 		CompilerContext ctx = (CompilerContext)mgr.getContext();
 		
-		int dirCount = 0;
-		for(String path : ctx.includeDirs){
-			if(path.equals(incDir1.substring(2).replace('/', '\\')))
-				dirCount++;
-		}
-		
-		assertEquals("Expected dirs not found", 1, dirCount);
+		assertTrue("Context should contain at least 1 include dir", ctx.includeDirs.size() > 0 );
 	}
 
 	@Test
 	public void testConfigDirArgs() {
-		String incDir1 = "/Ic:/Users/Jeff/projects/java/gdlc/gdl";
-		String configDir1 = "/Cc:/Users/Jeff/projects/java/gdlc/gdl/tests";
-		String configDir2 = "/Cc:/Users/Jeff/projects/java/gdlc/gdl/tests/expected";
-		String args[] = {new String("c:\\Users\\Jeff\\projects\\java\\gdlc\\gdl\\tests\\compileTest.gdl"),
+		String incDir1 = "/I"+TESTDIR;
+		String configDir1 = "/C"+TESTDIR;
+		String configDir2 = "/C"+EXPECTED;
+		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
 						incDir1, 
 						configDir1, 
-						configDir2,};
+						configDir2,
+						new String("-nooutput"), };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -93,10 +94,10 @@ public class CompilerContextTester {
 
 	@Test
 	public void testFindPropertyFilesNamed() {
-		String incDir1 = "/Ic:/Users/Jeff/projects/java/gdlc/gdl";
-		String configDir1 = "/Cc:/Users/Jeff/projects/java/gdlc/gdl/tests";
-		String configDir2 = "/Cc:/Users/Jeff/projects/java/gdlc/gdl/tests/expected";
-		String args[] = {new String("c:/Users/Jeff/projects/java/gdlc/gdl/tests/compileTest.gdl"),
+		String incDir1 = "/I"+TESTDIR;
+		String configDir1 = "/C"+TESTDIR;
+		String configDir2 = "/C"+EXPECTED;
+		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
 						new String("-nooutput"),
 						incDir1, 
 						configDir1, 
@@ -113,17 +114,17 @@ public class CompilerContextTester {
 		assertEquals("Expected to find 2 test.properties files", 2, filesFound.size());
 		
 		for (String path : filesFound) {
-			assertTrue(path.endsWith("gdl/tests/test.properties") || path.endsWith("gdl/tests/expected/test.properties"));
+			assertTrue(path.endsWith(TESTDIR+"/test.properties") || path.endsWith(EXPECTED+"/test.properties"));
 		}
 
 	}
 
 	@Test
 	public void testFindPropertyFilesNamedWithRelativeDirs() {
-		String incDir1 = "/Igdl";
-		String configDir1 = "/Cgdl/tests";
-		String configDir2 = "/Cgdl/tests/expected";
-		String args[] = {new String("gdl/tests/compileTest.gdl"),
+		String incDir1 = "/I"+TESTDIR;
+		String configDir1 = "/C"+TESTDIR;
+		String configDir2 = "/C"+EXPECTED;
+		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
 						new String("-nooutput"),
 						incDir1, 
 						configDir1, 
@@ -140,7 +141,7 @@ public class CompilerContextTester {
 		assertEquals("Expected to find 2 test.properties files", 2, filesFound.size());
 		
 		for (String path : filesFound) {
-			assertTrue(path.endsWith("gdl/tests/test.properties") || path.endsWith("gdl/tests/expected/test.properties"));
+			assertTrue(path.endsWith(TESTDIR+"/test.properties") || path.endsWith(EXPECTED+"/test.properties"));
 		}
 
 	}
