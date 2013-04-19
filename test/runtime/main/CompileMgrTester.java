@@ -30,10 +30,12 @@ import runtime.helpers.TestHelper;
  */
 public class CompileMgrTester extends TestHelper {
 	CompilerParameters 	cp 			= null;
-	String				TESTDIR		= rootDir + "/gdl/tests";
-	String 				OUTPUTDIR	= rootDir + "/gdl/tests/output";
-	String 				EXPECTED	= rootDir + "/gdl/tests/expected";
-	String 				LOOKUPS		= rootDir + "/gdl/tests/lookups";
+//	String				TESTDIR		= rootDir + "/gdl/tests";
+	// Using relative directories for easier paths, now that GDLC supports them.
+	String				TESTDIR		= "gdl/tests";
+	String 				OUTPUTDIR	= "gdl/tests/output";
+	String 				EXPECTED	= "gdl/tests/expected";
+	String 				LOOKUPS		= "gdl/tests/lookups";
 
 	/**
 	 * writeXmlToFile - helper function - writes xml output file to disk
@@ -374,7 +376,7 @@ public class CompileMgrTester extends TestHelper {
 		CompilerContext ctx = (CompilerContext)mgr.getContext();
 		assertIfContextHasError(mgr.getContext()); 
 		
-		assertTrue("'LookupTest3' lookup was not defined.",ctx.containsRuleset("LookupTest3"));
+		assertTrue("'TestPowerLookup3' lookup was not defined.",ctx.containsRuleset("TestPowerLookup3"));
 
 		writeXmlToFile(mgr, outFile);
 		
@@ -447,8 +449,8 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void verifyFileCompare() {
-		String outFile = new String(TESTDIR + "/verifyFC1.txt");
-		String expected = new String(TESTDIR + "/verifyFC2.txt");
+		String outFile = new String(TESTDIR + "/aliasTest.gdl");
+		String expected = new String(TESTDIR + "/aliasTest.gdl");
 		
 		assertTrue("File contents do not match", fileContentsAreIdentical(outFile, expected));
 		
@@ -606,8 +608,55 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
+	public void testConfigurationDirectoryParameter() {
+		String args[] = {	new String(TESTDIR + "/conditionTest.gdl"),
+							new String("/C" + TESTDIR),		// Configuration directory
+							new String("-nooutput"),};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		assertIfContextHasError(mgr.getContext()); 
+
+		String xml = mgr.getRuleXml("SimpleConditionRule1");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/SimpleConditionRule1.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+	}
+
+	@Test
+	public void testConditionCategoryConfiguration() {
+		String args[] = {	new String(TESTDIR + "/conditionTest.gdl"),
+							new String("/C" + TESTDIR),		// Configuration directory
+							new String("-nooutput"),};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		assertIfContextHasError(mgr.getContext()); 
+
+		String xml = mgr.getRuleXml("SimpleConditionRule1");
+		assertTrue("XML string is empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/SimpleConditionRule1.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+	}
+
+	@Test
 	public void testConditionMsgXmlOutput() {
 		String args[] = {new String(TESTDIR + "/conditionTest.gdl"),
+				new String("/C"+TESTDIR),
 				new String("-nooutput"),};
 		this.cp.process(args);
 
@@ -667,6 +716,7 @@ public class CompileMgrTester extends TestHelper {
 	@Test
 	public void testConditionsElementXmlOutput() {
 		String args[] = {new String(TESTDIR + "/conditionTest.gdl"),
+				new String("/C"+TESTDIR),
 				new String("-nooutput"),};
 		String outFile = OUTPUTDIR + "/testConditionsElementXmlOutputToFile.xml";
 		deleteFileIfExists(outFile);
@@ -687,12 +737,10 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertTrue("Output file not created", f.exists());
 		
-		String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\" Visibility=\"\"><![CDATA[ Test PriorTo docs condition message.  ]]></Message>";
-		//String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"1\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo docs condition message.]]></Message>";
-		String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\" Visibility=\"Internal\"><![CDATA[ Test PriorTo funding condition message.  ]]></Message>";
-		//String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"2\" Category=\"1\" ImageDocType=\"My Image Doc Type\"><![CDATA[Test PriorTo funding condition message.]]></Message>";
-		String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\" Visibility=\"External\"><![CDATA[ Test PriorTo approval condition message.  ]]></Message>";
-		//String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"3\" Category=\"1\" ImageDocType=\"\"><![CDATA[Test PriorTo approval condition message.]]></Message>";
+		String condDef1 = "<Message Type=\"Condition\" Id=\"1\" Name=\"Test Docs\" PriorTo=\"2222\" Category=\"101\" ImageDocType=\"\" Visibility=\"\"><![CDATA[ Test PriorTo docs condition message.  ]]></Message>";
+		String condDef2 = "<Message Type=\"Condition\" Id=\"2\" Name=\"Test Funding\" PriorTo=\"33\" Category=\"2222\" ImageDocType=\"My Image Doc Type\" Visibility=\"Internal\"><![CDATA[ Test PriorTo funding condition message.  ]]></Message>";
+		String condDef3 = "<Message Type=\"Condition\" Id=\"3\" Name=\"Test Approval\" PriorTo=\"101\" Category=\"33\" ImageDocType=\"\" Visibility=\"External\"><![CDATA[ Test PriorTo approval condition message.  ]]></Message>";
+		
 		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef1));
 		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef2));
 		assertTrue("File should contain condition XML definition", fileContains(outFile, condDef3));

@@ -1,26 +1,27 @@
 /* **************************************************************************
- *	File: powerLookupTest3.gdl
+ *  File: powerLookupTest3.gdl
  *
- *	Description:
- *		These are guideline definitions for powerlookup testing.
- *		These power lookups have more than 2 comparisons..
+ *  Description:
+ *    These are guideline definitions for powerlookup testing.
+ *    These power lookups have more than 2 comparisons..
  *
  ************************************************************************* */
  
 include ("simple.gdl");
 
-ppm	text	app		pUserType;
-ppm	text	app		pTierFlag;
+ppm text  app   pUserType;
+ppm text  app   pTierFlag;
 
-dpm	text	amortType1st;
-dpm	numeric	lockPeriod1st;
-dpm	numeric	rate1st;
+dpm text  amortType1st;
+dpm numeric lockPeriod1st;
+dpm numeric rate1st;
+dpm numeric(2) interest;
 
-import( powerlookup, "TestPowerLookups3.csv" );		// Import the powerlookup CSV file
+import( powerlookup, "TestPowerLookups.csv" );   // Import the powerlookup CSV file
 
 
 
 guideline ("TestPowerLookups3")
-	ruleset		LookupTest3();
+  ruleset   TestPowerLookup3();
 end
 

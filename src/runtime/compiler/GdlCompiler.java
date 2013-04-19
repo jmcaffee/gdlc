@@ -9,7 +9,9 @@ import java.util.HashMap;
 import runtime.main.Log;
 import runtime.parser.*;
 import runtime.plugins.AliasesPlugin;
+import runtime.plugins.ConditionCategoryConfigPlugin;
 import runtime.plugins.ConditionDefsPlugin;
+import runtime.plugins.ConditionPriorToConfigPlugin;
 import runtime.plugins.FunctionDefsPlugin;
 import runtime.plugins.GuidelinesPlugin;
 import runtime.plugins.IGdlcPlugin;
@@ -37,7 +39,8 @@ public class GdlCompiler {
 
 	/**
 	 * configurePlugins configure a sections plugin list. Plugins are processed in order.
-	 * @param section PRECOMPILE, COMPILE, POSTCOMPILE. Case is irrelevent.
+	 * Section names will be converted to UPPERCASE.
+	 * @param section PRECOMPILE, COMPILE, POSTCOMPILE. Case is irrelevant.
 	 * @param plugins ArrayList of plugins for a section.
 	 */
 	public void configurePlugins(String section, ArrayList<IGdlcPlugin> plugins){
@@ -49,7 +52,11 @@ public class GdlCompiler {
 	 *
 	 */
 	public void configureDefaultPlugins(){
+	      ArrayList<IGdlcPlugin> preCompilePlugins = new ArrayList<IGdlcPlugin>(); 
 	      ArrayList<IGdlcPlugin> compilePlugins = new ArrayList<IGdlcPlugin>(); 
+	      
+	      preCompilePlugins.add(new ConditionCategoryConfigPlugin());
+	      preCompilePlugins.add(new ConditionPriorToConfigPlugin());
 	      
 	      compilePlugins.add(new VariablesPlugin());
 	      compilePlugins.add(new LookupImportsPlugin());
@@ -62,7 +69,9 @@ public class GdlCompiler {
 	      compilePlugins.add(new GuidelinesPlugin());
 	      compilePlugins.add(new AliasesPlugin());
 
-	      this.configurePlugins("compile", compilePlugins);
+	      // Section names are converted to UPPERCASE by configurePlugins.
+	      this.configurePlugins("PRECOMPILE", preCompilePlugins);
+	      this.configurePlugins("COMPILE", compilePlugins);
 
 	}
 	

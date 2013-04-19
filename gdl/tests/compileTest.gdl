@@ -1,7 +1,7 @@
 /* **************************************************************************
 
-	FILE:
-	DESC:
+  FILE:
+  DESC:
 
 
 ************************************************************************** */
@@ -15,49 +15,49 @@
 * */
 
 // Test the import functionality
-import(dpm,"r:\sandbox\net.bd.gdlc\gdl\testInc1.gdl");
-import(ppm,"c:\some\file\path.dict");
+//import(dpm,"testInc1.gdl");
+//import(ppm,"c:\some\file\path.dict");
 
 // All referenced variables, rules, and rulesets are included.
 
-include "r:\sandbox\net.bd.gdlc\gdl\tests\rulesetDefs.inc.gdl";
+include "rulesetDefs.inc.gdl";
 
 ppm numeric app Rate;
 
 rule Rule-4()
-	if(Rate == Rate)
-	then
-	end
+  if(Rate == Rate)
+  then
+  end
 end
 
 
 // ========================================================
 //
-//	Guideline
+//  Guideline
 //
 // ========================================================
 guideline ("Test Guideline")
 
-	ruleset Ruleset1();
-	rule	Rule-4();
+  ruleset Ruleset1();
+  rule  Rule-4();
 
-  rule Rule5()								// This will override an existing rule definition
+  rule Rule5()                // This will override an existing rule definition
     if ( Loan_Amount_1st > 100000 &&
           ( (Loan_Amount_1st < 200000) ||
-            Loan_Amount_1st == 1 
+            Loan_Amount_1st == 1
           )
        )
     then
       Rate = Rate_1st;
     end
   end
-	
-	ruleset Ruleset2();
 
-	rule	Rule2();
-	rule	Rule3();
+  ruleset Ruleset2();
 
-	ruleset Ruleset3();
-	ruleset Ruleset4();
-	
+  rule  Rule2();
+  rule  Rule3();
+
+  ruleset Ruleset3();
+  ruleset Ruleset4();
+
 end

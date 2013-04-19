@@ -188,26 +188,6 @@ TOKEN :  /* Guideline 'Message' Keywords */
 
 
 
-TOKEN :  /* Guideline Condition Message 'ConditionType' Keywords */
-{
-  < CONDTYPE_ASSET:   "asset">
-| < CONDTYPE_INCOME:    "income">
-| < CONDTYPE_PROPERTY:  "property">
-| < CONDTYPE_PURCHASE:  "purchase">
-| < CONDTYPE_TITLE:   "title">
-}
-
-
-
-TOKEN :  /* Guideline Condition Message 'PriorTo' Keywords */
-{
-  < CONDPRIORTO_DOCS:     "docs">
-| < CONDPRIORTO_FUNDING:    "funding">
-| < CONDPRIORTO_APPROVAL:   "approval">
-}
-
-
-
 TOKEN :  /* XML Function input/output var indicators */
 {
   < IND_IN:   "IN">
@@ -1195,14 +1175,14 @@ void ConditionMsgDef() :
 void CondType() :
 { Token t;}
 {
-  ( t=<CONDTYPE_ASSET> | t=<MSG_CREDIT> | t=<CONDTYPE_INCOME> | t=<CONDTYPE_PROPERTY> | t=<CONDTYPE_PURCHASE> | t=<CONDTYPE_TITLE> ) { jjtThis.data.put("value", t.image); }
+  ( t=<IDENTIFIER> ) { jjtThis.data.put("value", t.image); }
 }
 
 
 void PriorTo() :
 { Token t; }
 {
-  ( t=<CONDPRIORTO_DOCS> | t=<CONDPRIORTO_FUNDING> | t=<CONDPRIORTO_APPROVAL> ) { jjtThis.data.put("value", t.image); }
+  ( t=<IDENTIFIER> ) { jjtThis.data.put("value", t.image); }
 }
 
 

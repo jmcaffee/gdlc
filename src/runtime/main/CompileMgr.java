@@ -68,15 +68,18 @@ public class CompileMgr {
 	 * @param cp CompileParameters object containing configuration options for the compiler
 	 */
 	public void execute(CompilerParameters cp) {
-		CompileMgr.setConfig(cp);			// Set the global configuration
+		// Set the global configuration
+		CompileMgr.setConfig(cp);
 		
 		String 				srcFile 	= CompileMgr.config.inFile;
 		ASTCompilationUnit 	parseTree	= null;
 		
-											// Store include dirs
+		// Store include dirs
 		for(String inc : CompileMgr.config.incDirs){
 			compilerContext.addIncludeDir(inc);
 		}
+		
+		compilerContext.setConfigDirs(cp.configDirs);
 		
 		Log.setVerbose(CompileMgr.config.verbose);
 		Log.setStatusPrefix("GDLC: ");
@@ -95,12 +98,13 @@ public class CompileMgr {
     		parseMgr.dumpParser();
     	}
 
-											// Store the abstract source tree...
+		// Store the abstract source tree...
 		compilerContext.setRootNode(parseTree);  
-		compile(compilerContext, parseTree);			// and compile the tree.
+		// and compile the tree.
+		compile(compilerContext, parseTree);
 		 
 		
-											// Dump error and warning info.
+		// Dump error and warning info.
 		if(compilerContext.hasErrors()){
 			Log.error("Compile aborted with errors:");
 			Log.out(compilerContext.dumpErrors());
@@ -133,7 +137,7 @@ public class CompileMgr {
  *
  */
 	  protected void generateOutput(){
-		  									// Determine name of output file
+		// Determine name of output file
 		String output = new String();
 		if(CompileMgr.config.outFile.length() < 1){
 			ASTGuidelineDef gdl = compilerContext.getGuideline();
@@ -152,12 +156,14 @@ public class CompileMgr {
 			Log.error("Unable to resolve an output filename.");
 			return;
 		}
-					// Output file might not have an extension.
-					// Add extension if it doesn't.
+		// Output file might not have an extension.
+		// Add extension if it doesn't.
 		if(!output.endsWith(".xml")){
-			output = output.concat(".xml");		// Add XML extension to filename.
+			// Add XML extension to filename.
+			output = output.concat(".xml");
 		}
-					// Write file to destination.
+		
+		// Write file to destination.
 		
 		Log.out("########################################");
 		if(this.writeXmlToFile(output)){

@@ -43,11 +43,14 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 	ArrayList<IProblem> 			errors		= new ArrayList<IProblem>();
 	
 	ArrayList<String>				includeDirs	= new ArrayList<String>();
+	ArrayList<String>				configDirs	= new ArrayList<String>();
 	
 	int								ruleId		= 1;
 	int								rulesetId 	= 1;
 	int								lookupId	= 1;
 	int								conditionId	= 1;
+	HashMap<String, Integer> 		conditionCategories = new HashMap<String, Integer>();
+	HashMap<String, Integer> 		conditionPriorTos	= new HashMap<String, Integer>();
 	
 	public int getTabCount() { return tabCnt; }
 	public void incTabCount() { this.tabCnt++; }
@@ -363,11 +366,30 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 		return errs.toString();
 	}
 	
+	/**
+	 * Add a list of dirs to search for configuration files
+	 * @param cdirs
+	 */
+	public void setConfigDirs(ArrayList<String> cdirs) {
+		for (String dir : cdirs) {
+			configDirs.add(dir);
+		}
+	}
+
+	/**
+	 * Add a directory to be searched for included src files.
+	 * All of the added directory's children (sub-dirs) will be added as well.
+	 * @param directory path
+	 */
 	public void addIncludeDir(String iDir){
 		addSubDirs(iDir);
 		
 	}
 
+	/***
+	 * Walk the directory's sub-dir tree and add each directory.
+	 * @param iDir
+	 */
 	private void addSubDirs(String iDir){
 	    File dir = new File(iDir);
 
@@ -393,7 +415,14 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 
 	public String joinPath(String dir, String file){
 		StringBuffer joined = new StringBuffer(dir);
-		joined.append(File.separatorChar).append(file);
+		
+		// Choose the file separator based on what is currently used in the dir.
+		// Default to posix style.
+		String separator = "/";
+		if(dir.contains("\\")) {
+			separator = "\\";
+		}
+		joined.append(separator).append(file);
 		
 		return joined.toString();
 	}
@@ -555,7 +584,62 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 		
 		return null;
 	}
-
+	@Override
+	public ArrayList<String> findPropertyFilesNamed(String filename) {
+		ArrayList<String> paths = new ArrayList<String>();
+		
+		for (String cpath : configDirs) {
+			if(new File(joinPath(cpath,filename)).isFile()){
+				paths.add(joinPath(cpath, filename));
+			}
+		}
+		
+		return paths;
+	}
+	
+	@Override
+	public void setConditionCategories(HashMap<String, Integer> condCategories) {
+		for (String key : condCategories.keySet()) {
+			this.conditionCategories.put(key, condCategories.get(key));
+		}
+	}
+	
+	/**
+	 * Retrieve a Category type ID based on a key (text version of type).
+	 * The ConditionCategoryConfigPlugin reads a properties file named category.properties
+	 * to populate the values stored here.
+	 * @param key human readable text version of type
+	 * @return ID if found, -1 if the key is not found
+	 */
+	public int getConditionCategoryId(String key) {
+		if(conditionCategories.containsKey(key)){
+			return conditionCategories.get(key);
+		}
+		// -1 indicates the key can't be found.
+		return -1;
+	}
+	
+	@Override
+	public void setConditionPriorTos(HashMap<String, Integer> condPriorTos) {
+		for (String key : condPriorTos.keySet()) {
+			this.conditionPriorTos.put(key, condPriorTos.get(key));
+		}
+	}
+	
+	/**
+	 * Retrieve a PriorTo type ID based on a key (text version of type).
+	 * The ConditionPriorToConfigPlugin reads a properties file named priorto.properties
+	 * to populate the values stored here.
+	 * @param key human readable text version of type
+	 * @return ID if found, -1 if the key is not found
+	 */
+	public int getConditionPriorToId(String key) {
+		if(conditionPriorTos.containsKey(key)){
+			return conditionPriorTos.get(key);
+		}
+		// -1 indicates the key can't be found.
+		return -1;
+	}
 
 }
 	

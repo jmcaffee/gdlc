@@ -89,7 +89,9 @@ public class XmlElemTester {
 		XmlElem elem = new XmlElem("TestTag");
 		String content = new String("content");
 		
-		String expectedNoContent 	= new String("<TestTag />");
+		// To get '<TestTag />', -validxml switch must be supplied to compiler.
+		// Default is '<TestTag/>' to match what AMS actually puts out.
+		String expectedNoContent 	= new String("<TestTag/>");
 		String expectedWithContent 	= new String("<TestTag>content</TestTag>");
 		
 		elem.setIsShortTag(true);		// This element should default to short style if

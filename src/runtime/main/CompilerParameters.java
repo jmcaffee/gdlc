@@ -15,6 +15,7 @@ public class CompilerParameters extends CommandLineParameters {
 	public 	String 				outFile	= new String("");
 
 	public 	ArrayList<String>	incDirs		= new ArrayList<String>();
+	public 	ArrayList<String>	configDirs	= new ArrayList<String>();
 	
 	public 	boolean 			verbose			= false;	// Verbosity is off by default.
 	public 	boolean 			verboseParse	= false;	// Parse verbosity is off by default.
@@ -30,7 +31,7 @@ public class CompilerParameters extends CommandLineParameters {
 		System.out.println();
 		System.out.println("======================================================================");
 		System.out.println("GDLC GuideLine Compiler");
-		System.out.println("Usage:  GDLC inFile [outFile] [-switch]* [/I]* ");
+		System.out.println("Usage:  GDLC inFile [outFile] [-switch]* [/I]* [/C]* ");
 		System.out.println();
 		System.out.println("	[] = optional");
 		System.out.println("	*  = 0 or more, separated by spaces");
@@ -51,7 +52,8 @@ public class CompilerParameters extends CommandLineParameters {
 		System.out.println("	-validxml     output valid xml.");
 		System.out.println();
 		System.out.println("   --parameters--");
-		System.out.println("	/Ipath        path to include dir.");
+		System.out.println("	/Ipath        path to include dir. Default: current dir");
+		System.out.println("	/Cpath        path to search for config files. Default: current dir");
 		System.out.println();
 		System.out.println("======================================================================");
 		System.out.println();
@@ -131,20 +133,38 @@ public class CompilerParameters extends CommandLineParameters {
 	
 	@Override
 	protected void processParameters(){
-		
+	
+		String paramValue;
 		for( String param : this.parameters){
 											// Right now, only /I is a valid parameter.
-			if(!param.startsWith("I")){
-				Log.error("PARAMETER ERROR: Unknown parameter [" + param + "].");
-				this.isValid = false;
+			// /I: Include dir param.
+			if(param.startsWith("I")){
+				paramValue = param.substring(1); 
+				this.incDirs.add(paramValue); 
+				Log.info("Include dir added: " + paramValue);
 				continue;
 			}
 			
-			this.incDirs.add(param.substring(1)); 
+			// /C: Config file dir param.
+			if(param.startsWith("C")){
+				paramValue = param.substring(1); 
+				this.configDirs.add(paramValue); 
+				Log.info("Config dir added: " + paramValue);
+				continue;
+			}
+			
+			// Unrecognized parameter.
+			Log.error("PARAMETER ERROR: Unknown parameter [" + param + "].");
+			this.isValid = false;
 		}
 
 		if(this.incDirs.size() < 1){
-											// Add the current dir as a default...
+			// Add the current dir as a default include...
+			this.incDirs.add(".");
+		}
+
+		if(this.configDirs.size() < 1){
+			// Add the current dir as a default config dir...
 			this.incDirs.add(".");
 		}
 

@@ -23,7 +23,8 @@ public class CompileError implements IProblem {
 		static public int OUTPUTERROR = 10;
 		static public int BADCAST = 11;
 		static public int DEFMISSING_XMLFUNC = 12;
-		static public int LASTERR = 12;
+		static public int MISSING_CONFIG_VALUE = 13;
+		static public int LASTERR = 13;
 		
 		static String[] desc = {
 			"Unknown Error",
@@ -39,6 +40,7 @@ public class CompileError implements IProblem {
 			"Output Error",
 			"Bad Cast",
 			"Undefined xmlfunc Reference",
+			"Missing configuration value",
 		};
 
 		static String getErrorDesc(int id){

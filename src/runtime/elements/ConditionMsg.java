@@ -78,25 +78,22 @@ public class ConditionMsg {
 	public String parseConditionCategory(ASTCondType node){
 		String value = node.getData("value");
 		
-		if(value.equalsIgnoreCase("asset")) {
-			value = new String("1");
+		// We use the value as a key to retrieve the ID from the context.
+		// The ConditionCategoryConfigPlugin reads the values and IDs from
+		// a properties file named category.properties.
+		
+		int categoryId = ctx.getConditionCategoryId(value);
+		
+		// An ID of -1 indicates we don't know what it is.
+		// Tell the user the situation.
+		if(categoryId == -1){
+			ctx.addError(new CompileError(CompileError.errors.MISSING_CONFIG_VALUE,
+							new String("[Missing Condition Category] An unknown condition category ("+value+") found in condition definition: "+this.identifier+"\n"+
+									"    If this is not a typo, be sure to add the category to your 'category.properties' file.")));
 		}
-		else if(value.equalsIgnoreCase("credit")) {
-			value = new String("2");
-		}
-		else if(value.equalsIgnoreCase("income")) {
-			value = new String("3");
-		}
-		else if(value.equalsIgnoreCase("property")) {
-			value = new String("4");
-		}
-		else if(value.equalsIgnoreCase("purchase")) {
-			value = new String("5");
-		}
-		else if(value.equalsIgnoreCase("title")) {
-			value = new String("6");
-		}
-									// Set attributes for the parent Message element.
+		
+		// Convert to a string and set attributes for the parent Message element.
+		value = Integer.toString(categoryId);
 		this.category = value;
 		return value;
 	}
@@ -104,16 +101,22 @@ public class ConditionMsg {
 	public String parseConditionPriorTo(ASTPriorTo node){
 		String value = node.getData("value");
 		
-		if(value.equalsIgnoreCase("docs")) {
-			value = new String("1");
+		// We use the value as a key to retrieve the ID from the context.
+		// The ConditionPriorToConfigPlugin reads the values and IDs from
+		// a properties file named priorto.properties.
+		
+		int priorToId = ctx.getConditionPriorToId(value);
+		
+		// An ID of -1 indicates we don't know what it is.
+		// Tell the user the situation.
+		if(priorToId == -1){
+			ctx.addError(new CompileError(CompileError.errors.MISSING_CONFIG_VALUE,
+							new String("[Missing Condition PriorTo Type] An unknown condition PriorTo type ("+value+") found in condition definition: "+this.identifier+"\n"+
+									"    If this is not a typo, be sure to add the PriorTo type to your 'priorto.properties' file.")));
 		}
-		else if(value.equalsIgnoreCase("funding")) {
-			value = new String("2");
-		}
-		else if(value.equalsIgnoreCase("approval")) {
-			value = new String("3");
-		}
-									// Set attributes for the parent Message element.
+		
+		// Convert to a string and set attributes for the parent Message element.
+		value = Integer.toString(priorToId);
 		this.priorTo = value;
 		return value;
 	}

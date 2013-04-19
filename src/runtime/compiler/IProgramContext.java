@@ -1,5 +1,9 @@
 package runtime.compiler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+
 import runtime.elements.ConditionMsg;
 import runtime.main.IProblem;
 import runtime.parser.ASTCompilationUnit;
@@ -51,6 +55,12 @@ public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncl
 	public abstract IVariable			getVarDpm(String alias);
 
 	public abstract boolean 			containsVar(VarDpm var);
+
+	public abstract ArrayList<String> 	findPropertyFilesNamed(String filename);
+
+	public abstract void 				setConditionCategories(HashMap<String, Integer> conditionCategories);
+
+	public abstract void 				setConditionPriorTos(HashMap<String, Integer> conditionPriorTos);
 
 
 }

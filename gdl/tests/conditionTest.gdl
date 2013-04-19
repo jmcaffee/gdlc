@@ -10,10 +10,10 @@ ppm numeric app     ppmVar;
 
 
 // Define conditions
-// keyword  identifier    sys name        category  priorto     Image Doc Type        Visibility  Condition Text
-condition testDocs      ("Test Docs",     asset,    docs,       "",                   "",         "Test PriorTo docs condition message."    );
-condition test-funding  ("Test Funding",  asset,    funding,    "My Image Doc Type",  "Internal", "Test PriorTo funding condition message." );
-condition TESTAPPROVAL  ("Test Approval", asset,    approval,   "",                   "External", "Test PriorTo approval condition message.");
+// keyword  identifier    sys name        category    priorto         Image Doc Type        Visibility  Condition Text
+condition testDocs      ("Test Docs",     testCat1,   testPriorTo2,   "",                   "",         "Test PriorTo docs condition message."    );
+condition test-funding  ("Test Funding",  testCat2,   testPriorTo3,   "My Image Doc Type",  "Internal", "Test PriorTo funding condition message." );
+condition TESTAPPROVAL  ("Test Approval", testCat3,   testPriorTo1,   "",                   "External", "Test PriorTo approval condition message.");
 
 
 rule SimpleConditionRule1()             // Define the rule.

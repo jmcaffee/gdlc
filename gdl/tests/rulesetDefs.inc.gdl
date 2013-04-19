@@ -1,46 +1,46 @@
 /* **************************************************************************
 
-	FILE:
-	DESC:
+  FILE:
+  DESC:
 
 
 ************************************************************************** */
 
-include "r:\sandbox\net.bd.gdlc\gdl\tests\ruleDefs.inc.gdl";					// Include rule definitions
+include "ruleDefs.inc.gdl";         // Include rule definitions
 
 
 
 // ========================================================
 //
-//	Ruleset: Ruleset1
+//  Ruleset: Ruleset1
 //
 // ========================================================
 ruleset Ruleset1(true)
 
   rule Rule1();
-  
+
   rule Rule2();
-  
+
   rule Rule3();
 end
 
 
 // ========================================================
 //
-//	Ruleset: Ruleset2
+//  Ruleset: Ruleset2
 //
 // ========================================================
 ruleset Ruleset2(true)
 
   rule Rule3();
-  
+
   rule Rule1();
 end
 
 
 // ========================================================
 //
-//	Ruleset: Ruleset3
+//  Ruleset: Ruleset3
 //
 // ========================================================
 ruleset Ruleset3(false)
@@ -52,13 +52,13 @@ end
 
 // ========================================================
 //
-//	Ruleset: Ruleset4
+//  Ruleset: Ruleset4
 //
 // ========================================================
 ruleset Ruleset4(continue)
 
   rule Rule1 ();
-  
+
   rule Rule2 ();
 end
 

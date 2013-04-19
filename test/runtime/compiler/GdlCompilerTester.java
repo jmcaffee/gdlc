@@ -40,7 +40,7 @@ public class GdlCompilerTester {
 	 */
 	@Test
 	public void testGdlCompiler() {
-		String args[] = {new String("r:\\tools\\java\\com.ktechsystems.gdlc\\gdl\\tests\\compileTest.gdl"),};
+		String args[] = {new String("c:/Users/Jeff/projects/java/gdlc/gdl/tests/compileTest.gdl"),};
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -58,8 +58,8 @@ public class GdlCompilerTester {
 	 */
 	@Test
 	public void testCompile() {
-		String args[] = {new String("r:\\tools\\java\\com.ktechsystems.gdlc\\gdl\\tests\\parseTest.gdl"),};
-		String badArgs[] = {new String("r:\\tools\\java\\com.ktechsystems.gdlc\\gdl\\tests\\doesnotexist.gdl"),};
+		String args[] = {new String("c:/Users/Jeff/projects/java/gdlc/gdl/tests/parseTest.gdl"),};
+		String badArgs[] = {new String("c:/Users/Jeff/projects/java/gdlc/gdl/tests/doesnotexist.gdl"),};
 
 		this.cp.process(args);
 

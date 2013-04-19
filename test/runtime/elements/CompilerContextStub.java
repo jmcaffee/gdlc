@@ -194,4 +194,22 @@ public class CompilerContextStub implements IProgramContext {
 		return null;
 	}
 
+	@Override
+	public ArrayList<String> findPropertyFilesNamed(String filename) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setConditionCategories(HashMap<String, Integer> conditionCategories) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setConditionPriorTos(HashMap<String, Integer> conditionPriorTos) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
