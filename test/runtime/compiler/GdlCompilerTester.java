@@ -19,6 +19,11 @@ import runtime.main.CompilerParameters;
 public class GdlCompilerTester {
 	CompilerParameters cp = null;
 
+	String				TESTDIR		= "gdl/tests/gdl_compiler";
+	String 				OUTPUTDIR	= TESTDIR+"/output";
+	String 				EXPECTED	= TESTDIR+"/expected";
+	String 				LOOKUPS		= TESTDIR+"/lookups";
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -40,7 +45,7 @@ public class GdlCompilerTester {
 	 */
 	@Test
 	public void testGdlCompiler() {
-		String args[] = {new String("c:/Users/Jeff/projects/java/gdlc/gdl/tests/compileTest.gdl"),};
+		String args[] = {new String(TESTDIR+"/compileTest.gdl"),};
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -58,8 +63,8 @@ public class GdlCompilerTester {
 	 */
 	@Test
 	public void testCompile() {
-		String args[] = {new String("c:/Users/Jeff/projects/java/gdlc/gdl/tests/parseTest.gdl"),};
-		String badArgs[] = {new String("c:/Users/Jeff/projects/java/gdlc/gdl/tests/doesnotexist.gdl"),};
+		String args[] = {new String(TESTDIR+"/parseTest.gdl"),};
+		String badArgs[] = {new String(TESTDIR+"/doesnotexist.gdl"),};
 
 		this.cp.process(args);
 

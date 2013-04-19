@@ -1,0 +1,63 @@
+/* **************************************************************************
+
+  FILE:
+  DESC:
+
+
+************************************************************************** */
+// Comment test
+
+/* Comment test */
+
+/* *
+* This is a test of the parser comment ignoring feature.
+*
+* */
+
+// Test the import functionality
+//import(dpm,"testInc1.gdl");
+//import(ppm,"c:\some\file\path.dict");
+
+// All referenced variables, rules, and rulesets are included.
+
+include "rulesetDefs.inc.gdl";
+
+ppm numeric app Rate;
+
+rule Rule-4()
+  if(Rate == Rate)
+  then
+  end
+end
+
+
+// ========================================================
+//
+//  Guideline
+//
+// ========================================================
+guideline ("Test Guideline")
+
+  ruleset Ruleset1();
+  rule  Rule-4();
+
+  rule Rule5()                // This will override an existing rule definition
+    if ( Loan_Amount_1st > 100000 &&
+          ( (Loan_Amount_1st < 200000) ||
+            Loan_Amount_1st == 1
+          )
+       )
+    then
+      Rate = Rate_1st;
+    end
+  end
+
+  ruleset Ruleset2();
+
+  rule  Rule2();
+  rule  Rule3();
+
+  ruleset Ruleset3();
+  ruleset Ruleset4();
+
+end
