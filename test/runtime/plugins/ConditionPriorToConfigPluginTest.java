@@ -20,7 +20,7 @@ public class ConditionPriorToConfigPluginTest extends
 		ctx = new CompilerContext();
 		// Add a configuration dir to search.
 		ArrayList<String> cdirs = new ArrayList<String>();
-		cdirs.add("gdl/tests");
+		cdirs.add("gdl/tests/condition_prior_to_config_plugin");
 		ctx.setConfigDirs(cdirs );
 	}
 
