@@ -1,0 +1,58 @@
+/* **************************************************************************
+ * File: 	compileTest-reservedConstants.gdl
+ * Desc:	Gdl Source file for testing reserved constants.
+ *
+ * Author:: Jeff McAffee 04/24/2010
+ * 
+ * *************************************************************************/
+
+ppm money       app         pLoanAmount                                     "Loan Amount";
+dpm	text		tempString;
+
+
+rule Rule-TestNullConstant()
+	if(pLoanAmount != NULL)
+	then
+		tempString = Null;
+	else
+		tempString = null;
+	end
+end // rule
+			
+	
+rule Rule-TestTrueConstant()
+	if(pLoanAmount != TRUE)
+	then
+		tempString = True;
+	else
+		tempString = true;
+	end
+end // rule
+
+
+rule Rule-TestFalseConstant()
+	if(pLoanAmount != FALSE)
+	then
+		tempString = False;
+	else
+		tempString = false;
+	end
+end // rule
+
+
+	
+/* ***************************************************************************
+ * ruleset Ruleset-TestReservedConstants()
+ * 
+ * Desc: Ruleset to test reserved constants.
+*************************************************************************** */
+ruleset Ruleset-TestReservedConstants(continue)
+
+
+	rule Rule-TestNullConstant();
+	rule Rule-TestTrueConstant();
+	rule Rule-TestFalseConstant();
+
+	
+end // ruleset Ruleset-TestReservedConstants(continue)
+

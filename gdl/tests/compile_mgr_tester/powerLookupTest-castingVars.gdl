@@ -1,0 +1,20 @@
+/* **************************************************************************
+ *	File: powerLookupTest-castingVars.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for powerlookup testing.
+ *
+ ************************************************************************* */
+ 
+include ("test_vars.gdl");
+
+import( powerlookup, "powerLookupTest-castingVars-PLK.csv" );		// Import the powerlookup CSV file
+
+
+
+guideline ("powerLookupTest-castingVars")
+	ruleset		CastVarsNumericPLK();
+	ruleset		CastVarsTextPLK();
+	ruleset		CastVarsBooleanPLK();
+end
+

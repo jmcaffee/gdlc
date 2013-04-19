@@ -1,0 +1,13 @@
+PowerLookup,,,
+,TestContinueExeTypePLK,Execution Type,Continue
+,,PPM Numeric,DPM Text
+,,PPM,DPM
+,,<>,Assign
+,,NULL,TestContinueExeTypePLK RULE 1
+
+PowerLookup,,,
+,TestTrueExeTypePLK,Execution Type,Stop if True
+,,PPM Numeric,DPM Text
+,,PPM,DPM
+,,<>,Assign
+,,NULL,TestTrueExeTypePLK RULE 1

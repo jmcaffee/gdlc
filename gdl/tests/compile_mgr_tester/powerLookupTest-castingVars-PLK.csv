@@ -1,0 +1,29 @@
+PowerLookup,,,,,,
+,CastVarsNumericPLK,Execution Type,Continue,,,
+,,PPM Numeric,DSM Decision Numeric,DPM Rate,DPM Numeric,DPM Text
+,,PPM,DPM,DPM,DPM,DPM
+,,<>,>,<,Assign,Assign
+,,NULL,0,5.555,PPM(PPM Numeric),TESTNUMERIC RULE 1
+,,NULL,100,,DPM(DSM Decision Numeric),TESTNUMERIC RULE 2
+,,NULL,,3.333,DPM(DPM Rate),TESTNUMERIC RULE 3
+,,,,4.444,,TESTNUMERIC RULE 4
+
+PowerLookup,,,,,,
+,CastVarsTextPLK,Execution Type,Stop if True,,,
+,,PPM Text,DSM Decision Text,DSM Decision Text,DPM Text,DPM Text
+,,PPM,DPM,DPM,DPM,DPM
+,,IN,<>,==,Assign,Assign
+,,A|B|C|D,NULL,This Text,PPM(PPM Text),TESTTEXT RULE 1
+,,E|F|G|H,Not This Text,,DPM(DSM Decision Text),TESTTEXT RULE 2
+,,I|J|K|L,,This Text,DPM(DSM Decision Text),TESTTEXT RULE 3
+,,,,This Text,,TESTTEXT RULE 4
+
+PowerLookup,,,,,,
+,CastVarsBooleanPLK,,,,,
+,,PPM Boolean,DSM Decision Boolean,DPM Boolean,DPM Boolean,DPM Text
+,,PPM,DPM,DPM,DPM,DPM
+,,==,<>,Assign,Assign,Assign
+,,true,true,true,PPM(PPM Boolean),TESTBOOL RULE 1
+,,false,false,false,DPM(DSM Decision Boolean),TESTBOOL RULE 2
+,,Null,null,NULL,DPM(DPM Boolean),TESTBOOL RULE 3
+,,true,false,Null,,TESTBOOL RULE 4

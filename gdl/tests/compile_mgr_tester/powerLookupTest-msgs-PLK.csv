@@ -1,0 +1,26 @@
+PowerLookup,,,,,
+,MsgsTruePLK,Execution Type,Continue,,
+,,PPM Numeric,DPM Text,True Message,False Message
+,,PPM,DPM,,
+,,<>,Assign,Findings,Findings
+,,NULL,TESTMSG-TRUE RULE 1,{True Message 1.},
+,,NULL,TESTMSG-TRUE RULE 2,{True Message 2.},
+,,NULL,TESTMSG-TRUE RULE 3,{True Message 3.},
+
+PowerLookup,,,,,
+,MsgsFalsePLK,Execution Type,Stop if True,,
+,,PPM Numeric,DPM Text,True Message,False Message
+,,PPM,DPM,,
+,,<>,Assign,Findings,Findings
+,,NULL,TESTMSG-FALSE RULE 1,,{False Message 1.}
+,,NULL,TESTMSG-FALSE RULE 2,,{False Message 2.}
+,,NULL,TESTMSG-FALSE RULE 3,,{False Message 3.}
+
+PowerLookup,,,,,
+,MsgsTrueWithDpmPLK,Execution Type,Continue,,
+,,PPM Numeric,DPM Text,True Message,False Message
+,,PPM,DPM,,
+,,<>,Assign,Exceptions,Exceptions
+,,NULL,TESTMSG-TRUE-DPM RULE 1,{True Message 1: <DPM>DPM Text</DPM>.},{False Message 1: <DPM>DPM Text</DPM>.}
+,,NULL,TESTMSG-TRUE-DPM RULE 2,{True Message 2: <DPM>dpmText</DPM>.},{False Message 2: <DPM>dpmText</DPM>.}
+,,NULL,TESTMSG-TRUE-DPM RULE 3,{True Message 3: <DPM>dpmText</DPM> - <DPM>dpmNumeric</DPM> - <DPM>dpmText</DPM>.},{False Message 3: <DPM>dpmText</DPM> - <DPM>dpmNumeric</DPM> - <DPM>dpmText</DPM>.}

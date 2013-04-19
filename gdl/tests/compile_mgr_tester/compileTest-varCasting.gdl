@@ -1,0 +1,74 @@
+/* **************************************************************************
+ * File: 	compileTest-varCasting.gdl
+ * Desc:	Gdl Source file for testing variable casting.
+ *
+ * Author:: Jeff McAffee 04/24/2010
+ * 
+ * *************************************************************************/
+
+ppm money       app         pLoanAmount;
+ppm	text		app			pProductName;
+ppm	text		app			productName;
+ppm	text		app			ppmWithAlias			"PPM With An Alias";
+ppm	text		app			ppmWithParens			"PPM With(Parens)";
+
+dpm	text					productName;
+dpm	text					tempString;
+dpm text					testStringWithAlias		"Test String With Alias";
+dpm text					dpmWithParens			"DPM With(Parens)";
+
+
+rule Rule-TestDpmCast()
+	if(pLoanAmount != DPM(productName))
+	then
+		tempString = DPM(productName);
+	else
+		tempString = DPM(Test String With Alias);
+	end
+end // rule
+			
+	
+rule Rule-TestDpmCastWithParens()
+	if(pLoanAmount != DPM("DPM With(Parens)"))
+	then
+		tempString = DPM("DPM With(Parens)");
+	else
+		tempString = DPM("DPM With(Parens)");
+	end
+end // rule
+			
+	
+rule Rule-TestPpmCast()
+	if(pLoanAmount != PPM(PPM With An Alias))
+	then
+		tempString = PPM(pProductName);
+	else
+		tempString = PPM(pProductName);
+	end
+end // rule
+
+
+rule Rule-TestPpmCastWithParens()
+	if(pLoanAmount != PPM("PPM With(Parens)"))
+	then
+		tempString = PPM("PPM With(Parens)");
+	else
+		tempString = PPM("PPM With(Parens)");
+	end
+end // rule
+
+
+/* ***************************************************************************
+ * ruleset Ruleset-TestReservedConstants()
+ * 
+ * Desc: Ruleset to test reserved constants.
+*************************************************************************** */
+ruleset Ruleset-TestVarCasting(continue)
+
+
+	rule Rule-TestDpmCast();
+	rule Rule-TestPpmCast();
+
+	
+end // ruleset Ruleset-TestVarCasting(continue)
+

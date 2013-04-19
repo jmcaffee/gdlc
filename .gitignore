@@ -8,3 +8,4 @@ build/
 backup/
 *.log
 gdl/tests/output/*.xml
+gdl/tests/compile_mgr_tester/output

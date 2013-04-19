@@ -1,0 +1,20 @@
+/* **************************************************************************
+ *  File: powerLookupTest-msgs.gdl
+ *
+ *  Description:
+ *    These are guideline definitions for powerlookup message testing.
+ *
+ ************************************************************************* */
+
+include ("test_vars.gdl");
+
+import( powerlookup, "powerLookupTest-msgs-PLK.csv" );    // Import the powerlookup CSV file
+
+
+
+guideline ("powerLookupTest-msgs")
+  ruleset   MsgsTruePLK();
+  ruleset   MsgsFalsePLK();
+  ruleset   MsgsTrueWithDpmPLK();
+end
+

@@ -32,10 +32,10 @@ public class CompileMgrTester extends TestHelper {
 	CompilerParameters 	cp 			= null;
 //	String				TESTDIR		= rootDir + "/gdl/tests";
 	// Using relative directories for easier paths, now that GDLC supports them.
-	String				TESTDIR		= "gdl/tests";
-	String 				OUTPUTDIR	= "gdl/tests/output";
-	String 				EXPECTED	= "gdl/tests/expected";
-	String 				LOOKUPS		= "gdl/tests/lookups";
+	String				TESTDIR		= "gdl/tests/compile_mgr_tester";
+	String 				OUTPUTDIR	= TESTDIR+"/output";
+	String 				EXPECTED	= TESTDIR+"/expected";
+	String 				LOOKUPS		= TESTDIR+"/lookups";
 
 	/**
 	 * writeXmlToFile - helper function - writes xml output file to disk
@@ -262,13 +262,14 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void testMoreThan2MathTermsXmlOutput() {
+		String outFile = OUTPUTDIR + "/mathTermXmlOutput.xml";
 		String args[] = {new String(TESTDIR + "/mathTermTest.gdl"),
+						outFile,
 						new String("/I" + TESTDIR),
 						new String("/I" + LOOKUPS),
 						};
 		this.cp.process(args);
 
-		String outFile = OUTPUTDIR + "/mathTermXmlOutput.xml";
 		deleteFileIfExists(outFile);
 
 		CompileMgr mgr = new CompileMgr();
@@ -290,12 +291,13 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void testCompilePowerLookupDef() {
+		String outFile = OUTPUTDIR + "/testCompilePowerLookupDef.xml";
 		String args[] = {new String(TESTDIR + "/powerLookupTest.gdl"),
+						outFile,
 						new String("/I" + TESTDIR),
 						new String("-nooutput"),};
 		this.cp.process(args);
 
-		String outFile = OUTPUTDIR + "/testCompilePowerLookupDef.xml";
 		deleteFileIfExists(outFile);
 
 		CompileMgr mgr = new CompileMgr();
@@ -321,14 +323,15 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void testCompilePowerLookupWithLookupAction() {
+		String outFile = OUTPUTDIR + "/testCompilePowerLookupWithLookupAction.xml";
 		String args[] = {new String(TESTDIR + "/powerLookupTest2.gdl"),
+						outFile,
 						new String("/I" + TESTDIR),
 						new String("-v"),
 						new String("-vp"),
 						new String("-nooutput"),};
 		this.cp.process(args);
 
-		String outFile = OUTPUTDIR + "/testCompilePowerLookupWithLookupAction.xml";
 		deleteFileIfExists(outFile);
 
 		CompileMgr mgr = new CompileMgr();
@@ -354,7 +357,9 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void testCompilePowerLookupWithManyComparisons() {
+		String outFile = OUTPUTDIR + "/testCompilePowerLookupWithManyComparisons.xml";
 		String args[] = {new String(TESTDIR + "/powerLookupTest3.gdl"),
+						outFile,
 						new String("/I" + TESTDIR),
 						new String("-v"),
 //						new String("-dd"),
@@ -363,7 +368,6 @@ public class CompileMgrTester extends TestHelper {
 						new String("-nooutput"),};
 		this.cp.process(args);
 
-		String outFile = OUTPUTDIR + "/testCompilePowerLookupWithManyComparisons.xml";
 		String expected = new String(EXPECTED + "/testCompilePowerLookupWithManyComparisons.xml");
 
 		deleteFileIfExists(outFile);
@@ -391,14 +395,15 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void testCompileManyANDComparisons() {
+		String outFile = OUTPUTDIR + "/testCompileManyANDComparisons.xml";
 		String args[] = {new String(TESTDIR + "/LookupTest3-1.gdl"),
+						outFile,
 						new String("/I" + TESTDIR),
 						new String("-v"),
 						new String("-vp"),
 						new String("-nooutput"),};
 		this.cp.process(args);
 
-		String outFile = OUTPUTDIR + "/testCompileManyANDComparisons.xml";
 		String expected = new String(EXPECTED + "/testCompileManyANDComparisons.xml");
 
 		deleteFileIfExists(outFile);
@@ -459,12 +464,13 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void testDeepComputeOutput() {
+		String outFile = new String(TESTDIR + "/output/deepComputeTest.xml");
 		String args[] = {new String(TESTDIR + "/deepComputeTest.gdl"),
-				new String(TESTDIR + "/output/deepComputeTest.xml"),
-				new String("/I" + TESTDIR),
-//				new String("-nooutput"),
-				new String("-v"),
-				new String("-vp")};
+						outFile,
+						new String("/I" + TESTDIR),
+		//				new String("-nooutput"),
+						new String("-v"),
+						new String("-vp")};
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -477,7 +483,6 @@ public class CompileMgrTester extends TestHelper {
 		String xml = mgr.getRuleXml("DeepComputeRule");
 		assertTrue("XML string is empty", (xml.length() > 0));
 		
-		String outFile = new String(TESTDIR + "/output/deepComputeTest.xml");
 		String expected = new String(EXPECTED + "/deepComputeTest.xml");
 		
 		assertTrue("File contents do not match", fileContentsAreIdenticalWithStrippedDate(outFile, expected));

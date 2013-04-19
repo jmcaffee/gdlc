@@ -1,0 +1,19 @@
+/* **************************************************************************
+ *	File: powerLookupTest-exeType.gdl
+ *
+ *	Description:
+ *		These are guideline definitions for powerlookup exe type testing.
+ *
+ ************************************************************************* */
+ 
+include ("test_vars.gdl");
+
+import( powerlookup, "powerLookupTest-exeType-PLK.csv" );		// Import the powerlookup CSV file
+
+
+
+guideline ("powerLookupTest-exeType")
+	ruleset		TestTrueExeTypePLK();
+	ruleset		TestContinueExeTypePLK();
+end
+

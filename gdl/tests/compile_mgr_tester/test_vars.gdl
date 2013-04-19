@@ -1,0 +1,36 @@
+/* **************************************************************************
+ *	File: test_vars.gdl
+ *
+ *	Description:
+ *		These are variable definitions used for testing.
+ *
+ ************************************************************************* */
+ 
+
+decision	dpm	numeric 	dsmDecisionNumeric		"DSM Decision Numeric";
+decision	dpm	numeric(2) 	dsmDecisionCurrency		"DSM Decision Currency";
+decision	dpm	numeric(3) 	dsmDecisionRate			"DSM Decision Rate";
+decision	dpm	text 		dsmDecisionText			"DSM Decision Text";
+decision	dpm	boolean 	dsmDecisionBoolean		"DSM Decision Boolean";
+decision	dpm	percentage 	dsmDecisionPercentage	"DSM Decision Percentage";
+decision	dpm	money 		dsmDecisionMoney		"DSM Decision Money";
+
+			dpm	numeric 	dpmNumeric				"DPM Numeric";
+			dpm	numeric(2) 	dpmCurrency				"DPM Currency";
+			dpm	numeric(3) 	dpmRate					"DPM Rate";
+			dpm	text 		dpmText					"DPM Text";
+			dpm	boolean 	dpmBoolean				"DPM Boolean";
+			dpm	percentage 	dpmPercentage			"DPM Percentage";
+			dpm	money 		dpmMoney				"DPM Money";
+			
+			dpm	numeric 	testDpm1				"Test Dpm 1";
+			dpm	numeric 	testDpm2				"Test Dpm 2";
+			dpm	numeric 	testDpm3				"Test Dpm 3";
+
+
+ppm	numeric		app     	ppmNumeric				"PPM Numeric";
+ppm	text		app     	ppmText					"PPM Text";
+ppm	boolean		app     	ppmBoolean				"PPM Boolean";
+ppm	percentage	app     	ppmPercentage			"PPM Percentage";
+ppm	money		app     	ppmMoney				"PPM Money";
+
