@@ -232,7 +232,9 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void testLookupXmlOutput() {
+		String outFile = OUTPUTDIR + "/testLookupXmlOutput.xml";
 		String args[] = {new String(TESTDIR + "/LookupTest4.gdl"),
+						outFile,
 						new String("/I" + TESTDIR),
 						new String("/I" + LOOKUPS),
 						new String("-Vod"),
@@ -240,7 +242,6 @@ public class CompileMgrTester extends TestHelper {
 						};
 		this.cp.process(args);
 
-		String outFile = OUTPUTDIR + "/testLookupXmlOutput.xml";
 		deleteFileIfExists(outFile);
 
 		CompileMgr mgr = new CompileMgr();
