@@ -123,6 +123,8 @@ public class ConditionMsg {
 	
 	public Object buildXmlRefElement(int order){
 		XmlElem me = new XmlElem("Message");
+		// Condition reference elements must be short tags.
+		me.setIsShortTag(true);
 
 		String[] attribs = {"Type", "Id", "Order"};
 		me.setAttributeOrder(attribs);
