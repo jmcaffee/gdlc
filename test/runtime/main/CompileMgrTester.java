@@ -323,7 +323,7 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompilePowerLookupWithLookupAction() {
+	public void compilePLKWithLookupAction() {
 		String outFile = OUTPUTDIR + "/testCompilePowerLookupWithLookupAction.xml";
 		String args[] = {new String(TESTDIR + "/powerLookupTest2.gdl"),
 						outFile,
@@ -357,8 +357,8 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompilePowerLookupWithManyComparisons() {
-		String outFile = OUTPUTDIR + "/testCompilePowerLookupWithManyComparisons.xml";
+	public void compilePLKWithManyComparisons() {
+		String outFile = OUTPUTDIR + "/plk_with_many_comparisons.xml";
 		String args[] = {new String(TESTDIR + "/powerLookupTest3.gdl"),
 						outFile,
 						new String("/I" + TESTDIR),
@@ -369,7 +369,7 @@ public class CompileMgrTester extends TestHelper {
 						new String("-nooutput"),};
 		this.cp.process(args);
 
-		String expected = new String(EXPECTED + "/testCompilePowerLookupWithManyComparisons.xml");
+		String expected = new String(EXPECTED + "/plk_with_many_comparisons.xml");
 
 		deleteFileIfExists(outFile);
 
@@ -388,7 +388,7 @@ public class CompileMgrTester extends TestHelper {
 			// Verify that the file was created.
 		File f=new File(outFile);
 		
-		assertTrue("Output file [testCompilePowerLookupWithManyComparisons] not created", f.exists());
+		assertTrue("Output file ["+outFile+"] not created", f.exists());
 
 		assertTrue("File contents do not match", fileContentsAreIdenticalWithStrippedDate(outFile, expected));
 
@@ -683,6 +683,240 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
+	public void compileRuleWithMetaOrdering() {
+		String args[] = {new String(TESTDIR + "/ruleWithMetaOrdering.gdl"),
+						new String("/C" + TESTDIR),		// Configuration directory
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		assertIfContextHasError(mgr.getContext()); 
+	}
+
+	@Test
+	public void ruleXmlContainsOrderedCompute() {
+		String outFile = OUTPUTDIR + "/ruleWithOrderedCompute.xml";
+		String args[] = {new String(TESTDIR + "/ruleWithOrderedCompute.gdl"),
+						outFile,
+						new String("/I" + TESTDIR),
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		deleteFileIfExists(outFile);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		CompilerContext ctx = (CompilerContext)mgr.getContext();
+		assertIfContextHasError(mgr.getContext()); 
+	
+		String rulename = "TestRule";
+		assertTrue("'"+rulename+"' rule was not defined.",ctx.containsRule(rulename));
+
+		String xml = mgr.getRuleXml(rulename);
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/ruleWithOrderedCompute.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+	}
+
+	@Test
+	public void ruleXmlContainsOrderedAssignTo() {
+		String outFile = OUTPUTDIR + "/ruleWithOrderedAssignTo.xml";
+		String args[] = {new String(TESTDIR + "/ruleWithOrderedAssignTo.gdl"),
+						outFile,
+						new String("/I" + TESTDIR),
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		deleteFileIfExists(outFile);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		CompilerContext ctx = (CompilerContext)mgr.getContext();
+		assertIfContextHasError(mgr.getContext()); 
+	
+		String rulename = "TestRule";
+		assertTrue("'"+rulename+"' rule was not defined.",ctx.containsRule(rulename));
+
+		String xml = mgr.getRuleXml(rulename);
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/ruleWithOrderedAssignTo.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+	}
+
+	@Test
+	public void ruleXmlContainsOrderedMessage() {
+		String outFile = OUTPUTDIR + "/ruleWithOrderedMessage.xml";
+		String args[] = {new String(TESTDIR + "/ruleWithOrderedMessage.gdl"),
+						outFile,
+						new String("/I" + TESTDIR),
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		deleteFileIfExists(outFile);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		CompilerContext ctx = (CompilerContext)mgr.getContext();
+		assertIfContextHasError(mgr.getContext()); 
+	
+		String rulename = "TestRule";
+		assertTrue("'"+rulename+"' rule was not defined.",ctx.containsRule(rulename));
+
+		String xml = mgr.getRuleXml(rulename);
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/ruleWithOrderedMessage.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+	}
+
+	@Test
+	public void ruleXmlContainsOrderedElseMessage() {
+		String outFile = OUTPUTDIR + "/ruleWithOrderedElseMessage.xml";
+		String args[] = {new String(TESTDIR + "/ruleWithOrderedElseMessage.gdl"),
+						outFile,
+						new String("/I" + TESTDIR),
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		deleteFileIfExists(outFile);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		CompilerContext ctx = (CompilerContext)mgr.getContext();
+		assertIfContextHasError(mgr.getContext()); 
+	
+		String rulename = "TestRule";
+		assertTrue("'"+rulename+"' rule was not defined.",ctx.containsRule(rulename));
+
+		String xml = mgr.getRuleXml(rulename);
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/ruleWithOrderedElseMessage.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+	}
+
+	@Test
+	public void ruleXmlContainsOrderedCondition() {
+		String outFile = OUTPUTDIR + "/ruleWithOrderedCondition.xml";
+		String args[] = {new String(TESTDIR + "/ruleWithOrderedCondition.gdl"),
+						outFile,
+						new String("/I" + TESTDIR),
+						new String("/C" + TESTDIR),		// Configuration directory
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		deleteFileIfExists(outFile);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		CompilerContext ctx = (CompilerContext)mgr.getContext();
+		assertIfContextHasError(mgr.getContext()); 
+	
+		String rulename = "TestRule";
+		assertTrue("'"+rulename+"' rule was not defined.",ctx.containsRule(rulename));
+
+		String xml = mgr.getRuleXml(rulename);
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/ruleWithOrderedCondition.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+	}
+
+	@Test
+	public void ruleXmlContainsOrderedElseCondition() {
+		String outFile = OUTPUTDIR + "/ruleWithOrderedElseCondition.xml";
+		String args[] = {new String(TESTDIR + "/ruleWithOrderedElseCondition.gdl"),
+						outFile,
+						new String("/I" + TESTDIR),
+						new String("/C" + TESTDIR),		// Configuration directory
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		deleteFileIfExists(outFile);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		CompilerContext ctx = (CompilerContext)mgr.getContext();
+		assertIfContextHasError(mgr.getContext()); 
+	
+		String rulename = "TestRule";
+		assertTrue("'"+rulename+"' rule was not defined.",ctx.containsRule(rulename));
+
+		String xml = mgr.getRuleXml(rulename);
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/ruleWithOrderedElseCondition.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+	}
+
+	@Test
+	public void plkXmlOutputContainsOrderAttributes() {
+		String outFile = OUTPUTDIR + "/orderAttribPLKTest.xml";
+		String args[] = {new String(TESTDIR + "/orderAttribPLKTest.gdl"),
+						outFile,
+						new String("/I" + TESTDIR),
+						new String("-nooutput"),};
+		this.cp.process(args);
+
+		deleteFileIfExists(outFile);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+		
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		CompilerContext ctx = (CompilerContext)mgr.getContext();
+		assertIfContextHasError(mgr.getContext()); 
+		
+		assertTrue("'OrderAttribPLK' powerlookup was not defined.",ctx.containsRuleset("OrderAttribPLK"));
+
+		String xml = mgr.getRuleXml("OrderAttribPLK-1");
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		String expectedResult = EXPECTED + "/orderAttribPLKRule1.xml";
+		String validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+		xml = mgr.getRuleXml("OrderAttribPLK-2");
+		assertTrue("XML string should not be empty", (xml.length() > 0));
+		
+		expectedResult = EXPECTED + "/orderAttribPLKRule2.xml";
+		validXml = getFileContents(expectedResult);
+		assertEquals("XML string is not valid", validXml, xml);
+		
+	}
+
+	@Test
 	public void testConditionPLKMsgXmlOutput() {
 		String args[] = {new String(TESTDIR + "/conditionPLKTest.gdl"),
 						 new String("/I" + TESTDIR),
@@ -910,7 +1144,7 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
-		assertIfContextErrorNotExist(mgr.getContext(),"c:\\Users\\Jeff\\projects\\java\\gdlc\\gdl\\tests\\badIncludeFile.gdl"); 
+		assertIfContextErrorNotExist(mgr.getContext(),"badIncludeFile.gdl"); 
 
 		writeXmlToFile(mgr, outFile);
 		
@@ -948,7 +1182,9 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testFunctionDefinition() {
+	public void compilesFunctionDefinition() {
+		fail("Embedded rule references are not yet supported.");
+
 		String args[] = {new String(TESTDIR + "/functionDefTest.gdl"),
 						 new String("/I" + TESTDIR),
 						 new String("-v"),
@@ -1158,7 +1394,7 @@ public class CompileMgrTester extends TestHelper {
 
 	
 	@Test
-	public void testCompilePowerLookups_CastingVars() {
+	public void compilesPLK_CastingVars() {
 		String args[] = {new String(TESTDIR + "/powerLookupTest-castingVars.gdl"),
 						new String("/I" + TESTDIR),
 						new String("-v"),
@@ -1253,7 +1489,7 @@ public class CompileMgrTester extends TestHelper {
 
 	
 	@Test
-	public void testCompilePowerLookups_Msgs() {
+	public void compilesPLKs_Msgs() {
 		String args[] = {new String(TESTDIR + "/powerLookupTest-msgs.gdl"),
 						new String("/I" + TESTDIR),
 						new String("-v"),

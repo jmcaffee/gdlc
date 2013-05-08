@@ -1,0 +1,1 @@
+<Rule Id="1" Name="TestRule"><IfMessages><Message Type="Condition" Id="1" Order="5"/></IfMessages><ElseMessages/><Condition><Expression><Brace><Compute><Operator>&gt;</Operator><LeftOperand><DPM Name="var1"/></LeftOperand><RightOperand><Constant>100000</Constant></RightOperand></Compute></Brace></Expression></Condition></Rule>

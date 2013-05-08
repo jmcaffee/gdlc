@@ -79,6 +79,7 @@ public class ComputeTreeVisitor extends DepthFirstVisitor {
 	 */
 	public Object visit(ASTEqualityCompute node, Object data) {
 		SimpleNode parent = (SimpleNode)node.jjtGetParent();
+		String order = node.getData("Order");
 		
 		if(parent.id() != GdlParserTreeConstants.JJTBRACE){
 			ASTBrace brace = new ASTBrace(GdlParserTreeConstants.JJTBRACE);

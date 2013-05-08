@@ -259,7 +259,14 @@ public class XmlVisitor extends DepthFirstVisitor {
 		XmlElem lhs = new XmlElem("LeftOperand");
 		XmlElem rhs = new XmlElem("RightOperand");
 		
-//		node.childrenAccept(this, me);
+		String[] attribs = {"Order"};
+		// Only add the attribute if the value actually exists.
+		// Generally, it only exists for powerlookup rules.
+		if (node.getData("Order") != null && node.getData("Order").length() > 0) {
+			me.setAttributeOrder(attribs);
+			me.putAttribute("Order", node.getData("Order"));
+		}
+		
 		node.getLhs().jjtAccept(this, lhs);
 		node.getRhs().jjtAccept(this, rhs);
 		node.getOperator().jjtAccept(this, me);
@@ -426,6 +433,14 @@ public class XmlVisitor extends DepthFirstVisitor {
 		XmlElem elem = (XmlElem)data;
 		XmlElem me = new XmlElem("AssignTo");
 
+		String[] attribs = {"Order"};
+		// Only add the attribute if the value actually exists.
+		// Generally, it only exists for powerlookup rules.
+		if (node.getData("Order") != null && node.getData("Order").length() > 0) {
+			me.setAttributeOrder(attribs);
+			me.putAttribute("Order", node.getData("Order"));
+		}
+		
 		node.childrenAccept(this, me);
 
 		elem.appendXml(me.toXml());
@@ -448,9 +463,15 @@ public class XmlVisitor extends DepthFirstVisitor {
 		XmlElem elem = (XmlElem)data;
 		XmlElem me = new XmlElem("Message");
 
-		String[] attribs = {"Type", "ExceptionType"};
+		String[] attribs = {"Type", "ExceptionType", "Order"};
 		me.setAttributeOrder(attribs);
 
+		// Only add the attribute if the value actually exists.
+		// Generally, it only exists for powerlookup rules.
+		if (node.getData("Order") != null && node.getData("Order").length() > 0) {
+			me.putAttribute("Order", node.getData("Order"));
+		}
+		
 		node.childrenAccept(this, me);
 
 		StringBuffer msgText = new StringBuffer();
@@ -490,7 +511,16 @@ public class XmlVisitor extends DepthFirstVisitor {
 		ConditionMsg actualNode = this.ctx.getCondition(node.getData("Identifier"));
 	
 		XmlElem elem = (XmlElem)data;
-		XmlElem me = (XmlElem)actualNode.buildXmlRefElement(this.getNextOrderIndex());
+		
+		// A specific order may have been specified in the source.
+		// Use the specified value if it exists, default otherwise.
+		int order = this.getNextOrderIndex();
+		String nodeOrder = node.getData("Order");
+		if (nodeOrder != null && nodeOrder.length() > 0) {
+			order = Integer.parseInt(nodeOrder);
+		}
+		
+		XmlElem me = (XmlElem)actualNode.buildXmlRefElement(order);
 		elem.appendXml(me.toXml());
 		return elem;
 	}

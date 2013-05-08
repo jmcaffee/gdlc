@@ -198,6 +198,13 @@ TOKEN :  /* XML Function input/output var indicators */
 
 TOKEN :
 { 
+  < BRACKETED_NUMERIC: "[" ["0"-"9"] (["0"-"9"])* "]" >
+}
+
+
+
+TOKEN :
+{ 
     < NUMERIC_CONSTANT: ( <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> ) >
 }
 
@@ -819,6 +826,17 @@ void EqExpr() #EqualityCompute(>1) :
 
 
 /*
+MetaOrder   A MetaOrder attribute takes the form [#]. It can only be used
+            within a EqExpr or AssignTo.
+*/
+String MetaOrder() #void :
+{ Token t;}
+{
+  ( t=<BRACKETED_NUMERIC> { return t.image.substring(1,(t.image.length()-1));} )
+}
+
+
+/*
 Compute  --> CompTerm ( AND1 CompTerm | AND2 CompTerm | OR1 CompTerm | OR2 CompTerm )*
 */
 void Compute() #LogicalCompute(3) :
@@ -851,10 +869,10 @@ CompTerm  --> Primary ( LT Primary
 
 */
 void CompTerm() #EqualityCompute(>1) :
-{}
+{String order;}
 {
   LOOKAHEAD(2)
-  LhOperand() (EqualityOperator() Operand())
+  (order=MetaOrder(){jjtThis.data.put("Order",order);})? LhOperand() (EqualityOperator() Operand())
 |
   Operand()
  
@@ -1085,11 +1103,16 @@ void IfActions() :
 {}
 {
   ( 
-    Assign() 
-  | Message()
-  | ( LOOKAHEAD(4)
-    ConditionMsgDef() 
-  |   ConditionMsgRef()  )
+    ( LOOKAHEAD(2)
+        ( LOOKAHEAD(2)
+            Assign() 
+          | Message()
+        ) 
+      | ( LOOKAHEAD(5)
+              ConditionMsgDef() 
+            | ConditionMsgRef()
+        ) 
+    )
   )* 
 }
 
@@ -1097,11 +1120,16 @@ void ElseActions() :
 {}
 {
   ( 
-    Assign() 
-  | Message() 
-  | ( LOOKAHEAD(4)
-    ConditionMsgDef() 
-  |   ConditionMsgRef()  )
+    ( LOOKAHEAD(2)
+        ( LOOKAHEAD(2)
+            Assign() 
+          | Message()
+        )
+      | ( LOOKAHEAD(5)
+              ConditionMsgDef() 
+            | ConditionMsgRef()
+        )
+    )
   )* 
 }
 
@@ -1113,9 +1141,9 @@ void Assign() :
 
 
 void AssignTo() :
-{}
+{String order;}
 {
-  VarRef()
+  (order=MetaOrder(){jjtThis.data.put("Order",order);})? VarRef()
 }
 
 
@@ -1147,9 +1175,9 @@ void LookupDef() :
 
 
 void Message() :
-{ String msg;}
+{ String msg, order;}
 {
-  "message" <LPAREN> MessageType() "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
+  (order=MetaOrder(){jjtThis.data.put("Order",order);})? "message" <LPAREN> MessageType() "," msg=StringLiteral(){jjtThis.data.put("value",msg);} <RPAREN> EOS()
 }
 
 void MessageType() :
@@ -1159,9 +1187,9 @@ void MessageType() :
 }
 
 void ConditionMsgRef() :
-{String id;}
+{String id, order;}
 {
-  "condition" id=Name(){jjtThis.data.put("Identifier",id);} <DEREFERENCE> EOS()
+  (order=MetaOrder(){jjtThis.data.put("Order",order);})? "condition" id=Name(){jjtThis.data.put("Identifier",id);} <DEREFERENCE> EOS()
 }
 
 void ConditionMsgDef() :

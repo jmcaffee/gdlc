@@ -1,0 +1,8 @@
+PowerLookup,,,,,,,,,
+,Order Attrib PLK,Execution Type,Continue,,,,,,
+,,var1,var2,var3,var4,result1,result2,True Message,False Message
+,,DPM,DPM,DPM,DPM,DPM,DPM,,
+,,==,<>,==,<>,Assign,Assign,Exceptions,Exceptions
+,,1,2,3,4,Fail,Y,{Message 1.},{Message 2.}
+,,5,6,7,8,Fail,N,{Message 3.},{Message 4.}
+,,,,,,,,,

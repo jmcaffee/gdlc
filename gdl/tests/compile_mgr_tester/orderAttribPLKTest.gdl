@@ -1,0 +1,23 @@
+/* **************************************************************************
+ *  File: powerLookupTest.gdl
+ *
+ *  Description:
+ *    These are guideline definitions for powerlookup testing.
+ *
+ ************************************************************************* */
+
+dpm numeric var1;
+dpm numeric var2;
+dpm numeric var3;
+dpm numeric var4;
+dpm text    result1;
+dpm text    result2;
+
+import( powerlookup, "orderattribplk.csv" );    // Import the powerlookup CSV file
+
+
+
+guideline ("OrderAttribPLKTest")
+  ruleset   OrderAttribPLK();
+end
+

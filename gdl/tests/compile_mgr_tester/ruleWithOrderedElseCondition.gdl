@@ -1,0 +1,27 @@
+/* **************************************************************************
+ *  File:
+ *
+ *  Description:
+ *    This is to test a missing rule definition
+ *
+ ************************************************************************* */
+
+
+dpm numeric var1;
+dpm numeric var2;
+
+condition testCondition1 ("Test Condition", testCat1, testPriorTo1, "image_doc_type", "External",
+                           "Stipulation Text");
+
+rule TestRule()             // Define the rule.
+  if(var1 > 100000)
+  then
+  else
+    [5]condition testCondition1();
+  end
+end
+
+ruleset TestRuleset(true)
+  rule TestRule();         // Rule was defined above.
+end
+

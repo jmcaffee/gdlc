@@ -102,10 +102,14 @@ public class PowerLookupRulesetBuilder {
 			
 			boolean first 		= true;
 			int		valueIndex 	= 0;
+			int		orderIndex  = 0;	// We have to tell AMS which column the data came from
+										// so it can recreate the matrix correctly when viewed
+										// within the PLK editor (admin module).
 			
 			// For each row of data, use the operation (LHOperand and Operator)
 			// at the same index.
 			for(VarOp op : ops){
+				orderIndex += 1;		// The column always starts at one.
 				if(isActionOp(op)){
 					break;
 				}
@@ -118,9 +122,9 @@ public class PowerLookupRulesetBuilder {
 				
 				if(first){
 					first = false;
-					ruleOps.append(genVar.lookupAndCast(op.getName(), op.typ) +" "+ op.getOp());
+					ruleOps.append(metaOrder(orderIndex) + genVar.lookupAndCast(op.getName(), op.typ) +" "+ op.getOp());
 				}else{
-					ruleOps.append(" && "+ genVar.lookupAndCast(op.getName(), op.typ) +" "+ op.getOp());
+					ruleOps.append(" && "+ metaOrder(orderIndex) + genVar.lookupAndCast(op.getName(), op.typ) +" "+ op.getOp());
 				}
 				ruleOps.append(" "+ normalizeValue(values.get(valueIndex++)) +" ");
 			}
@@ -131,12 +135,16 @@ public class PowerLookupRulesetBuilder {
 			rule.append(ruleOps);
 			rule.append(") then ");
 
+			// Reset the orderIndex so the column count is correct.
+			orderIndex = 0;
+			
 			for(VarOp op : ops){
+				orderIndex += 1;	// Column count always starts from 1.
 				if(!isActionOp(op)){
 					continue;
 				}
 
-				addAction(values.get(valueIndex++), rule, op);
+				addAction(values.get(valueIndex++), rule, op, orderIndex);
 			}
 			
 			rule.append("end ");
@@ -145,6 +153,10 @@ public class PowerLookupRulesetBuilder {
 		
 		Log.info(rule.toString());
 		return rule;
+	}
+
+	private String metaOrder(int orderIndex) {
+		return "["+Integer.toString(orderIndex) + "]";
 	}
 
 	protected boolean isMsgOp(VarOp op){
@@ -170,19 +182,20 @@ public class PowerLookupRulesetBuilder {
 		return false;
 	}
 	
-	protected void addAction(String value, StringBuffer rule, VarOp op) {
+	protected void addAction(String value, StringBuffer rule, VarOp op, int orderIndex) {
 		if(value.isEmpty()){
 			return;				// Don't add action if the value is blank. 
 		}
 		if(isMsgOp(op)){
-			addMessageAction(value, rule, op);
+			addMessageAction(value, rule, op, orderIndex);
 			return;
 		}
 		if(isConditionOp(op)){
-			addConditionAction(value, rule, op);
+			addConditionAction(value, rule, op, orderIndex);
 			return;
 		}
-		rule.append(""+ genVar.lookupAndCast(op.name, op.typ) +" = ");
+		rule.append(metaOrder(orderIndex) + genVar.lookupAndCast(op.name, op.typ) +" = ");
+		
 		if(op.op.equals("Lookup")){	
 			addLookupAction(value, rule, op);
 		}else {
@@ -191,7 +204,7 @@ public class PowerLookupRulesetBuilder {
 	}
 
 	
-	protected void addMessageAction(String value, StringBuffer rule, VarOp op) {
+	protected void addMessageAction(String value, StringBuffer rule, VarOp op, int orderIndex) {
 		if(!value.startsWith("{") && !value.endsWith("}")){
 			ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
 				new String("Message [" + value + "] declaration is missing brace prefix or suffix. PowerLookup messages must be surrounded with braces: '{Message text here.}'.")));
@@ -199,10 +212,10 @@ public class PowerLookupRulesetBuilder {
 		}
 		
 		// Ex:
-		// message(findings, "Recommendation By CV: New Balance of $<DPM>dpmCurrency</DPM>.");
+		// [7]message(findings, "Recommendation By CV: New Balance of $<DPM>dpmCurrency</DPM>.");
 
 		String msgTxt = value.substring(1, (value.length() - 1));		// Strip braces.
-		StringBuffer msg = new StringBuffer("message("+ op.getOp() + ", \""+ msgTxt +"\");");  
+		StringBuffer msg = new StringBuffer(metaOrder(orderIndex) + "message("+ op.getOp() + ", \""+ msgTxt +"\");");  
 		
 		if(op.getName().equalsIgnoreCase("True Message")){
 			rule.append(msg);
@@ -222,7 +235,7 @@ public class PowerLookupRulesetBuilder {
 	}
 	
 	
-	protected void addConditionAction(String value, StringBuffer rule, VarOp op) {
+	protected void addConditionAction(String value, StringBuffer rule, VarOp op, int orderIndex) {
 		ConditionMsg condition = ctx.getConditionFromAlias(value);
 		if(null == condition){
 			// Maybe we're actually using the GDLC ID?
@@ -237,11 +250,11 @@ public class PowerLookupRulesetBuilder {
 		}
 		
 		// Ex output:
-		// condition ConditionId();
+		// [7]condition ConditionId();
 
 		// Condition references use the identifier.
 		String condId = condition.getIdentifier();		
-		StringBuffer cond = new StringBuffer("condition " + condId + "();");
+		StringBuffer cond = new StringBuffer(metaOrder(orderIndex) + "condition " + condId + "();");
 		
 		if(op.getOp().equalsIgnoreCase("True Action:Condition")){
 			rule.append(cond);

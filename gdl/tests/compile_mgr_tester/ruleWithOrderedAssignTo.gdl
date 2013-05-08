@@ -1,0 +1,23 @@
+/* **************************************************************************
+ *  File:
+ *
+ *  Description:
+ *    This is to test a missing rule definition
+ *
+ ************************************************************************* */
+
+
+dpm numeric var1;
+dpm numeric var2;
+
+rule TestRule()             // Define the rule.
+  if(var1 > 100000)
+  then
+    [3]var1 = var2;
+  end
+end
+
+ruleset TestRuleset(true)
+  rule TestRule();         // Rule was defined above.
+end
+
