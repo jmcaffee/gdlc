@@ -23,7 +23,7 @@ public class TestHelper {
 	 * deleteFileIfExists - helper function - delete a file if it exists
 	 * @param filename path of file to delete
 	 */
-	protected void deleteFileIfExists(String filename) {
+	public static void deleteFileIfExists(String filename) {
 		File f=new File(filename);
 		if(f.exists()){
 			f.delete();
@@ -34,7 +34,7 @@ public class TestHelper {
 	 * getFileContents - returns the contents of a text file as a string
 	 * @param filename path of file to read
 	 */
-	protected String getFileContents(String filename) {
+	public static String getFileContents(String filename) {
 		BufferedReader f1 = null;
 		String line;
 		StringBuffer contents = new StringBuffer();
@@ -62,7 +62,7 @@ public class TestHelper {
 	 * assertIfContextHasError - helper function - throws assertion if context has errors.
 	 * @param ctx IErrorContext object
 	 */
-	protected void assertIfContextHasError(IErrorContext ctx) {
+	public static void assertIfContextHasError(IErrorContext ctx) {
 		if(ctx.hasErrors()){
 			System.out.print(ctx.dumpErrors());
 		}
@@ -72,16 +72,38 @@ public class TestHelper {
 	/**
 	 * assertIfContextErrorNotExist - helper function - throws assertion if context does not have specific error.
 	 * @param ctx IErrorContext object
+	 * @param errPart error text to search context for 
 	 */
-	protected void assertIfContextErrorNotExist(IErrorContext ctx, String errPart) {
+	public static void assertIfContextErrorNotExist(IErrorContext ctx, String errPart) {
 		String errs = null;
 		if(ctx.hasErrors()){
 			errs = ctx.dumpErrors();
 			assertTrue("'" + errPart + "' is not in returned errors. ", (-1 != errs.indexOf(errPart)));
 		}
 		assertTrue("Context SHOULD have errors.",ctx.hasErrors());
-		
-		
+	}
+	
+
+	/**
+	 * Assert that a section of XML contains an XML partial
+	 * @param needle partial to search for
+	 * @param haystack XML to search for partial
+	 */
+	public static void assertXmlContains(String needle, String haystack) {
+		if (!haystack.contains(needle)) {
+			System.out.print(""+getFileLineLink()+" "+needle+" not found in:\n"+haystack);
+			fail();
+		}
+	}
+	
+	/**
+	 * Generate a link to the file and line number.
+	 * This link can be clicked to take the user to the location the method was called from.
+	 * 			
+	 * @return String in format: (filename.java:linenum)
+	 */
+	public static String getFileLineLink() {
+	    return new String("("+Thread.currentThread().getStackTrace()[3].getFileName()+":"+Integer.toString(Thread.currentThread().getStackTrace()[3].getLineNumber())+")");
 	}
 	
 	/**
@@ -91,7 +113,7 @@ public class TestHelper {
 	 * @param searchFor string to search for
 	 * @return true/false
 	 */
-	protected boolean fileContains(String fname1, String searchFor){
+	public static boolean fileContains(String fname1, String searchFor){
 		boolean result = false;
 		
 		BufferedReader f1 = null;
@@ -128,7 +150,7 @@ public class TestHelper {
 	 * @param fname2 filename/path of 2nd file to compare with
 	 * @return true/false
 	 */
-	protected boolean fileContentsAreIdentical(String fname1, String fname2){
+	public static boolean fileContentsAreIdentical(String fname1, String fname2){
 		boolean result = true;
 		
 		BufferedReader f1 = null;
@@ -173,7 +195,7 @@ public class TestHelper {
 	 * @param fname2 filename/path of 2nd file to compare with
 	 * @return true/false
 	 */
-	protected boolean fileContentsAreIdenticalWithStrippedDate(String fname1, String fname2){
+	public static boolean fileContentsAreIdenticalWithStrippedDate(String fname1, String fname2){
 		boolean result = true;
 		
 		BufferedReader f1 = null;
@@ -210,7 +232,7 @@ public class TestHelper {
 	}
 	
 	
-	String stripDate(String line){
+	public static String stripDate(String line){
 		String clean = line.replaceFirst("StartDate=\"[a-zA-Z]++\\s\\d{1,2}+\\s\\d{4}+\\s\\d{2}+:\\d{2}+(AM|PM)\"", "StartDate=\"\"");
 		return clean;
 	}
