@@ -12,43 +12,27 @@ import runtime.compiler.*;
  */
 public class GdlMain {
 
-      public static void main(String args[]) {
-          CompilerParameters cp = new CompilerParameters();
+    public static void main(String args[]) {
+        CompilerParameters cp = new CompilerParameters();
 
-//        if(args.length == 0){
-//            cp.usage();
-//            return;
-//        }
+        cp.process(args);
+        if(cp.isValid){
+            CompileMgr mgr = new CompileMgr();
+            mgr.execute(cp);
+        }
+    }
 
-          cp.process(args);
-          if(cp.isValid){
-              CompileMgr mgr = new CompileMgr();
-              mgr.execute(cp);
-          }
-      }
+    static void writeWarnings(CompilerContext ctx){
+        Log.status("GDLC has completed with warnings:");
+        ctx.dumpWarnings();
+    }
 
-      static void writeWarnings(CompilerContext ctx){
-          Log.status("GDLC has completed with warnings:");
-          ctx.dumpWarnings();
-      }
+    static void writeErrors(CompilerContext ctx){
+        Log.status("GDLC has completed with errors:");
+        Log.error(ctx.dumpErrors());
+    }
 
-      static void writeErrors(CompilerContext ctx){
-          Log.status("GDLC has completed with errors:");
-          Log.error(ctx.dumpErrors());
-      }
-
-      static void dumpContextData(CompilerContext ctx) {
-
-//      Log.info("");
-//      Log.info("---------- ERRORS ----------");
-//      ctx.dumpErrors();
-//      Log.info("");
-//
-//      Log.info("");
-//      Log.info("---------- WARNINGS ----------");
-//      ctx.dumpWarnings();
-//      Log.info("");
-//
+    static void dumpContextData(CompilerContext ctx) {
         Log.info("");
         Log.info("---------- DPM variables ----------");
         ctx.dumpDpmVars();
@@ -70,6 +54,5 @@ public class GdlMain {
         Log.info("");
 
         Log.info("");
-
-      }
+    }
 }

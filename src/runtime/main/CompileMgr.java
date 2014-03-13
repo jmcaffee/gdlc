@@ -103,7 +103,6 @@ public class CompileMgr {
         // and compile the tree.
         compile(compilerContext, parseTree);
 
-
         // Dump error and warning info.
         if(compilerContext.hasErrors()){
             Log.error("Compile aborted with errors:");
@@ -128,15 +127,13 @@ public class CompileMgr {
         }else{
             Log.out("No output generated (-nooutput switch)");
         }
-
     }
 
-
-/**
- * generateOutput generates compiled output data
- *
- */
-      protected void generateOutput(){
+    /**
+     * generateOutput generates compiled output data
+     *
+     */
+    protected void generateOutput(){
         // Determine name of output file
         String output = new String();
         if(CompileMgr.config.outFile.length() < 1){
@@ -175,233 +172,204 @@ public class CompileMgr {
         Log.out("########################################");
     }
 
+    public ASTCompilationUnit getParseTree(){
+        return compilerContext.getRootNode();
+    }
 
-      public ASTCompilationUnit getParseTree(){
-          return compilerContext.getRootNode();
-      }
+    public CompilerContext getContext(){
+        return compilerContext;
+    }
 
+    private void compile(IProgramContext ctx, ASTCompilationUnit tree) {
+        Log.status("Compiling...");
 
-      public CompilerContext getContext(){
-          return compilerContext;
-      }
+        GdlCompiler compiler = new GdlCompiler();
+        compiler.configureDefaultPlugins();
 
+        try {
+            compiler.compile(ctx, tree);
 
-      private void compile(IProgramContext ctx, ASTCompilationUnit tree) {
-          Log.status("Compiling...");
-
-//        if(tree == null){
-//            Log.error("Compile failed: parse tree is empty.");
-//            return;
-//        }
-
-          GdlCompiler compiler = new GdlCompiler();
-          compiler.configureDefaultPlugins();
-
-//        ArrayList<IGdlcPlugin> compilePlugins = new ArrayList<IGdlcPlugin>();
-//        compilePlugins.add(new VariablesPlugin());
-//        compilePlugins.add(new LookupImportsPlugin());
-//        compilePlugins.add(new LookupsPlugin());
-//        compilePlugins.add(new PowerLookupImportsPlugin());
-//        compilePlugins.add(new RuleDefsPlugin());
-//        compilePlugins.add(new RulesetDefsPlugin());
-//        compilePlugins.add(new RefResolverPlugin());
-//        compilePlugins.add(new GuidelinesPlugin());
-//        compilePlugins.add(new AliasesPlugin());
-//
-//        compiler.configurePlugins("compile", compilePlugins);
-
-          try {
-              compiler.compile(ctx, tree);
-
-          } catch (CompileException e) {
-                  Log.error("Encountered errors during compilation.");
-                  Log.error(e.toString());
-                  return;
-          }
-
-      }
-
-        public String getRuleXml(String key){
-            ASTRuleDef rule = compilerContext.getRule(key);
-            if(null == rule){ return new String(""); }
-
-            // Create XmlVisitor
-            XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
-            XmlElem result = new XmlElem("Result");
-
-            // Run the visitor against the rule.
-            rule.jjtAccept(xmlVisitor, result);
-
-            return result.getContent();
-        }
-
-
-        public String getRulesetXml(String key){
-            IRuleset rs = compilerContext.getRuleset(key);
-            if(null == rs){ return new String(""); }
-
-            // Create XmlVisitor
-            XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
-            XmlElem result = new XmlElem("Result");
-
-            // Run the visitor against the rule.
-            rs.getNode().jjtAccept(xmlVisitor, result);
-
-            return result.getContent();
-        }
-
-        public String getGuidelineXml(){
-            ASTGuidelineDef gdl = compilerContext.getGuideline();
-            if(null == gdl){ return new String(""); }
-
-            // Create XmlVisitor
-            XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
-            XmlElem result = new XmlElem("Result");
-
-            // Run the visitor against the rule.
-            gdl.jjtAccept(xmlVisitor, result);
-
-            return result.getContent();
-        }
-
-        public void writeXml(Writer out) throws IOException {
-            ASTGuidelineDef gdl = compilerContext.getGuideline();
-            if(null == gdl){
-                Log.error("No guideline has been defined.");
+        } catch (CompileException e) {
+                Log.error("Encountered errors during compilation.");
+                Log.error(e.toString());
                 return;
-            }
+        }
+    }
 
-            // Create XmlVisitor
-            XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
+    public String getRuleXml(String key){
+        ASTRuleDef rule = compilerContext.getRule(key);
+        if(null == rule){ return new String(""); }
 
-            XmlElem gdlRoot = new XmlElem("GuidelineRoot");
+        // Create XmlVisitor
+        XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
+        XmlElem result = new XmlElem("Result");
 
-            // Run the visitor against the guideline node.
-            gdl.jjtAccept(xmlVisitor, gdlRoot);
+        // Run the visitor against the rule.
+        rule.jjtAccept(xmlVisitor, result);
 
-            // Build a list of lookup names referenced in the guideline definition.
-            CollectReferencedLookupsVisitor lookupList = new CollectReferencedLookupsVisitor(compilerContext);
-            gdl.jjtAccept(lookupList, null);
+        return result.getContent();
+    }
 
-            XmlElem lookupData = buildLookupsElement(lookupList.lookups);
-            gdlRoot.appendXml(lookupData.toXml());
+    public String getRulesetXml(String key){
+        IRuleset rs = compilerContext.getRuleset(key);
+        if(null == rs){ return new String(""); }
 
-            // Build a list of Condition names referenced in the guideline definition.
-            CollectReferencedConditionsVisitor condList = new CollectReferencedConditionsVisitor(compilerContext);
-            gdl.jjtAccept(condList, null);
+        // Create XmlVisitor
+        XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
+        XmlElem result = new XmlElem("Result");
 
-            // Build the Conditions element.
-            XmlElem condData = buildConditionsElement(condList.conditions);
-            gdlRoot.appendXml(condData.toXml());
+        // Run the visitor against the rule.
+        rs.getNode().jjtAccept(xmlVisitor, result);
 
-            // Build a list of DPM names referenced in the guideline definition.
-            CollectReferencedDpmsVisitor dpmList = new CollectReferencedDpmsVisitor(compilerContext);
-            gdl.jjtAccept(dpmList, null);
+        return result.getContent();
+    }
 
-            // Build the DERIVEDPARAMETERS element.
-            XmlElem dpmData = buildDerivedParametersElement(dpmList.dpms);
-            gdlRoot.appendXml(dpmData.toXml());
+    public String getGuidelineXml(){
+        ASTGuidelineDef gdl = compilerContext.getGuideline();
+        if(null == gdl){ return new String(""); }
 
-            String content = gdlRoot.toXml();
-            out.write(content);
-            out.close();
+        // Create XmlVisitor
+        XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
+        XmlElem result = new XmlElem("Result");
+
+        // Run the visitor against the rule.
+        gdl.jjtAccept(xmlVisitor, result);
+
+        return result.getContent();
+    }
+
+    public void writeXml(Writer out) throws IOException {
+        ASTGuidelineDef gdl = compilerContext.getGuideline();
+        if(null == gdl){
+            Log.error("No guideline has been defined.");
+            return;
         }
 
-        protected XmlElem buildLookupsElement(HashMap<String,String> list){
-            XmlElem lookupData = new XmlElem("LOOKUPS");
+        // Create XmlVisitor
+        XmlVisitor xmlVisitor = new XmlVisitor(this.getContext());
+
+        XmlElem gdlRoot = new XmlElem("GuidelineRoot");
+
+        // Run the visitor against the guideline node.
+        gdl.jjtAccept(xmlVisitor, gdlRoot);
+
+        // Build a list of lookup names referenced in the guideline definition.
+        CollectReferencedLookupsVisitor lookupList = new CollectReferencedLookupsVisitor(compilerContext);
+        gdl.jjtAccept(lookupList, null);
+
+        XmlElem lookupData = buildLookupsElement(lookupList.lookups);
+        gdlRoot.appendXml(lookupData.toXml());
+
+        // Build a list of Condition names referenced in the guideline definition.
+        CollectReferencedConditionsVisitor condList = new CollectReferencedConditionsVisitor(compilerContext);
+        gdl.jjtAccept(condList, null);
+
+        // Build the Conditions element.
+        XmlElem condData = buildConditionsElement(condList.conditions);
+        gdlRoot.appendXml(condData.toXml());
+
+        // Build a list of DPM names referenced in the guideline definition.
+        CollectReferencedDpmsVisitor dpmList = new CollectReferencedDpmsVisitor(compilerContext);
+        gdl.jjtAccept(dpmList, null);
+
+        // Build the DERIVEDPARAMETERS element.
+        XmlElem dpmData = buildDerivedParametersElement(dpmList.dpms);
+        gdlRoot.appendXml(dpmData.toXml());
+
+        String content = gdlRoot.toXml();
+        out.write(content);
+        out.close();
+    }
+
+    protected XmlElem buildLookupsElement(HashMap<String,String> list){
+        XmlElem lookupData = new XmlElem("LOOKUPS");
 
 
-            for(String lkName : list.keySet()){
-                buildLookup(lookupData, lkName);
-            }
-
-            return lookupData;
+        for(String lkName : list.keySet()){
+            buildLookup(lookupData, lkName);
         }
 
-        protected void buildLookup(XmlElem parent, String lkName){
-            ASTLookupDef node = compilerContext.getLookup(lkName);
-            LookupNodeVisitor lkupVisitor = new LookupNodeVisitor(compilerContext);
+        return lookupData;
+    }
 
-            node.jjtAccept(lkupVisitor, parent);
+    protected void buildLookup(XmlElem parent, String lkName){
+        ASTLookupDef node = compilerContext.getLookup(lkName);
+        LookupNodeVisitor lkupVisitor = new LookupNodeVisitor(compilerContext);
 
+        node.jjtAccept(lkupVisitor, parent);
+    }
+
+    protected XmlElem buildConditionsElement(HashMap<String,String> list){
+        XmlElem condData = new XmlElem("Conditions");
+
+        for(String condName : list.keySet()){
+            XmlElem condElem = null;
+            ConditionMsg cond = compilerContext.getCondition(condName);
+            condElem = (XmlElem)cond.buildXmlDefElement();
+            condData.appendXml(condElem.toXml());
         }
 
-        protected XmlElem buildConditionsElement(HashMap<String,String> list){
-            XmlElem condData = new XmlElem("Conditions");
+        return condData;
+    }
 
+    protected XmlElem buildDerivedParametersElement(HashMap<String,String> list){
+        XmlElem dpmData = new XmlElem("DERIVEDPARAMETERS");
 
-            for(String condName : list.keySet()){
-                XmlElem condElem = null;
-                ConditionMsg cond = compilerContext.getCondition(condName);
-                condElem = (XmlElem)cond.buildXmlDefElement();
-                condData.appendXml(condElem.toXml());
-            }
-
-            return condData;
+        for(String dpmName : list.keySet()){
+            buildDpm(dpmData, dpmName);
         }
 
-        protected XmlElem buildDerivedParametersElement(HashMap<String,String> list){
-            XmlElem dpmData = new XmlElem("DERIVEDPARAMETERS");
+        return dpmData;
+    }
 
+    protected void buildDpm(XmlElem parent, String dpmName){
+        XmlElem me = null;
 
-            for(String dpmName : list.keySet()){
-                buildDpm(dpmData, dpmName);
+        if(compilerContext.containsVar(new VarDpm(dpmName))){
+            VarDpm dpm = (VarDpm)compilerContext.getVar(new VarDpm(dpmName));
+            me = new XmlElem(dpm.getVarType());
+            me.setIsShortTag(true);
+
+            me.putAttribute("Name", dpm.getAlias());
+            me.putAttribute("Type", dpm.getType());
+            me.putAttribute("Order", dpm.getOrder());
+            String pt = dpm.getProductType();
+            me.putAttribute("ProductType", pt);
+            if(pt.equals("4")){
+                me.putAttribute("Precision", dpm.getPrecision());
             }
+            me.putAttribute("DataType", dpm.getDataType());
 
-            return dpmData;
+            String[] attOrderWithPrecision = {"Name", "Type", "Order", "ProductType", "Precision", "DataType"};
+            String[] attOrder = {"Name", "Type", "Order", "ProductType", "DataType"};
+            if(pt.equals("4") && !pt.isEmpty()){
+                me.setAttributeOrder(attOrderWithPrecision);
+            }
+            else {
+                me.setAttributeOrder(attOrder);
+            }
         }
 
-        protected void buildDpm(XmlElem parent, String dpmName){
-            XmlElem me = null;
-
-            if(compilerContext.containsVar(new VarDpm(dpmName))){
-                VarDpm dpm = (VarDpm)compilerContext.getVar(new VarDpm(dpmName));
-                me = new XmlElem(dpm.getVarType());
-                me.setIsShortTag(true);
-
-                me.putAttribute("Name", dpm.getAlias());
-                me.putAttribute("Type", dpm.getType());
-                me.putAttribute("Order", dpm.getOrder());
-                String pt = dpm.getProductType();
-                me.putAttribute("ProductType", pt);
-                if(pt.equals("4")){
-                    me.putAttribute("Precision", dpm.getPrecision());
-                }
-                me.putAttribute("DataType", dpm.getDataType());
-
-                String[] attOrderWithPrecision = {"Name", "Type", "Order", "ProductType", "Precision", "DataType"};
-                String[] attOrder = {"Name", "Type", "Order", "ProductType", "DataType"};
-                if(pt.equals("4") && !pt.isEmpty()){
-                    me.setAttributeOrder(attOrderWithPrecision);
-                }
-                else {
-                    me.setAttributeOrder(attOrder);
-                }
-            }
-
-            if(null == me){
-                Log.error("Missing variable.");
-                return;
-            }
-
-            parent.appendXml(me.toXml());
+        if(null == me){
+            Log.error("Missing variable.");
+            return;
         }
 
-        protected boolean writeXmlToFile(String filepath){
-            BufferedWriter out = null;
-            try{
-                out = new BufferedWriter(new FileWriter(filepath));
-                this.writeXml(out);
-            }
-            catch(IOException e){
+        parent.appendXml(me.toXml());
+    }
+
+    protected boolean writeXmlToFile(String filepath){
+        BufferedWriter out = null;
+        try{
+            out = new BufferedWriter(new FileWriter(filepath));
+            this.writeXml(out);
+        }
+        catch(IOException e){
 //              fail("IOException thrown while creating output file [" + outFile + "]");
-                return false;
-            }
-
-            return true;
+            return false;
         }
 
-
-
+        return true;
+    }
 }
 
