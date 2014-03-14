@@ -9,9 +9,9 @@
  */
 package runtime.compiler;
 
-import java.lang.Exception;
+import runtime.main.GdlcException;
 
-public class CompileException extends Exception {
+public class CompileException extends GdlcException {
       public CompileException(String message) {
         super(message);
       }
