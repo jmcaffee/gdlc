@@ -13,12 +13,18 @@ import runtime.compiler.*;
 public class GdlMain {
 
     public static void main(String args[]) {
-        CompilerParameters cp = new CompilerParameters();
+        try {
 
-        cp.process(args);
-        if(cp.isValid){
-            CompileMgr mgr = new CompileMgr();
-            mgr.execute(cp);
+            CompilerParameters cp = new CompilerParameters();
+
+            cp.process(args);
+            if(cp.isValid){
+                CompileMgr mgr = new CompileMgr();
+                mgr.execute(cp);
+            }
+        }
+        catch(GdlcException e) {
+            System.exit(1);
         }
     }
 

@@ -67,7 +67,7 @@ public class CompileMgr {
      * execute execute the parser/compiler
      * @param cp CompileParameters object containing configuration options for the compiler
      */
-    public void execute(CompilerParameters cp) {
+    public void execute(CompilerParameters cp) throws GdlcException {
         // Set the global configuration
         CompileMgr.setConfig(cp);
 
@@ -91,7 +91,7 @@ public class CompileMgr {
 
         if(null == (parseTree = parseMgr.getParseTree())) {
             Log.error("Aborting compile.");
-            return;
+            throw new GdlcException("Parse failed");
         }
 
         if(CompileMgr.config.verboseParse){
@@ -119,7 +119,7 @@ public class CompileMgr {
         }
 
         if(compilerContext.hasErrors()){
-            return;
+            throw new GdlcException("Compile failed with errors");
         }
 
         if(CompileMgr.config.generateOutput){
@@ -133,7 +133,7 @@ public class CompileMgr {
      * generateOutput generates compiled output data
      *
      */
-    protected void generateOutput(){
+    protected void generateOutput() throws GdlcException {
         // Determine name of output file
         String output = new String();
         if(CompileMgr.config.outFile.length() < 1){
@@ -151,7 +151,7 @@ public class CompileMgr {
 
         if(output.length() < 1){
             Log.error("Unable to resolve an output filename.");
-            return;
+            throw new GdlcException("Unable to resolve output filename");
         }
         // Output file might not have an extension.
         // Add extension if it doesn't.
@@ -162,14 +162,15 @@ public class CompileMgr {
 
         // Write file to destination.
 
-        Log.out("########################################");
         if(this.writeXmlToFile(output)){
+            Log.out("########################################");
             Log.out("XML written to file [" + output + "].");
+            Log.out("########################################");
         }
         else{
             Log.error("Errors occurred while writing XML [" + output + "].");
+            throw new GdlcException("Errors occurred while writing XML");
         }
-        Log.out("########################################");
     }
 
     public ASTCompilationUnit getParseTree(){
