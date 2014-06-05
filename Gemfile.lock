@@ -1,0 +1,29 @@
+GIT
+  remote: git@cerberuslabs.net:tools/ruby/rakeutils.git
+  revision: 36c4e25d8dbafeee727fd41108fd9416d1402eee
+  specs:
+    rakeutils (0.0.3)
+      ktcommon
+      ktutils
+
+GIT
+  remote: ssh://git@bitbucket.org/ktechsystems/ktcommon.git
+  revision: 65205e9af9036b48778f6396a64d5121a2ed1e47
+  specs:
+    ktcommon (0.0.7)
+      git_store
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    git_store (0.3.3)
+    ktutils (0.0.2)
+    rake (10.3.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ktcommon!
+  rake (~> 10.3.2)
+  rakeutils!
