@@ -9,7 +9,11 @@
 
 require 'rake'
 require 'rake/clean'
-require 'rakeUtils.rb'
+
+# Setup load paths for bundler gems.
+require 'bundler/setup'
+
+require 'rakeutils'
 
 $verbose = true
 

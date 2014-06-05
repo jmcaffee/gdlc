@@ -9,7 +9,9 @@
 
 require 'rake'
 require 'rake/clean'
-require 'rakeUtils.rb'
+require 'rakeutils'
+require 'rakeutils/jjtreetask'
+require 'rakeutils/javacctask'
 
 
 #### Directories
