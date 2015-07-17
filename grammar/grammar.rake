@@ -9,7 +9,6 @@
 
 require 'rake'
 require 'rake/clean'
-require 'rakeutils'
 require 'rakeutils/jjtreetask'
 require 'rakeutils/javacctask'
 
@@ -61,10 +60,10 @@ namespace :grammar do
 
   task :jjTreeTarget => [:init] do
     jjTreeTask = JJTreeTask.new
-    #jjTreeTask.outputFile(t.name)
+    #jjTreeTask.output_file(t.name)
     #jjTreeTask.static("false")
-    jjTreeTask.outputDir(GRAMMAR_BUILD_DIR)
-    jjTreeTask.generateFrom(JJTREE_GRAMMAR_FILE)
+    jjTreeTask.output_dir(GRAMMAR_BUILD_DIR)
+    jjTreeTask.generate_from(JJTREE_GRAMMAR_FILE)
 
     puts "jjTreeTarget completed"
   end
@@ -73,8 +72,8 @@ namespace :grammar do
 
   task :javaccTarget => [:init] do
     javaCcTask = JavaCCTask.new
-    javaCcTask.outputDir(GRAMMAR_BUILD_DIR)
-    javaCcTask.generateFrom(JAVACC_GRAMMAR_FILE)
+    javaCcTask.output_dir(GRAMMAR_BUILD_DIR)
+    javaCcTask.generate_from(JAVACC_GRAMMAR_FILE)
 
     puts "javaccTarget completed"
   end

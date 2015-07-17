@@ -7,13 +7,12 @@
 # Website::   http://ktechsystems.com
 ##############################################################################
 
-require 'rake'
 require 'rake/clean'
 
 # Setup load paths for bundler gems.
-require 'bundler/setup'
+#require 'bundler/setup'
 
-require 'rakeutils'
+require 'rakeutils/filegentask'
 
 $verbose = true
 
@@ -61,8 +60,8 @@ import "#{GRAMMAR_DIR}/grammar.rake"
 # Load local tasks.
 imports = FileList['tasks/**/*.rake']
 imports.each do |imp|
-	puts "Importing local task file: #{imp}" if $verbose
-	import "#{imp}"
+  puts "Importing local task file: #{imp}" if $verbose
+  import "#{imp}"
 end
 
 
@@ -86,7 +85,7 @@ desc "Build GDLC application distribution"
 
 task :dist => [:init, :build, :jar, DIST_DIR, :copyLibsToDist] do
   cp_r("#{BUILD_DIR}/gdlc.jar", "#{DIST_DIR}")
-  
+
   puts "GDLC distro built"
 end
 
@@ -118,7 +117,7 @@ task :compile => [:init] do
   cvsjar = "#{OSTERMILLERUTILS}"
 
   classpath = "-classpath #{cvsjar}"
-  
+
   options = "#{classpath}"
   options << " -sourcepath #{SRC_DIR}"
   options << " -d #{BUILD_DIR}"           # Destination dir
@@ -132,10 +131,9 @@ task :compile => [:init] do
   srcFiles.each do |f|
     sourceFiles << " #{f}"
   end
-  
+
   output = `javac #{options} #{sourceFiles}`
   puts output
-  
 end
 
 #######################################
@@ -144,13 +142,13 @@ desc "compile each src file individually"
 
 task :compile_each => [:init] do
   puts "Compiling each java source file individually."
-  
+
   cvsjar = File.expand_path("#{OSTERMILLERUTILS}").gsub(/\//, "\\")
   cvsjar = File.expand_path("#{OSTERMILLERUTILS}")
   cvsjar = "#{OSTERMILLERUTILS}"
 
   classpath = "-classpath #{cvsjar}"
-  
+
   options = "#{classpath}"
   options << " -sourcepath ./#{SRC_DIR}"
   options << " -d #{BUILD_DIR}"           # Destination dir
@@ -166,7 +164,6 @@ task :compile_each => [:init] do
     output = `javac #{options} #{f}`
     puts output
   end
-    
 end
 
 #######################################
@@ -177,12 +174,11 @@ task :jar => [:compile] do
   puts "Building java archive file (jar)."
   target    = "gdlc.jar"
   manifest  = "../#{MISC_DIR}/manifest.mf"
-  
+
   cd("#{BUILD_DIR}") do |dir| # Everything is relative to the build dir (where class files are coming from).
     `jar -cvfm "#{target}" "#{manifest}" "runtime"`
     # jar -cvfm jars/gdlc.zip misc/manifest.mf -C build .     # '-C' flag works from the command line but not here.
   end
-  
 end
 
 
@@ -277,13 +273,13 @@ namespace :version do
   task :generateVersionFile do
     appVersionFile = "Constants.java"
     versionFile = File.join(MISC_DIR, "projectproperties.yml")
-    
+
     srcDir = MISC_DIR
     destDir = "src/runtime/main"
-    
+
     srcPath = File.join(srcDir, appVersionFile)
     destPath = File.join(destDir, appVersionFile)
-    
+
     gen = FileGenTask.new(true)
     gen.generate(srcPath, destPath, versionFile)
 
@@ -310,17 +306,20 @@ end # namespace :version
 #######################################
 
 def currentVersionString
-    yml = DataFile.new
-    key = "version_major"
-    minorkey = "version_minor"
-    buildkey = "version_build"
-    data = yml.read("#{MISC_DIR}/projectproperties.yml")
-    major = data["#{key}"]
-	minor = data["#{minorkey}"]
-									# The version file is incremented at the end of the build so it's ready for the next. 
-									# To be sure the filename will match the actual version, decrement the build #.
-	build = data["#{buildkey}"] - 1 
-	versionStr = "#{major}.#{minor}.#{build}"
+  yml = DataFile.new
+  key = "version_major"
+  minorkey = "version_minor"
+  buildkey = "version_build"
+
+  data = yml.read("#{MISC_DIR}/projectproperties.yml")
+  major = data["#{key}"]
+  minor = data["#{minorkey}"]
+
+  # The version file is incremented at the end of the build so it's ready for the next. 
+  # To be sure the filename will match the actual version, decrement the build #.
+  build = data["#{buildkey}"] - 1
+
+  versionStr = "#{major}.#{minor}.#{build}"
 end
 
 #######################################
