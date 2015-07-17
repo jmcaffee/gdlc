@@ -9,3 +9,8 @@ backup/
 *.log
 gdl/tests/output/*.xml
 gdl/tests/compile_mgr_tester/output
+
+# Ignore Eclipse specific files
+.classpath
+.project
+.settings/
