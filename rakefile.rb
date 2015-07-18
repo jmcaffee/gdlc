@@ -1,9 +1,9 @@
 ##############################################################################
 # File:: rakefile.rb
 # Purpose:: Generate Java code using JavaCC grammar file.
-# 
+#
 # Author::    Jeff McAffee 02/26/2010
-# Copyright:: Copyright (c) 2010 kTech Systems LLC. All rights reserved.
+# Copyright:: Copyright (c) 2010 Jeff McAffee. All rights reserved.
 # Website::   http://ktechsystems.com
 ##############################################################################
 
