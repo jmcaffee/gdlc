@@ -31,7 +31,7 @@ public class CompilerParameters extends CommandLineParameters {
         System.out.println();
         System.out.println("======================================================================");
         System.out.println("GDLC GuideLine Compiler");
-        System.out.println("Usage:  GDLC inFile [outFile] [-switch]* [/I]* [/C]* ");
+        System.out.println("Usage:  GDLC inFile [outFile] [-switch]* [--I]* [--C]* ");
         System.out.println();
         System.out.println("    [] = optional");
         System.out.println("    *  = 0 or more, separated by spaces");
