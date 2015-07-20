@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html>
+  <head><title>GDLC User Manual</title></head>
+
+  <style media="screen" type="text/css">
+<!--
+  body {
+    font-family: Arial, sans-serif;
+  }
+
+  .content {
+    margin: 0 auto;
+    min-height: 100%;
+    padding: 0 0 100px;
+    width: 980px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .rendered-content {
+    padding: 10px;
+  }
+
+  /* Fancy HR styles based on http://css-tricks.com/examples/hrs/ */
+  hr {
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(200,200,200,1), rgba(200,200,200,0.5), rgba(200,200,200,0));
+    background-image:    -moz-linear-gradient(left, rgba(200,200,200,1), rgba(200,200,200,0.5), rgba(200,200,200,0));
+    background-image:     -ms-linear-gradient(left, rgba(200,200,200,1), rgba(200,200,200,0.5), rgba(200,200,200,0));
+    background-image:      -o-linear-gradient(left, rgba(200,200,200,1), rgba(200,200,200,0.5), rgba(200,200,200,0));
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: normal;
+    line-height: 1.25;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.5625;
+  }
+
+  h4 {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  h5 {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.66;
+    text-transform: uppercase;
+  }
+
+  h6 {
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 1.66;
+    text-transform: uppercase;
+  }
+
+  pre  {
+    margin-left: 2em;
+    display: block;
+    background: #f5f5f5;
+    font-family: monospace;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 1px 3px;
+  }
+
+  code {
+    background: #f5f5f5;
+    font-family: monospace;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 1px 3px;
+  }
+
+  pre, code {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  pre code {
+    border: 0;
+    padding: 0;
+  }
+
+  ul.toc li {
+    list-style: none;
+    font-size: 14px;
+  }
+
+  ul.toc li span.h3toc {
+    margin-left: 20px;
+  }
+
+  ul.toc li span.h4toc {
+    margin-left: 40px;
+  }
+
+  ul.toc li span.h5toc {
+    margin-left: 60px;
+  }
+
+  ul.toc li span.h6toc {
+    margin-left: 80px;
+  }
+-->
+</style>
+
+
+  <body>
+    <div class="content">
+      <div class="rendered-content">
+
+<a name="Guideline.Compiler.User.Manual"></a>
+<h1>Guideline Compiler User Manual</h1>
+
+<a name="Summary"></a>
+<h2>Summary</h2>
+
+<p>GDLC is a guideline compiler. It was created to allow guidelines to be written using text files and a simple language. The compiler parses and compiles the text files (called source files) into an XML version of the guideline. This XML file can be uploaded directly into the application using the normal upload procedure.</p>
+
+<hr>
+
+<a name="TOC"></a>
+<h2>Table of Contents</h2>
+
+<ul class="toc">
+<li><span class="h2toc"><a href="#Running.GDLC.from.the.command.line">Running GDLC from the command line</a></span></li>
+<li><span class="h2toc"><a href="#Compiler.Options">Compiler Options</a></span></li>
+<li><span class="h3toc"><a href="#Inclusion.Paths">Inclusion Paths</a></span></li>
+<li><span class="h3toc"><a href="#Configuration.Paths">Configuration Paths</a></span></li>
+<li><span class="h2toc"><a href="#Documentation.Conventions">Documentation Conventions</a></span></li>
+<li><span class="h2toc"><a href="#GDL.Syntax">GDL Syntax</a></span></li>
+<li><span class="h3toc"><a href="#Keywords">Keywords</a></span></li>
+<li><span class="h3toc"><a href="#Identifiers">Identifiers</a></span></li>
+<li><span class="h3toc"><a href="#Operators">Operators</a></span></li>
+<li><span class="h4toc"><a href="#Equality.Operators">Equality Operators</a></span></li>
+<li><span class="h4toc"><a href="#Boolean.Operators">Boolean Operators</a></span></li>
+<li><span class="h4toc"><a href="#Mathematical.Operators">Mathematical Operators</a></span></li>
+<li><span class="h2toc"><a href="#Variables">Variables</a></span></li>
+<li><span class="h3toc"><a href="#PPMs">PPMs</a></span></li>
+<li><span class="h4toc"><a href="#Definitions">Definitions</a></span></li>
+<li><span class="h5toc"><a href="#Examples">Examples</a></span></li>
+<li><span class="h5toc"><a href="#Types">Types</a></span></li>
+<li><span class="h5toc"><a href="#AppXML.Source">AppXML Source</a></span></li>
+<li><span class="h3toc"><a href="#DPMs">DPMs</a></span></li>
+<li><span class="h4toc"><a href="#Definitions.0">Definitions</a></span></li>
+<li><span class="h5toc"><a href="#Examples.0">Examples</a></span></li>
+<li><span class="h5toc"><a href="#Types.0">Types</a></span></li>
+<li><span class="h4toc"><a href="#References">References</a></span></li>
+<li><span class="h3toc"><a href="#DSMs">DSMs</a></span></li>
+<li><span class="h4toc"><a href="#Definitions.1">Definitions</a></span></li>
+<li><span class="h5toc"><a href="#Examples.1">Examples</a></span></li>
+<li><span class="h4toc"><a href="#References.0">References</a></span></li>
+<li><span class="h3toc"><a href="#LOS.Restrictions">LOS Restrictions</a></span></li>
+<li><span class="h2toc"><a href="#Lookups">Lookups</a></span></li>
+<li><span class="h3toc"><a href="#Definitions.2">Definitions</a></span></li>
+<li><span class="h3toc"><a href="#References.1">References</a></span></li>
+<li><span class="h2toc"><a href="#PowerLookups">PowerLookups</a></span></li>
+<li><span class="h3toc"><a href="#Definitions.3">Definitions</a></span></li>
+<li><span class="h3toc"><a href="#References.2">References</a></span></li>
+<li><span class="h2toc"><a href="#Rules">Rules</a></span></li>
+<li><span class="h3toc"><a href="#Definitions.4">Definitions</a></span></li>
+<li><span class="h3toc"><a href="#References.3">References</a></span></li>
+<li><span class="h2toc"><a href="#Rulesets">Rulesets</a></span></li>
+<li><span class="h3toc"><a href="#Definitions.5">Definitions</a></span></li>
+<li><span class="h3toc"><a href="#References.4">References</a></span></li>
+<li><span class="h2toc"><a href="#Conditions">Conditions</a></span></li>
+<li><span class="h3toc"><a href="#Definitions.6">Definitions</a></span></li>
+<li><span class="h3toc"><a href="#References.5">References</a></span></li>
+<li><span class="h3toc"><a href="#Defining.Categories">Defining Categories</a></span></li>
+<li><span class="h3toc"><a href="#Defining.PriorTos">Defining PriorTos</a></span></li>
+<li><span class="h3toc"><a href="#Telling.the.Compiler.about.your.Properties">Telling the Compiler about your Properties</a></span></li>
+<li><span class="h2toc"><a href="#Messages">Messages</a></span></li>
+<li><span class="h3toc"><a href="#Message.Types">Message Types</a></span></li>
+<li><span class="h4toc"><a href="#DPMs.in.Messages">DPMs in Messages</a></span></li>
+<li><span class="h4toc"><a href="#Exception.messages">Exception messages</a></span></li>
+<li><span class="h4toc"><a href="#Findings.messages">Findings messages</a></span></li>
+<li><span class="h2toc"><a href="#Aliases">Aliases</a></span></li>
+<li><span class="h3toc"><a href="#Variables.0">Variables</a></span></li>
+<li><span class="h3toc"><a href="#Rules.0">Rules</a></span></li>
+<li><span class="h3toc"><a href="#Rulesets.0">Rulesets</a></span></li>
+<li><span class="h2toc"><a href="#Guideline.Definitions">Guideline Definitions</a></span></li>
+<li><span class="h2toc"><a href="#Including.Source.Files">Including Source Files</a></span></li>
+<li><span class="h2toc"><a href="#Importing.Files">Importing Files</a></span></li>
+<li><span class="h3toc"><a href="#Lookup.Files">Lookup Files</a></span></li>
+<li><span class="h3toc"><a href="#PowerLookup.Files">PowerLookup Files</a></span></li>
+<li><span class="h2toc"><a href="#XML.Functions">XML Functions</a></span></li>
+<li><span class="h3toc"><a href="#Definitions.7">Definitions</a></span></li>
+<li><span class="h3toc"><a href="#References.6">References</a></span></li>
+<li><span class="h2toc"><a href="#Miscellaneous">Miscellaneous</a></span></li>
+<li><span class="h3toc"><a href="#Inserting.a.Pricing.Guideline..special.rule.">Inserting a Pricing Guideline (special rule)</a></span></li>
+</ul>
+
+
+<hr>
+
+<a name="Running.GDLC.from.the.command.line"></a>
+<h2>Running GDLC from the command line</h2>
+
+<p>Typing GDLC without any parameters (or with the -h option) will result in the following usage message:</p>
+
+<pre><code>======================================================================
+GDLC GuideLine Compiler
+Usage:  GDLC inFile [outFile] [-switch]* [--I]* [--C]*
+
+        [] = optional
+        *  = 0 or more, separated by spaces
+
+        inFile    name of file to compile.
+        outFile   name of XML output file. (default is guideline name)
+
+    --switches--
+        -h, -help     show usage instructions.
+        -version      display the application version.
+
+        -no,-nooutput do not generate output.
+        -r, -raw      force output of all rules/sets/lookups.
+                      outFile is a required parameter when -raw is used.
+        -v, -verbose  show all status messages.
+        -vp,          show parse tree.
+
+        -validxml     output valid xml.
+
+    --parameters--
+        --Ipath       path to include dir. Default: current dir
+        --Cpath       path to search for config files.
+
+======================================================================
+</code></pre>
+
+<p>The <code>-raw</code> option is not available at this time.</p>
+
+<hr>
+
+<a name="Compiler.Options"></a>
+<h2>Compiler Options</h2>
+
+<a name="Inclusion.Paths"></a>
+<h3>Inclusion Paths</h3>
+
+<p>Inclusion Paths are directory paths the compiler will search to find files <code>import</code>ed
+or <code>include</code>d by your source files.</p>
+
+<p>Inclusion paths are set using the <code>--I</code> command line parameter. Multiple
+directories can be added to the inclusion path list with repeated use of
+the <code>--I</code> flag.</p>
+
+<p>Example:</p>
+
+<pre><code>gdlc my_rules.gdl my_output.xml --Irelative/path/to/my/include/dir --I/another/path
+</code></pre>
+
+<a name="Configuration.Paths"></a>
+<h3>Configuration Paths</h3>
+
+<p>Configuration Paths are directory paths the compiler will search to find
+configuration files.</p>
+
+<p>Configuration paths are set using the <code>--C</code> command line parameter. Multiple
+directories can be added to the configuration path list with repeated use of
+the <code>--C</code> flag similar to the Inclusion Paths above.</p>
+
+<hr>
+
+<a name="Documentation.Conventions"></a>
+<h2>Documentation Conventions</h2>
+
+<p>Text surrounded with square brackets [] is optional.
+Text formatted like <code>this</code> indicates a <em>keyword</em>.</p>
+
+<hr>
+
+<a name="GDL.Syntax"></a>
+<h2>GDL Syntax</h2>
+
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>GDL is CaSe sEnSitiVe.</li>
+<li>
+<em>Definitions</em> mean the objects are being <strong>defined</strong>
+</li>
+<li>
+<em>References</em> mean previously defined objects are being <strong>referenced</strong>
+</li>
+<li>Most reference statements must be terminated with <code>;</code>
+</li>
+<li>
+<code>rule</code>, <code>ruleset</code>, and <code>guideline</code> definition statements must be terminated with <code>end</code>.</li>
+<li>Comments may be placed into the guideline source code in one of two ways:
+
+<ul>
+<li>
+<em>Single line comments:</em> Any text from <code>//</code> to the end of a line is considered a comment</li>
+<li>
+<em>Multi line comments:</em> All text within a <code>/* ... */</code> pair is considered a comment.</li>
+</ul>
+</li>
+</ul>
+
+
+<a name="Keywords"></a>
+<h3>Keywords</h3>
+
+<pre><code>alias app boolean condition continue
+crd date  decision  dpm dsm
+else  end false guideline if
+import  IN  include InsertPricingGuideline  lookup
+message money numeric OUT percentage
+PL  powerlookup ppm prd rule
+ruleset text  then  true  xmlfunc
+</code></pre>
+
+<a name="Identifiers"></a>
+<h3>Identifiers</h3>
+
+<p>Variable, <code>rule</code>, <code>ruleset</code> and <code>condition</code> identifiers (names) are limited to the
+string lengths listed below. Spaces and special characters (such as <code>&amp;, *, and @</code>)
+are not allowed as part of the identifier. The <strong>only</strong> special characters that
+are allowed (other than alphanumeric characters) are <code>_</code> (the underscore) and
+<code>-</code> (the dash). Identifiers must start with a letter.</p>
+
+<p>DPM/DSM variable names/aliases are limited to a maximum character length of 50.</p>
+
+<a name="Operators"></a>
+<h3>Operators</h3>
+
+<p>These operators are available for use in the guidelines.</p>
+
+<a name="Equality.Operators"></a>
+<h4>Equality Operators</h4>
+
+<p>Equality operators can only be used inside of <code>if</code> statements.</p>
+
+<pre><code>&lt; &lt;=  &gt;
+&gt;=  ==  !=
+&lt;&gt;  in  ??
+</code></pre>
+
+<a name="Boolean.Operators"></a>
+<h4>Boolean Operators</h4>
+
+<p>Boolean operators can only be used inside of if statements.</p>
+
+<pre><code>&amp;&amp;  and ||  or  ( )
+</code></pre>
+
+<a name="Mathematical.Operators"></a>
+<h4>Mathematical Operators</h4>
+
+<p>Mathematical operators can only be used on the right hand side of assignment (<code>=</code>) statements.</p>
+
+<pre><code>+ - * / ^ ( )
+</code></pre>
+
+<hr>
+
+<a name="Variables"></a>
+<h2>Variables</h2>
+
+<p>All variable definition statements must be terminated with a <code>;</code>.</p>
+
+<a name="PPMs"></a>
+<h3>PPMs</h3>
+
+<p>PPM variables are primary parameter variables. They are considered <em>read only</em>
+by the application. The application initializes PPM variables with values from
+the engine based on their XPath definition.</p>
+
+<a name="Definitions"></a>
+<h4>Definitions</h4>
+
+<pre><code>ppm valueType ppmType identifier ["alias"];
+</code></pre>
+
+<a name="Examples"></a>
+<h5>Examples</h5>
+
+<pre><code>ppm text prd pProgramName "Program Name";
+ppm text app pUserType "User Type";
+ppm money crd pMortgagePayoffs "Mortgage Payoffs";
+</code></pre>
+
+<a name="Types"></a>
+<h5>Types</h5>
+
+<p><strong>valueType:</strong></p>
+
+<p>The type of data the PPM will return:</p>
+
+<ul>
+<li><code>boolean</code></li>
+<li><code>date</code></li>
+<li><code>money</code></li>
+<li><code>numeric</code></li>
+<li><code>percentage</code></li>
+<li><code>text</code></li>
+</ul>
+
+
+<a name="AppXML.Source"></a>
+<h5>AppXML Source</h5>
+
+<p><strong>ppmType:</strong></p>
+
+<p>What section of the AppXML is the PPM sourced from:</p>
+
+<ul>
+<li>
+<code>app</code>: application</li>
+<li>
+<code>prd</code>: product</li>
+<li>
+<code>crd</code>: credit</li>
+</ul>
+
+
+<a name="DPMs"></a>
+<h3>DPMs</h3>
+
+<p>DPM variables are derived parameter variables. These variables are considered
+<em>read/write</em> by the application (the value that they contain can be modified
+by guideline rules).</p>
+
+<a name="Definitions.0"></a>
+<h4>Definitions</h4>
+
+<pre><code>dpm valueType identifier ["alias"];
+</code></pre>
+
+<a name="Examples.0"></a>
+<h5>Examples</h5>
+
+<pre><code>dpm numeric creditGradeScore;
+dpm text docTypeAbbrev;
+dpm money loanAmount "Loan Amount";
+</code></pre>
+
+<a name="Types.0"></a>
+<h5>Types</h5>
+
+<p>The type of data the variable will contain:</p>
+
+<ul>
+<li><code>boolean</code></li>
+<li><code>date</code></li>
+<li><code>money</code></li>
+<li><code>numeric</code></li>
+<li><code>percentage</code></li>
+<li><code>text</code></li>
+<li><code>datetime</code></li>
+</ul>
+
+
+<p>TALK ABOUT NUMERIC PRECISION</p>
+
+<a name="References"></a>
+<h4>References</h4>
+
+<a name="DSMs"></a>
+<h3>DSMs</h3>
+
+<p>DSM variables are a special subset of DPM variables. They are indicated by the
+<code>decision</code> keyword that begins the variable definition. Refer to the DPM variable
+description for further restrictions/applications.</p>
+
+<a name="Definitions.1"></a>
+<h4>Definitions</h4>
+
+<pre><code>decision dpm valueType identifier ["alias"];
+</code></pre>
+
+<a name="Examples.1"></a>
+<h5>Examples</h5>
+
+<pre><code>decision dpm numeric testDsm "Test DSM Alias";
+</code></pre>
+
+<a name="References.0"></a>
+<h4>References</h4>
+
+<a name="LOS.Restrictions"></a>
+<h3>LOS Restrictions</h3>
+
+<p><strong>LOS Guideline Engine Restriction</strong></p>
+
+<p>The guidelines must initialize a DPM/DSM variable to a value
+<strong>before it is referenced in any way</strong> (other than an assignment), or an application
+level error will be thrown.</p>
+
+<p><em>This restriction does not apply to the AMS Guideline Engine.</em></p>
+
+<hr>
+
+<a name="Lookups"></a>
+<h2>Lookups</h2>
+
+<a name="Definitions.2"></a>
+<h3>Definitions</h3>
+
+<pre><code>lookup("Lookup Name", xParameterVariable, yParameterVariable);
+</code></pre>
+
+<a name="References.1"></a>
+<h3>References</h3>
+
+<p>This statement defines a lookup and returns the looked-up value. It can be used
+on the right hand side of an assignment ( <code>=</code> ) statement.</p>
+
+<pre><code>aValue = lookup("FHA-ClosingCostState", pSubjectPropertyState, globalParam);
+</code></pre>
+
+<p>When a lookup is defined, the compiler searches for the lookup data in memory.
+An error will be thrown if the data does not exist. See the <code>import</code> statement
+for how to load lookup data.</p>
+
+<p>All lookup definition/reference statements must be terminated with a <code>;</code>.</p>
+
+<hr>
+
+<a name="PowerLookups"></a>
+<h2>PowerLookups</h2>
+
+<a name="Definitions.3"></a>
+<h3>Definitions</h3>
+
+<p>Need more info here.</p>
+
+<pre><code>Example needed.
+</code></pre>
+
+<a name="References.2"></a>
+<h3>References</h3>
+
+<hr>
+
+<a name="Rules"></a>
+<h2>Rules</h2>
+
+<a name="Definitions.4"></a>
+<h3>Definitions</h3>
+
+<p>Rule definitions consist of an if statement block surrounded with
+the <code>rule</code> and <code>end</code> keywords:</p>
+
+<pre><code>rule RuleIdentifier()
+
+  // if statement block
+
+end
+</code></pre>
+
+<p>Note the required parenthises at the end of the rule identifier.</p>
+
+<p>An <code>if</code> block is made up of the keywords <code>if</code>, <code>then</code>, <code>else</code> (optional)
+and <code>end</code> to close it.</p>
+
+<pre><code>rule SomeRule()
+
+  if( /* conditional statements */ )
+  then
+
+    // assignment statements (if conditionals equate to true)
+
+  else
+
+    // assignment statements (if conditionals equate to false)
+
+  end // end of if block
+
+end // end of rule block
+</code></pre>
+
+<p>Conditional statements <strong>must</strong> be surrounded by parenthesis. If multiple
+conditional statements are used (combined with <code>or</code>, <code>||</code>, <code>and</code>, or <code>&amp;&amp;</code>) then
+each conditional statement is surrounded, as is the group.</p>
+
+<p>Single conditional example:</p>
+
+<pre><code>rule SingleConditionalRule()
+
+  if( a == b )
+  then
+    a = c;
+  end
+
+end
+</code></pre>
+
+<p>The statement above does not contain the optional <code>else</code> statement. While
+the <code>else</code> (if false) block is optional, the true block is not.</p>
+
+<p>Also note that assignments (<code>=</code>) cannot be used in the conditional section of an
+<code>if</code> statement, only the boolean operators listed elsewhere.</p>
+
+<p>Multiple conditional example:</p>
+
+<pre><code>rule MultipleConditionalRule()
+
+  if(
+      ( a == b ) &amp;&amp;
+      ( b == c )
+    )
+  then
+    a = d;
+  end
+
+end
+</code></pre>
+
+<p>This rule could also be written as:</p>
+
+<pre><code>rule MultipleConditionalRule()
+
+  if(
+      ( a == b ) and
+      ( b == c )
+    )
+  then
+    a = d;
+  end
+
+end
+</code></pre>
+
+<p>Here's a more complicated example:</p>
+
+<pre><code>rule ComplicatedMultipleConditionalRule()
+
+  if(
+      (
+        ( a == b ) and
+        ( b == c )
+      ) or
+      (
+        ( a != b ) and
+        ( b != c )
+      )
+    )
+  then
+    a = d;
+  end
+
+end
+</code></pre>
+
+<p>For readability purposes, if you use <code>and</code>, and <code>or</code> in your statements,
+do not combine them with <code>&amp;&amp;</code> and <code>||</code>. The compiler won't complain; it is
+acceptable syntax, but can be confusing to the reader.</p>
+
+<p>Here's that rule again using the alternative operators:</p>
+
+<pre><code>rule ComplicatedMultipleConditionalRule()
+
+  if(
+      (
+        ( a == b ) &amp;&amp;
+        ( b == c )
+      ) ||
+      (
+        ( a != b ) &amp;&amp;
+        ( b != c )
+      )
+    )
+  then
+    a = d;
+  end
+
+end
+</code></pre>
+
+<p>The end result is the same.</p>
+
+<p>A more realistic example of a simple rule:</p>
+
+<pre><code>rule SetAppraisedValue()
+  if(pReviewValue != 0)
+  then
+    appraisedValue = pReviewValue;
+  else
+    appraisedValue = purchasePrice;
+  end
+end
+</code></pre>
+
+<a name="References.3"></a>
+<h3>References</h3>
+
+<p>When referencing a rule, either in a ruleset or a guideline, where the rule
+has already been defined, use this syntax:</p>
+
+<pre><code>rule SetAppraisalValue();
+</code></pre>
+
+<hr>
+
+<a name="Rulesets"></a>
+<h2>Rulesets</h2>
+
+<a name="Definitions.5"></a>
+<h3>Definitions</h3>
+
+<p>Missing info about 'PL' modifier keyword.</p>
+
+<pre><code>ruleset InitAppraisedValue(continue)
+
+  rule SetAppraisedValue()
+    if(pLoanAmount == pLoanAmount)
+    then
+      appraisedValue = pAppraisalValue;
+    end
+  end
+
+  // ------------------------
+
+  rule SetBPOValue()
+    if(pReviewValue != 0)
+    then
+      BPOValue = pReviewValue;
+    end
+  end
+
+end // ruleset
+</code></pre>
+
+<p>Both rule references, and rule definitions can be used within a ruleset.</p>
+
+<a name="References.4"></a>
+<h3>References</h3>
+
+<hr>
+
+<a name="Conditions"></a>
+<h2>Conditions</h2>
+
+<pre><code>condition identifier("SystemName", CategoryType, PriorToType, "Image Doc Type", "Visibility", "Condition message");
+</code></pre>
+
+<p><strong>SystemName:</strong> Name of the condition when displayed in the GUI conditions interface.</p>
+
+<p><strong>CategoryType:</strong> Category of condition. By default, the following are available:</p>
+
+<ul>
+<li>asset</li>
+<li>income</li>
+<li>property</li>
+<li>purchase</li>
+<li>title</li>
+</ul>
+
+
+<p><strong>PriorToType:</strong> Stage where condition should be cleared 'prior to'.
+By default, the following are available:</p>
+
+<ul>
+<li>docs</li>
+<li>funding</li>
+<li>approval</li>
+</ul>
+
+
+<p><strong>Image Doc Type:</strong> Name of the 'type' of document the condition is expecting.</p>
+
+<p><strong>Visibility:</strong> Visibility of the condition.</p>
+
+<ul>
+<li>"" <blank> = default visibility</blank>
+</li>
+<li>Internal   = Internally visible - Not visible from the Borrower Portal</li>
+<li>External   = Externally visible - Can be seen in the Borrower Portal</li>
+</ul>
+
+
+<p><strong>Condition message:</strong> Actual text of the condition/stipulation.</p>
+
+<p>Condition definition statements must be terminated with a <code>;</code>.</p>
+
+<p>Condition reference statements must be terminated with <code>();</code>.</p>
+
+<p>Condition message definitions contain a number of required parameters used by
+the system to generate 'underwriter' conditions. If a condition message is
+redefined only the last definition will be used (uploaded) regardless of
+where the definition occurred within the guideline.</p>
+
+<p><em>A warning message will be generated by the compiler so you know this has happened.</em></p>
+
+<p>Condition message references can only be used within the 'if-true' or
+'if-false' sections of rule definitions.</p>
+
+<a name="Definitions.6"></a>
+<h3>Definitions</h3>
+
+<pre><code>condition DeathCertificate("Death Certificate", Legal, Qualification, "Death Certificate", "External",
+    "Death Certificate");
+</code></pre>
+
+<a name="References.5"></a>
+<h3>References</h3>
+
+<pre><code>condition DeathCertificate();
+</code></pre>
+
+<a name="Defining.Categories"></a>
+<h3>Defining Categories</h3>
+
+<p>To define your own categories, create a file named <code>category.properties</code>.
+Populate it with key/value pairs.</p>
+
+<pre><code>Disability-Co:3
+HardshipPackage-Co:2
+Property:4
+Property-Other:6
+Borrower:7
+Financials:8
+Authorizations:9
+Financials-Co:10
+Retirement:11
+HardshipPackage:12
+Maintenance:13
+Legal:14
+Disability:15
+Other:16
+</code></pre>
+
+<p>Each key/value pair must be separated with <code>:</code> or <code>=</code>. White space does not
+matter, with the understanding that trailing white space at the end of the
+line is discarded.</p>
+
+<p>Another example (these are all valid):</p>
+
+<pre><code>Property        :4
+Property-Other:   6
+Borrower  =   7
+Financials=8
+</code></pre>
+
+<p><em>Note:</em><br>
+The <code>value</code> part of the key/value pair is a DB ID. To determine which IDs to
+use, the Factory Defaults document should be referenced.</p>
+
+<a name="Defining.PriorTos"></a>
+<h3>Defining PriorTos</h3>
+
+<p>To define your own Prior To types, create a file named <code>priorto.properties</code>.
+Populate it with key/value pairs.</p>
+
+<pre><code>Processing:8
+Submission:9
+Qualification:10
+TrialPeriod:11
+LoanModification:12
+</code></pre>
+
+<p>The same requirements/restrictions from above (Categories) apply to PriorTos.</p>
+
+<p><em>Note:</em><br>
+The <code>value</code> part of the key/value pair is a DB ID. To determine which IDs to
+use, the Factory Defaults document should be referenced.</p>
+
+<a name="Telling.the.Compiler.about.your.Properties"></a>
+<h3>Telling the Compiler about your Properties</h3>
+
+<p>Use the <code>--C</code> flag to tell the compiler what directory to search for
+your properties files.</p>
+
+<pre><code>--Cpath/to/my/properties/dir
+</code></pre>
+
+<hr>
+
+<a name="Messages"></a>
+<h2>Messages</h2>
+
+<pre><code>message (messageType, "Message text to display.");
+</code></pre>
+
+<a name="Message.Types"></a>
+<h3>Message Types</h3>
+
+<p>Exception type messages are used to indicate a failure of some
+sort. Exception messages are displayed on the decision results. Message types
+other than exceptions are used to convey information to the user. The following
+types are available:</p>
+
+<p><strong>messageType:</strong></p>
+
+<ul>
+<li><code>exception</code></li>
+<li><code>findings</code></li>
+<li><code>observation</code></li>
+<li><code>credit</code></li>
+</ul>
+
+
+<p><strong>Message text:</strong> Actual text of the message that will be displayed.</p>
+
+<a name="DPMs.in.Messages"></a>
+<h4>DPMs in Messages</h4>
+
+<p>DPM variable values can be incorporated into the message text by surrounding
+the variable name with <code>&lt;DPM&gt; &lt;/DPM&gt;</code> tags.
+When using DPM variables within messages, if the DPM/DSM has an alias
+defined, the alias must be used; the engine only recognizes/knows about the
+alias.</p>
+
+<p>TODO:IS THIS STILL TRUE (ABOUT ALIASES)?</p>
+
+<p>TODO:DISCUSS THE ABILITY TO UNDERSTAND ALIAS' WHEN PULLING FROM PLKS.</p>
+
+<p>Message definition statements must be terminated with a <code>;</code>.</p>
+
+<p>Message definitions can only be used within the 'if-true' or 'if-false'
+sections of rule definitions.</p>
+
+<a name="Exception.messages"></a>
+<h4>Exception messages</h4>
+
+<pre><code>message(exception, "LTV of &lt;DPM&gt;LTV&lt;/DPM&gt; is greater than 70%.");
+</code></pre>
+
+<p>Exception messages are only displayed in the application in the case of a
+decline, or decision failure (<code>Decision != "Pass"</code>).</p>
+
+<a name="Findings.messages"></a>
+<h4>Findings messages</h4>
+
+<pre><code>message(findings, "The borrower has a payoff on their credit report.");
+</code></pre>
+
+<p>Findings messages (including all non-exception messages) are only displayed
+in the applicaation when there's <strong>no</strong> decision failure (<code>Decision == "Pass"</code>).</p>
+
+<hr>
+
+<a name="Aliases"></a>
+<h2>Aliases</h2>
+
+<p>Aliases were designed so the developer could write GDL code using valid
+identifier names even though the application is expecting an identifier
+that contains spaces. This is especially important for PPMs (because
+they cannot be renamed in the system). Aliases are also used with DSMs
+for the same reasons.</p>
+
+<p>For example, application expects a DSM named <code>Price Adj-Total</code>. With an alias,
+this is no problem. The rules can reference a <code>dpm</code> named <code>priceAdj-total</code>
+(notice there are no spaces) and the uploaded XML will reference the dpm
+as <code>Price Adj-Total</code>.</p>
+
+<p>Aliases can be used with variables, rulesets and rule identifiers. Please
+note that the alias itself must be in quotes in <strong>all</strong> cases, regardless of
+whether or not it contains spaces.</p>
+
+<p>All alias statements must be terminated with a <code>;</code>.</p>
+
+<a name="Variables.0"></a>
+<h3>Variables</h3>
+
+<p>Variable aliases are created during variable definition. The alias is the part
+of the definition in quotes.</p>
+
+<pre><code>// A DPM
+dpm text someHumanName "Some Human Name Alias";
+
+// A DSM
+decision dpm numeric(3) modRate "Mod Rate";
+
+// A PPM
+ppm crd pCreditScore "Credit Score";
+</code></pre>
+
+<a name="Rules.0"></a>
+<h3>Rules</h3>
+
+<pre><code>alias ( rule, Identifier, "Alias name" );
+</code></pre>
+
+<p>A rule alias statement consists of the <code>alias</code> keyword, an alias type of <code>rule</code>,
+the rule identifier and the rule alias.</p>
+
+<pre><code>alias(rule, SimpleAliasRule1, "Alias Rule 1");
+</code></pre>
+
+<a name="Rulesets.0"></a>
+<h3>Rulesets</h3>
+
+<pre><code>alias ( ruleset, Identifier, "Alias name" );
+</code></pre>
+
+<p>A ruleset alias statement consists of the <code>alias</code> keyword, an alias type of
+<code>ruleset</code>, the ruleset identifier and the ruleset alias. Because a
+powerlookup is just a ruleset, they can be aliased as well. <em>In fact, this
+is how they are generated when PLK .csv files are imported.</em></p>
+
+<pre><code>alias(ruleset, SimpleAliasRuleset1, "Alias Ruleset 1");
+</code></pre>
+
+<hr>
+
+<a name="Guideline.Definitions"></a>
+<h2>Guideline Definitions</h2>
+
+<pre><code>guideline("Guideline Name")
+
+...
+
+end
+</code></pre>
+
+<p>The guideline statement defines the rules, rulesets, powerlookups and lookups
+that are within a guideline object. The order of all contained statements
+will be preserved.</p>
+
+<p>A guideline is the main vehicle for outputting XML. When the compiler is
+run in its default mode (no output file specified), the guideline name will
+be used as the filename of the output file. An extension of .XML will be added
+as a suffix.</p>
+
+<p>The <code>guideline</code> statement must have a matching <code>end</code> statement to terminate
+the guideline definition.</p>
+
+<hr>
+
+<a name="Including.Source.Files"></a>
+<h2>Including Source Files</h2>
+
+<pre><code>include("includeFileName.gdl");
+</code></pre>
+
+<p>Included files are parsed and compiled at the point that they are included
+within the parent file. <em>Including</em> a file more than once will only result in
+the file being parsed one time. It will be ignored if included again.</p>
+
+<p>The include statement must be terminated with a <code>;</code>.</p>
+
+<p>Files to be included must reside in a directory that has been added to the
+inclusion path list. Filenames can also include a relative path from a
+directory on the inclusion path list:</p>
+
+<p>Given the following directory structure:</p>
+
+<pre><code>/proj
+ |-my_rules.gdl
+ |
+ |-src
+ | |-inc
+ | | |-includeFileName
+</code></pre>
+
+<p>and the following compiler command line is run from <code>/proj</code>:</p>
+
+<pre><code>gdlc my_rules.gdl my_output.xml --Isrc
+</code></pre>
+
+<p>then the following statements would work:</p>
+
+<pre><code>include("inc/includeFileName.gdl");
+
+include("src/inc/includeFileName.gdl");
+</code></pre>
+
+<p>but this would not:</p>
+
+<pre><code>include("includeFileName.gdl");
+</code></pre>
+
+<p>To make this statement work, you could add its directory to the inclusion
+path list like so:</p>
+
+<pre><code>gdlc my_rules.gdl my_output.xml --Isrc --Isrc/inc
+</code></pre>
+
+<p>Note that the current directory is added to the inclusion list by default so
+the following would also work:</p>
+
+<pre><code>gdlc my_rules.gdl my_output.xml
+</code></pre>
+
+<p>with</p>
+
+<pre><code>include("src/inc/includeFileName.gdl");
+</code></pre>
+
+<hr>
+
+<a name="Importing.Files"></a>
+<h2>Importing Files</h2>
+
+<pre><code>import( importType, "csvFileToImport.csv" );
+</code></pre>
+
+<p><strong>importType:</strong></p>
+
+<ul>
+<li><code>lookup</code></li>
+<li><code>powerlookup</code></li>
+</ul>
+
+
+<p>The <code>import</code> statement is used to load <code>lookup</code> and <code>powerlookup</code> data into the
+compiler. Lookup data must be imported before a lookup definition statement
+referencing the data is instantiated. The compiler will throw an error if
+the lookup is referenced prior to import.</p>
+
+<p>The <code>import</code> statement can only load CSV files. Non CSV files should not be
+referenced by the <code>import</code> statement. The CSV file extension must be included
+as part of the filename.</p>
+
+<p>The <code>import</code> statement must be terminated with a <code>;</code>.</p>
+
+<p>Imported files must also be on the inclusion path.</p>
+
+<hr>
+
+<a name="Lookup.Files"></a>
+<h3>Lookup Files</h3>
+
+<pre><code>import( lookup, "TestLookups.csv");
+</code></pre>
+
+<p>The <code>lookup</code> import type will import Lookup matricies from a CSV file.</p>
+
+<hr>
+
+<a name="PowerLookup.Files"></a>
+<h3>PowerLookup Files</h3>
+
+<pre><code>import( powerlookup, "TestPowerLookups.csv");
+</code></pre>
+
+<p>The <code>powerlookup</code> import type will import PowerLookups from a CSV file. After
+a <code>powerlookup</code> has been imported, its ruleset can be referenced the same as
+any other ruleset.</p>
+
+<p>Powerlookups are automatically aliased as they are imported: Spaces are
+removed, dashes and underscores are left in place.</p>
+
+<p>Given a PLK named <code>Test My_Power-Lookup PLK</code> in the file <code>TestPowerLookups.csv</code>,
+its use would be as follows:</p>
+
+<pre><code>import(powerlookup, "TestPowerLookups.csv");
+
+// ...
+
+guideline("MyGuideline")
+
+  ruleset SomeRuleset();
+
+  // ...
+
+  ruleset TestMy_Power-LookupPLK();
+
+  // ...
+
+end // guideline MyGuideline
+</code></pre>
+
+<hr>
+
+<a name="XML.Functions"></a>
+<h2>XML Functions</h2>
+
+<pre><code>xmlfunc identifier( [IN|OUT] dpmVariable, [IN|OUT] "constant", [IN|OUT] 15.5 );
+</code></pre>
+
+<p>XML Functions are defined and provided by the engine. The compiler does not
+know whether or not a function is available. It is up to the user to verify
+the function exists before using it in your guideline.</p>
+
+<p>To use an XML function, it must first be defined. The compiler does check the
+argument count against the function definition when it is referenced within a
+rule. Errors will be thrown if the argument count doesn't match.</p>
+
+<p>In both definitions and references, the <code>IN</code> and <code>OUT</code> keywords can be used in
+front of each argument. These keywords are optional. They affect nothing and
+are only used as an indicator for the user as to whether the variable is used
+for INput to the function or OUTput from the function. <code>IN</code> and <code>OUT</code> can be
+used in either definitions, or references, or both.</p>
+
+<p>DPM variables, PPM variables, numbers and constants (values surrounded with
+quotes) can be used as arguments. Inline expressions are not allowed as
+arguments to the function. Assigning values to variables before using them
+within a function <em>can be done within the same rule</em>.</p>
+
+<p>Function <em>definition</em> statements must be terminated with a <code>;</code>.</p>
+
+<p>Function <em>reference</em> statements must also be terminated with <code>;</code> (the same as
+any other assignment operation).</p>
+
+<a name="Definitions.7"></a>
+<h3>Definitions</h3>
+
+<p>Argument <em>types</em> are not checked by the compiler. Because of this, it is usually
+helpful to use constants in the argument list of the definition that describe
+what the argument should be.</p>
+
+<pre><code>xmlfunc Floor( IN "NumToBeFloored", IN "Multiple" );
+</code></pre>
+
+<a name="References.6"></a>
+<h3>References</h3>
+
+<p>XML function references are used on the right hand side of assignment
+operations. The <code>xmlfunc</code> keyword is <em>not</em> used in references.</p>
+
+<pre><code>rule SetAppraisedValue()
+  if(pReviewValue != 0)
+  then
+    appraisedValue = Floor( IN pReviewValue, IN 100 );
+  else
+    appraisedValue = purchasePrice;
+  end
+end
+</code></pre>
+
+<hr>
+
+<a name="Miscellaneous"></a>
+<h2>Miscellaneous</h2>
+
+<a name="Inserting.a.Pricing.Guideline..special.rule."></a>
+<h3>Inserting a Pricing Guideline (special rule)</h3>
+
+<p>This keyword is only of use with LOS guidelines. It generates a special rule
+that tells the application where to insert the pricing guideline (into the
+eligibility/program guideline) for the current product.</p>
+
+<pre><code>InsertPricingGuideline();
+</code></pre>
+
+<p>Example</p>
+
+<pre><code>...
+
+rule SomeRule();
+ruleset MyRuleset();
+
+InsertPricingGuideline();   // &lt;--- The pricing/product guideline will be inserted here.
+
+ruleset AnotherRuleset();
+
+...
+</code></pre>
+      </div> <!-- .content -->
+    </div> <!-- .rendered-content -->
+  </body>
+</html>
