@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'gdlc'
+res = File.expand_path('../../res/', __FILE__)
+
+gdlc_jar = "#{res}/gdlc.jar"
+
+#puts "res: #{res}"
+#puts "gdlc_jar: #{gdlc_jar}"
+
+args = ARGV
+#puts "---ARGV---"
+#args.each do |a|
+#  puts a
+#end
+#puts "---END ARGV---"
+args = ARGV.join ' '
+
+system "java -jar #{gdlc_jar} #{args}"
