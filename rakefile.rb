@@ -83,7 +83,7 @@ task :init => [SRC_PARSER_DIR, BUILD_DIR, DIST_DIR]
 
 desc "Build GDLC application distribution"
 
-task :dist => [:init, :build, :jar, DIST_DIR, :copyLibsToDist] do
+task :dist => [:init, :build, :jar, DIST_DIR, :copy_libs_to_dist] do
   cp_r("#{BUILD_DIR}/gdlc.jar", "#{DIST_DIR}")
 
   puts "GDLC distro built"
@@ -93,15 +93,15 @@ end
 
 desc "Build GDLC application"
 
-task :build => [:init, :buildGrammar, "version:generateVersionFile", :compile, "version:inc_build"] do
+task :build => [:init, :build_grammar, "version:generate_version_file", :compile] do
   puts "Application compiled"
 end
 
 #######################################
 
-task :buildGrammar => [:init, "grammar:generate", 
+task :build_grammar => [:init, "grammar:generate",
                       :clean_backup,
-                      "grammar:backup", 
+                      "grammar:backup",
                       "grammar:copyToAppSrc",
                       "grammar:replaceCustomSrc"] do
   puts "Grammar source files built"
@@ -126,13 +126,13 @@ task :compile => [:init] do
   #options << " -g"                        # Include debugging info
   #options << " -Xlint:unchecked"          # Run lint for unchecked warnings
 
-  sourceFiles = ""
-  srcFiles = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
-  srcFiles.each do |f|
-    sourceFiles << " #{f}"
+  source_files = ""
+  src_files = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
+  src_files.each do |f|
+    source_files << " #{f}"
   end
 
-  output = `javac #{options} #{sourceFiles}`
+  output = `javac #{options} #{source_files}`
   puts output
 end
 
@@ -157,9 +157,9 @@ task :compile_each => [:init] do
   #options << " -g"                        # Include debugging info
   #options << " -Xlint:unchecked"          # Run lint for unchecked warnings
 
-  sourceFiles = ""
-  srcFiles = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
-  srcFiles.each do |f|
+  source_files = ""
+  src_files = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
+  src_files.each do |f|
     puts "Compiling: #{f}"
     output = `javac #{options} #{f}`
     puts output
@@ -184,7 +184,7 @@ end
 
 #######################################
 
-task :copyLibsToDist do
+task :copy_libs_to_dist do
   FileList.new(Dir.glob("#{LIBS_DIR}/**/**.*")).each do |f|
     cp_r(f, "#{DIST_DIR}")
   end
@@ -221,6 +221,14 @@ end
 
 namespace :version do
 
+  def display_gem_version_update_notice version_hash
+    vmajor = version_hash["version_major"]
+    vminor = version_hash["version_minor"]
+    vbuild = version_hash["version_build"]
+
+    puts "You must manually update the gem version to #{vmajor}.#{vminor}.#{vbuild}"
+  end
+
   #######################################
 
   desc "increment major version number"
@@ -236,6 +244,7 @@ namespace :version do
     data["#{buildkey}"] = 0
     yml.write("#{MISC_DIR}/projectproperties.yml", data)
 
+    display_gem_version_update_notice data
   end
 
   #######################################
@@ -251,6 +260,7 @@ namespace :version do
     data["#{buildkey}"] = 0
     yml.write("#{MISC_DIR}/projectproperties.yml", data)
 
+    display_gem_version_update_notice data
   end
 
   #######################################
@@ -264,13 +274,14 @@ namespace :version do
     data["#{key}"] = data["#{key}"] + 1
     yml.write("#{MISC_DIR}/projectproperties.yml", data)
 
+    display_gem_version_update_notice data
   end
 
   #######################################
 
   #desc "generate app version file"
 
-  task :generateVersionFile do
+  task :generate_version_file do
     appVersionFile = "Constants.java"
     versionFile = File.join(MISC_DIR, "projectproperties.yml")
 
@@ -305,7 +316,7 @@ end # namespace :version
 #######################################
 #######################################
 
-def currentVersionString
+def current_version_string
   yml = DataFile.new
   key = "version_major"
   minorkey = "version_minor"
@@ -315,11 +326,11 @@ def currentVersionString
   major = data["#{key}"]
   minor = data["#{minorkey}"]
 
-  # The version file is incremented at the end of the build so it's ready for the next. 
+  # The version file is incremented at the end of the build so it's ready for the next.
   # To be sure the filename will match the actual version, decrement the build #.
   build = data["#{buildkey}"] - 1
 
-  versionStr = "#{major}.#{minor}.#{build}"
+  version_str = "#{major}.#{minor}.#{build}"
 end
 
 #######################################
