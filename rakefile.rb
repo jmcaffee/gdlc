@@ -25,6 +25,7 @@ SRC_PARSER_DIR    = "#{SRC_DIR}/runtime/parser"
 BACKUP_DIR        = "backup"
 BACKUP_PARSER_DIR = "#{BACKUP_DIR}/runtime/parser"
 
+DOCS_DIR          = "docs"
 LIBS_DIR          = "libs"
 MISC_DIR          = "misc"
 DIST_DIR          = "./dist"
@@ -33,6 +34,10 @@ DIST_DIR          = "./dist"
 GRAMMAR_DIR         = "grammar"
 GRAMMAR_BUILD_DIR   = "#{GRAMMAR_DIR}/build"
 
+GEM_SRC_DIR       = "gem"
+GEM_DOCS_DIR      = "#{GEM_SRC_DIR}/docs"
+GEM_RES_DIR       = "#{GEM_SRC_DIR}/res"
+
 # Vendor Libraries
 OSTERMILLERUTILS	= File.expand_path(File.join(LIBS_DIR, "ostermillerutils","ostermillerutils*.jar"))
 
@@ -40,9 +45,13 @@ OSTERMILLERUTILS	= File.expand_path(File.join(LIBS_DIR, "ostermillerutils","oste
 CLEAN.include("#{BUILD_DIR}/**/*.*")
 CLEAN.include("#{DIST_DIR}/**/*.*")
 CLEAN.include("#{SRC_PARSER_DIR}/**/*.*")
+CLEAN.include("#{GEM_DOCS_DIR}/**/*.*")
+CLEAN.include("#{GEM_RES_DIR}/**/*.*")
 CLOBBER.include("#{BUILD_DIR}")
 CLOBBER.include("#{DIST_DIR}")
 CLOBBER.include("#{SRC_PARSER_DIR}")
+CLOBBER.include("#{GEM_DOCS_DIR}")
+CLOBBER.include("#{GEM_RES_DIR}")
 
 
 #### Directory creation tasks
@@ -69,10 +78,71 @@ task :init => [SRC_PARSER_DIR, BUILD_DIR, DIST_DIR]
 
 desc "Build GDLC application distribution"
 
-task :dist => [:init, :build, :jar, DIST_DIR, :copy_libs_to_dist] do
-  cp_r("#{BUILD_DIR}/gdlc.jar", "#{DIST_DIR}")
-
+task :dist => [:init, :build, :jar, :copy_jar_to_dist, :copy_libs_to_dist, :update_gem_files, "gem:build"] do
+  puts
   puts "GDLC distro built"
+  puts
+end
+
+#######################################
+
+task :update_gem_resources => [:init, :copy_jar_to_dist, :copy_libs_to_dist] do
+  gem_resource_dir = Pathname(GEM_RES_DIR)
+
+  if gem_resource_dir.exist?
+    gem_resource_dir.rmtree
+    gem_resource_dir.mkpath
+  end
+
+  dist_files = FileList.new(Dir.glob("#{DIST_DIR}/**/*.*"))
+  dist_files.each do |f|
+    cp f, gem_resource_dir
+  end
+
+  cp "#{MISC_DIR}/manifest.mf", gem_resource_dir
+
+  puts "gem resource files updated"
+end
+
+#######################################
+
+desc 'Generate GDLC manual HTML'
+task :man do
+
+  ENV['TITLE'] = 'GDLC User Manual'
+
+  Rake::Task['markdown:md2html'].invoke( 'docs/GDLC_manual.md' )
+  Rake::Task['markdown:md2html'].reenable
+
+end
+
+#######################################
+
+task :update_gem_docs => [:init, GEM_DOCS_DIR, :man] do
+  gem_docs_dir = Pathname(GEM_DOCS_DIR)
+
+  if gem_docs_dir.exist?
+    gem_docs_dir.rmtree
+    gem_docs_dir.mkpath
+  end
+
+  doc_files = FileList.new(Dir["#{DOCS_DIR}/GDLC_manual.*"])
+  doc_files.each do |f|
+    cp f, gem_docs_dir
+  end
+
+  puts "gem doc files updated"
+end
+
+#######################################
+
+task :update_gem_files => [:init, :update_gem_resources, :update_gem_docs]
+
+#######################################
+
+task :copy_jar_to_dist => [:init, :jar, DIST_DIR] do
+  cp("#{BUILD_DIR}/gdlc.jar", "#{DIST_DIR}")
+  puts "gdlc.jar copied to #{DIST_DIR}."
 end
 
 #######################################
@@ -170,7 +240,7 @@ end
 
 #######################################
 
-task :copy_libs_to_dist do
+task :copy_libs_to_dist => [:init, DIST_DIR] do
   FileList.new(Dir.glob("#{LIBS_DIR}/**/**.*")).each do |f|
     cp_r(f, "#{DIST_DIR}")
   end
