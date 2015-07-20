@@ -46,43 +46,43 @@ namespace :grammar do
 
   desc "Generate GDLC parsing classes (java)"
 
-  task :generate => [:init, :jjTreeTarget, :javaccTarget] do
+  task :generate => [:init, :jj_tree_target, :javacc_target] do
     puts "grammar generated"
   end
 
   #######################################
 
-  task :buildParser => [:init, :jjTreeTarget, :javaccTarget] do
+  task :build_parser => [:init, :jj_tree_target, :javacc_target] do
     puts "parser built"
   end
 
   #######################################
 
-  task :jjTreeTarget => [:init] do
-    jjTreeTask = JJTreeTask.new
-    #jjTreeTask.output_file(t.name)
-    #jjTreeTask.static("false")
-    jjTreeTask.output_dir(GRAMMAR_BUILD_DIR)
-    jjTreeTask.generate_from(JJTREE_GRAMMAR_FILE)
+  task :jj_tree_target => [:init] do
+    jjt_task = JJTreeTask.new
+    #jjt_task.output_file(t.name)
+    #jjt_task.static("false")
+    jjt_task.output_dir(GRAMMAR_BUILD_DIR)
+    jjt_task.generate_from(JJTREE_GRAMMAR_FILE)
 
-    puts "jjTreeTarget completed"
+    puts "jj_tree_target completed"
   end
 
   #######################################
 
-  task :javaccTarget => [:init] do
-    javaCcTask = JavaCCTask.new
-    javaCcTask.output_dir(GRAMMAR_BUILD_DIR)
-    javaCcTask.generate_from(JAVACC_GRAMMAR_FILE)
+  task :javacc_target => [:init] do
+    javacc_task = JavaCCTask.new
+    javacc_task.output_dir(GRAMMAR_BUILD_DIR)
+    javacc_task.generate_from(JAVACC_GRAMMAR_FILE)
 
-    puts "javaccTarget completed"
+    puts "javacc_target completed"
   end
 
   #######################################
 
   task :backup => [BACKUP_PARSER_DIR] do
-    javaList = FileList.new(Dir.glob("#{SRC_PARSER_DIR}/*.*"))
-    javaList.each do |f|
+    java_list = FileList.new(Dir.glob("#{SRC_PARSER_DIR}/*.*"))
+    java_list.each do |f|
       cp_r(f, "#{BACKUP_PARSER_DIR}")
     end
 
@@ -90,26 +90,26 @@ namespace :grammar do
 
   #######################################
 
-  task :copyToAppSrc do
-    javaList = FileList.new(Dir.glob("#{GRAMMAR_BUILD_DIR}/*.java"))
-    javaList.include(Dir.glob("#{GRAMMAR_BUILD_DIR}/*.jj"))
-    javaList.each do |f|
+  task :copy_to_app_src do
+    java_list = FileList.new(Dir.glob("#{GRAMMAR_BUILD_DIR}/*.java"))
+    java_list.include(Dir.glob("#{GRAMMAR_BUILD_DIR}/*.jj"))
+    java_list.each do |f|
       cp_r(f, "#{SRC_PARSER_DIR}")
     end
 
   end
   #######################################
 
-  task :replaceCustomSrc do
-#    delFiles = %w( ASTEqualityCompute.java ASTLogicalCompute.java ASTMathCompute.java BaseNode.java Compute.java SimpleNode.java )
-#    delFiles.each do |f|
+  task :replace_custom_src do
+#    del_files = %w( ASTEqualityCompute.java ASTLogicalCompute.java ASTMathCompute.java BaseNode.java Compute.java SimpleNode.java )
+#    del_files.each do |f|
 #      rm_f("#{SRC_PARSER_DIR}/#{f}")
 #    end
-    custSrcList = FileList.new(Dir.glob("#{GRAMMAR_SRC_DIR}/*.java"))
-    custSrcList.each do |f|
-      destFile = "#{SRC_PARSER_DIR}/" + File.basename(f)
-      if( File.exists?(destFile) )
-        rm_f(destFile)
+    cust_src_list = FileList.new(Dir.glob("#{GRAMMAR_SRC_DIR}/*.java"))
+    cust_src_list.each do |f|
+      dest_file = "#{SRC_PARSER_DIR}/" + File.basename(f)
+      if( File.exists?(dest_file) )
+        rm_f(dest_file)
       end
       cp_r(f, "#{SRC_PARSER_DIR}")
     end

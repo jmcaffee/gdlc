@@ -52,20 +52,6 @@ directory BACKUP_DIR
 directory BACKUP_PARSER_DIR
 directory SRC_PARSER_DIR
 
-#### Imports
-# Note: Rake loads imports only after the current rakefile has been completely loaded.
-# Load grammar tasks.
-import "#{GRAMMAR_DIR}/grammar.rake"
-
-# Load local tasks.
-imports = FileList['tasks/**/*.rake']
-imports.each do |imp|
-  puts "Importing local task file: #{imp}" if $verbose
-  import "#{imp}"
-end
-
-
-
 
 #######################################
 
@@ -102,8 +88,8 @@ end
 task :build_grammar => [:init, "grammar:generate",
                       :clean_backup,
                       "grammar:backup",
-                      "grammar:copyToAppSrc",
-                      "grammar:replaceCustomSrc"] do
+                      "grammar:copy_to_app_src",
+                      "grammar:replace_custom_src"] do
   puts "Grammar source files built"
 end
 
@@ -113,18 +99,18 @@ desc "compile all java src files"
 
 task :compile => [:init] do
   puts "Compiling java source."
-#  cvsjar = File.expand_path("#{OSTERMILLERUTILS}").gsub(/\//, "\\")
-  cvsjar = "#{OSTERMILLERUTILS}"
 
-  classpath = "-classpath #{cvsjar}"
+  # Note: on windows, may need to change file separators:
+  #cvsjar = File.expand_path("#{OSTERMILLERUTILS}").gsub(/\//, "\\")
 
-  options = "#{classpath}"
-  options << " -sourcepath #{SRC_DIR}"
-  options << " -d #{BUILD_DIR}"           # Destination dir
-  options << " -nowarn"                   # Don't show compile warnings
-  options << " -O"                        # Optimize for speed
-  #options << " -g"                        # Include debugging info
-  #options << " -Xlint:unchecked"          # Run lint for unchecked warnings
+  jopts = []
+  jopts << "-classpath #{OSTERMILLERUTILS}"
+  jopts << "-sourcepath #{SRC_DIR}"
+  jopts << "-d #{BUILD_DIR}"            # Destination dir
+  jopts << "-nowarn"                    # Don't show compile warnings
+  jopts << "-O"                         # Optimize for speed
+  #jopts << "-g"                        # Include debugging info
+  #jopts << "-Xlint:unchecked"          # Run lint for unchecked warnings
 
   source_files = ""
   src_files = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
@@ -132,7 +118,7 @@ task :compile => [:init] do
     source_files << " #{f}"
   end
 
-  output = `javac #{options} #{source_files}`
+  output = `javac #{jopts.join(' ')} #{source_files}`
   puts output
 end
 
@@ -143,25 +129,23 @@ desc "compile each src file individually"
 task :compile_each => [:init] do
   puts "Compiling each java source file individually."
 
-  cvsjar = File.expand_path("#{OSTERMILLERUTILS}").gsub(/\//, "\\")
-  cvsjar = File.expand_path("#{OSTERMILLERUTILS}")
-  cvsjar = "#{OSTERMILLERUTILS}"
+  # Note: on windows, may need to change file separators:
+  #cvsjar = File.expand_path("#{OSTERMILLERUTILS}").gsub(/\//, "\\")
 
-  classpath = "-classpath #{cvsjar}"
-
-  options = "#{classpath}"
-  options << " -sourcepath ./#{SRC_DIR}"
-  options << " -d #{BUILD_DIR}"           # Destination dir
-  options << " -nowarn"                   # Don't show compile warnings
-  options << " -O"                        # Optimize for speed
-  #options << " -g"                        # Include debugging info
-  #options << " -Xlint:unchecked"          # Run lint for unchecked warnings
+  jopts = []
+  jopts << "-classpath #{OSTERMILLERUTILS}"
+  jopts << "-sourcepath #{SRC_DIR}"
+  jopts << "-d #{BUILD_DIR}"            # Destination dir
+  jopts << "-nowarn"                    # Don't show compile warnings
+  jopts << "-O"                         # Optimize for speed
+  #jopts << "-g"                        # Include debugging info
+  #jopts << "-Xlint:unchecked"          # Run lint for unchecked warnings
 
   source_files = ""
   src_files = FileList.new(Dir.glob("#{SRC_DIR}/**/*.java"))
   src_files.each do |f|
     puts "Compiling: #{f}"
-    output = `javac #{options} #{f}`
+    output = `javac #{jopts.join(' ')} #{f}`
     puts output
   end
 end
@@ -175,9 +159,11 @@ task :jar => [:compile] do
   target    = "gdlc.jar"
   manifest  = "../#{MISC_DIR}/manifest.mf"
 
-  cd("#{BUILD_DIR}") do |dir| # Everything is relative to the build dir (where class files are coming from).
+  # Everything is relative to the build dir (where class files are coming from).
+  cd("#{BUILD_DIR}") do |dir|
     `jar -cvfm "#{target}" "#{manifest}" "runtime"`
-    # jar -cvfm jars/gdlc.zip misc/manifest.mf -C build .     # '-C' flag works from the command line but not here.
+    # '-C' flag works from the command line but not here.
+    # jar -cvfm jars/gdlc.zip misc/manifest.mf -C build .
   end
 end
 
@@ -215,124 +201,4 @@ task :clobber_backup do
   end
 
 end
-
-#######################################
-#######################################
-
-namespace :version do
-
-  def display_gem_version_update_notice version_hash
-    vmajor = version_hash["version_major"]
-    vminor = version_hash["version_minor"]
-    vbuild = version_hash["version_build"]
-
-    puts "You must manually update the gem version to #{vmajor}.#{vminor}.#{vbuild}"
-  end
-
-  #######################################
-
-  desc "increment major version number"
-
-  task :inc_major do
-    yml = DataFile.new
-    key = "version_major"
-    minorkey = "version_minor"
-    buildkey = "version_build"
-    data = yml.read("#{MISC_DIR}/projectproperties.yml")
-    data["#{key}"] = data["#{key}"] + 1
-    data["#{minorkey}"] = 0
-    data["#{buildkey}"] = 0
-    yml.write("#{MISC_DIR}/projectproperties.yml", data)
-
-    display_gem_version_update_notice data
-  end
-
-  #######################################
-
-  desc "increment minor version number"
-
-  task :inc_minor do
-    yml = DataFile.new
-    key = "version_minor"
-    buildkey = "version_build"
-    data = yml.read("#{MISC_DIR}/projectproperties.yml")
-    data["#{key}"] = data["#{key}"] + 1
-    data["#{buildkey}"] = 0
-    yml.write("#{MISC_DIR}/projectproperties.yml", data)
-
-    display_gem_version_update_notice data
-  end
-
-  #######################################
-
-  desc "increment build version number"
-
-  task :inc_build do
-    yml = DataFile.new
-    key = "version_build"
-    data = yml.read("#{MISC_DIR}/projectproperties.yml")
-    data["#{key}"] = data["#{key}"] + 1
-    yml.write("#{MISC_DIR}/projectproperties.yml", data)
-
-    display_gem_version_update_notice data
-  end
-
-  #######################################
-
-  #desc "generate app version file"
-
-  task :generate_version_file do
-    appVersionFile = "Constants.java"
-    versionFile = File.join(MISC_DIR, "projectproperties.yml")
-
-    srcDir = MISC_DIR
-    destDir = "src/runtime/main"
-
-    srcPath = File.join(srcDir, appVersionFile)
-    destPath = File.join(destDir, appVersionFile)
-
-    gen = FileGenTask.new(true)
-    gen.generate(srcPath, destPath, versionFile)
-
-  end
-
-  #######################################
-
-  #desc "create yml"
-
-  task :create_yml do
-    yml = DataFile.new
-    data = {}
-    data["version_major"] = 1
-    data["version_minor"] = 0
-    data["version_build"] = 0
-    yml.write("#{MISC_DIR}/newprops.yml", data)
-    puts "New version file written to [ #{MISC_DIR}/newprops.yml ]."
-
-  end
-
-end # namespace :version
-
-#######################################
-#######################################
-
-def current_version_string
-  yml = DataFile.new
-  key = "version_major"
-  minorkey = "version_minor"
-  buildkey = "version_build"
-
-  data = yml.read("#{MISC_DIR}/projectproperties.yml")
-  major = data["#{key}"]
-  minor = data["#{minorkey}"]
-
-  # The version file is incremented at the end of the build so it's ready for the next.
-  # To be sure the filename will match the actual version, decrement the build #.
-  build = data["#{buildkey}"] - 1
-
-  version_str = "#{major}.#{minor}.#{build}"
-end
-
-#######################################
-#######################################
 
