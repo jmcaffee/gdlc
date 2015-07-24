@@ -206,15 +206,15 @@ The type of data the variable will contain:
 + `text`
 + `datetime`
 
-TALK ABOUT NUMERIC PRECISION
+TODO: NUMERIC PRECISION
 
 #### References
 
 ### DSMs
 
-DSM variables are a special subset of DPM variables. They are indicated by the
-`decision` keyword that begins the variable definition. Refer to the DPM variable
-description for further restrictions/applications.
+DSM variables are Decision Parameters, a special subset of DPM variables. They
+are indicated by the `decision` keyword that begins the variable definition.
+Refer to the DPM variable description for further restrictions/applications.
 
 #### Definitions
 
@@ -262,7 +262,7 @@ All lookup definition/reference statements must be terminated with a `;`.
 
 ### Definitions
 
-Need more info here.
+TODO: Need more info here.
 
     Example needed.
 
@@ -420,7 +420,7 @@ has already been defined, use this syntax:
 
 ### Definitions
 
-Missing info about 'PL' modifier keyword.
+TODO: Missing info about 'PL' modifier keyword.
 
     ruleset InitAppraisedValue(continue)
 
@@ -590,9 +590,9 @@ When using DPM variables within messages, if the DPM/DSM has an alias
 defined, the alias must be used; the engine only recognizes/knows about the
 alias.
 
-TODO:IS THIS STILL TRUE (ABOUT ALIASES)?
+TODO: IS THIS STILL TRUE (ABOUT ALIASES)?
 
-TODO:DISCUSS THE ABILITY TO UNDERSTAND ALIAS' WHEN PULLING FROM PLKS.
+TODO: DISCUSS THE ABILITY TO UNDERSTAND ALIAS' WHEN PULLING FROM PLKS.
 
 Message definition statements must be terminated with a `;`.
 
