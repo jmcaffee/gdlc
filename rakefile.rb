@@ -179,8 +179,8 @@ task :compile => [:init] do
   jopts << "-d #{BUILD_DIR}"            # Destination dir
   jopts << "-nowarn"                    # Don't show compile warnings
   jopts << "-O"                         # Optimize for speed
-  jopts << "-source 1.7"                # Source is 1.6 compatible
-  jopts << "-target 1.7"                # Build to run on 1.6 or better
+  jopts << "-source 1.7"                # Source is 1.7 compatible
+  jopts << "-target 1.7"                # Build to run on 1.7 or better
   #jopts << "-g"                        # Include debugging info
   #jopts << "-Xlint:unchecked"          # Run lint for unchecked warnings
 
