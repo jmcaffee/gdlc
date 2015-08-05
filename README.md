@@ -14,6 +14,11 @@ No more point-and-click rule development!
 The easiest way to install and use GDLC is via the ruby gem of the same name.
 See [its README](gem/README.md) for details on its use.
 
+## Dependencies
+
+The GDLC binary is written in Java. To use GDLC, you must have a Java runtime
+of version 1.7 (Java 7) or better.
+
 ## Usage
 
 Typing `GDLC` without any parameters (or with the `-h` option) will result in

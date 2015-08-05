@@ -16,6 +16,11 @@ Or install it yourself as:
 
     $ gem install gdlc
 
+## Dependencies
+
+The GDLC binary is written in Java. To use GDLC, you must have a Java runtime
+of version 1.7 (Java 7) or better.
+
 ## Usage
 
 Here's an example rake file, stored in my project's `rakelib/` directory
