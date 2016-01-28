@@ -14,3 +14,14 @@ gdl/tests/compile_mgr_tester/output
 .classpath
 .project
 .settings/
+
+# Ignore bundler dirs
+.bin/
+.bundle/
+
+# Ignore Idea dirs/files
+.idea/
+out/
+tmp/
+*.iml
+
