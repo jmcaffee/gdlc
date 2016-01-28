@@ -162,6 +162,7 @@
 <li><span class="h4toc"><a href="#Definitions.0">Definitions</a></span></li>
 <li><span class="h5toc"><a href="#Examples.0">Examples</a></span></li>
 <li><span class="h5toc"><a href="#Types.0">Types</a></span></li>
+<li><span class="h5toc"><a href="#Example">Example</a></span></li>
 <li><span class="h4toc"><a href="#References">References</a></span></li>
 <li><span class="h3toc"><a href="#DSMs">DSMs</a></span></li>
 <li><span class="h4toc"><a href="#Definitions.1">Definitions</a></span></li>
@@ -468,7 +469,17 @@ dpm money loanAmount "Loan Amount";
 </ul>
 
 
-<p>TODO: NUMERIC PRECISION</p>
+<p>To specify the <em>visible</em> precision of a numeric value, surround the desired
+precision with parens immediately after the <code>numeric</code> keyword.</p>
+
+<p>Note that this doesn't affect the actual precision of the variable's value
+when used in calculations (16 places), only how it is displayed to the user.</p>
+
+<a name="Example"></a>
+<h5>Example</h5>
+
+<pre><code>dpm numeric(2) loanAmount "Loan Amount";
+</code></pre>
 
 <a name="References"></a>
 <h4>References</h4>
@@ -514,8 +525,19 @@ level error will be thrown.</p>
 <a name="Definitions.2"></a>
 <h3>Definitions</h3>
 
+<p><em>Prior to 3.0:</em></p>
+
 <pre><code>lookup("Lookup Name", xParameterVariable, yParameterVariable);
 </code></pre>
+
+<p><em>3.0 +</em></p>
+
+<pre><code>lookup("Lookup Name");
+</code></pre>
+
+<p>The <code>Xparameter</code> and <code>Yparameter</code> details are now included as part of the Lookup
+data. Previously, the parameters were defined in the <code>lookup</code> declaration
+statement (above).</p>
 
 <a name="References.1"></a>
 <h3>References</h3>
@@ -523,7 +545,7 @@ level error will be thrown.</p>
 <p>This statement defines a lookup and returns the looked-up value. It can be used
 on the right hand side of an assignment ( <code>=</code> ) statement.</p>
 
-<pre><code>aValue = lookup("FHA-ClosingCostState", pSubjectPropertyState, globalParam);
+<pre><code>aValue = lookup("FHA-ClosingCostState");
 </code></pre>
 
 <p>When a lookup is defined, the compiler searches for the lookup data in memory.
@@ -540,13 +562,20 @@ for how to load lookup data.</p>
 <a name="Definitions.3"></a>
 <h3>Definitions</h3>
 
-<p>TODO: Need more info here.</p>
-
-<pre><code>Example needed.
-</code></pre>
+<p>PowerLookups are just <code>Ruleset</code>s defined within a <code>xls/csv</code> file.
+As such, there are no special definition statements for PLKs.</p>
 
 <a name="References.2"></a>
 <h3>References</h3>
+
+<p>Because PowerLookups are simply Rulesets, they are referenced the
+same way any other ruleset is referenced:</p>
+
+<pre><code>ruleset SomeRuleset();
+</code></pre>
+
+<p>Prior to referencing a PowerLookup ruleset, the ruleset must be
+<code>import</code>ed.</p>
 
 <hr>
 
@@ -716,7 +745,7 @@ has already been defined, use this syntax:</p>
 <a name="Definitions.5"></a>
 <h3>Definitions</h3>
 
-<p>TODO: Missing info about 'PL' modifier keyword.</p>
+<p><em>TODO: Missing info about 'PL' modifier keyword.</em></p>
 
 <pre><code>ruleset InitAppraisedValue(continue)
 
@@ -919,9 +948,9 @@ When using DPM variables within messages, if the DPM/DSM has an alias
 defined, the alias must be used; the engine only recognizes/knows about the
 alias.</p>
 
-<p>TODO: IS THIS STILL TRUE (ABOUT ALIASES)?</p>
+<p><em>TODO: IS THIS STILL TRUE (ABOUT ALIASES)?</em></p>
 
-<p>TODO: DISCUSS THE ABILITY TO UNDERSTAND ALIAS' WHEN PULLING FROM PLKS.</p>
+<p><em>TODO: DISCUSS THE ABILITY TO UNDERSTAND ALIAS' WHEN PULLING FROM PLKS.</em></p>
 
 <p>Message definition statements must be terminated with a <code>;</code>.</p>
 
@@ -1134,6 +1163,22 @@ as part of the filename.</p>
 </code></pre>
 
 <p>The <code>lookup</code> import type will import Lookup matricies from a CSV file.</p>
+
+<p><em>Prior to 3.0</em></p>
+
+<p>The expected format of a lookup table is:</p>
+
+<p><img src="img/old_lookup_format.png" title="Pre 3.0 Lookup Format" alt="Old Lookup format"></p>
+
+<p><em>3.0 +</em></p>
+
+<p>The expected format is now:</p>
+
+<p><img src="img/new_lookup_format.png" title="3.0 Lookup Format" alt="New Lookup format"></p>
+
+<p>The <code>Xparameter</code> and <code>Yparameter</code> details are now included as part of the Lookup
+data. Previously, the parameters were defined in the <code>lookup</code> declaration
+statement.</p>
 
 <hr>
 
