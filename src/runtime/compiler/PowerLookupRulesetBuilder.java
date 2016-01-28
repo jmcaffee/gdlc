@@ -48,7 +48,7 @@ public class PowerLookupRulesetBuilder {
 			return "continue";
 		}
 
-		// Currently only continue and true are supported for PLKs.
+		// Currently, only continue and true are supported for PLKs.
 		// True is the default so a blank = true OR Stop if True = true.
 		// Since there are no other options here, return true.
 		return "true";
@@ -267,7 +267,7 @@ public class PowerLookupRulesetBuilder {
 			return;
 		}
 		
-		// TODO: Add the current filename to the error messages.
+		// FIXME: Add the current filename to the error messages.
 		ctx.addError(new CompileError(CompileError.errors.IMPORTERROR,
 				new String("Condition [" + value + "] unrecognized condition operation type: ["+ op.getName() +"]. Valid PowerLookup condition operation types are: 'True Action:Condition', 'False Action:Condition'.")));
 		return;
@@ -282,14 +282,13 @@ public class PowerLookupRulesetBuilder {
 				new String("Lookup [" + value + "] definition is missing. Verify that the lookup is defined before using it in a PowerLookup.")));
 			return;
 		}
-		String xParam = ((SimpleNode)lkup.jjtGetChild(0)).getName();	// FIXME: Lookup params should be cast.
-		String yParam = ((SimpleNode)lkup.jjtGetChild(1)).getName();
-		rule.append("lookup(\""+ value +"\", " + xParam + ", " + yParam + ");");
+
+		rule.append("lookup(\""+ value +"\");");
 	}
 	
 	protected boolean isActionOp(VarOp op){
 		if(	op.getOp().equals("Assign") ||
-			op.getOp().equals("Lookup") ||
+            op.getOp().equals("Lookup") ||
 			op.getOp().equals("Condition") ||
 			op.getOp().equals("True Action:Condition") ||
 			op.getOp().equals("False Action:Condition") ||

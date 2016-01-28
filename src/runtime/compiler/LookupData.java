@@ -14,7 +14,11 @@ public class LookupData {
 	}
 
 	public String name = new String();
-	
+	public String xParameter = new String();
+	public String yParameter = new String();
+	public String xParameterType = new String();
+	public String yParameterType = new String();
+
 	public ArrayList<MinMax> colMinMaxs = new ArrayList<MinMax>();
 	public ArrayList<MinMax> rowMinMaxs = new ArrayList<MinMax>();
 

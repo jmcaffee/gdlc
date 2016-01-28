@@ -1,44 +1,47 @@
 /* **************************************************************************
- *	File: lookupReDef.gdl
+ *  File: lookupReDef.gdl
  *
- *	Description:
- *		These are guideline definitions for lookup redefinition testing.
+ *  Description:
+ *    These are guideline definitions for lookup redefinition testing.
  *
  ************************************************************************* */
- 
+
 include ("simple.gdl");
 
-import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
+import( lookup, "TestLookupsAliased.csv" );        // Import the lookup CSV file
 
 dpm numeric alsDpmVar "Alias DPM Variable";
-ppm money	app		alsPpmVar "PPM Alias Var";
+ppm money app   alsPpmVar "PPM Alias Var";
 
-rule SimpleAliasRule1()								// Define the rule.
-	if ( ppmVar == 1 )	
-	then
-		dpmVar = lookup("TestLookup LK1", alsPpmVar, alsDpmVar);
-		dpmVar = lookup("TestLookup LK2", ppmVar, alsDpmVar);
-	end
+rule SimpleAliasRule1()               // Define the rule.
+  if ( ppmVar == 1 )
+  then
+    dpmVar = lookup("TestLookup LK1");
+    dpmVar = lookup("TestLookup LK2");
+  end
 end
 
 
-rule SimpleAliasRule2()								// Define the rule.
-	if ( ppmVar == 1 )	
-	then														// LK1 is being redefined here.
-		dpmVar = lookup("TestLookup LK1", alsPpmVar, dpmVar);	// The y delta is different. A warning should be produced.
-		dpmVar = lookup("TestLookup LK2", ppmVar, alsDpmVar);
-	end
+rule SimpleAliasRule2()               // Define the rule.
+  if ( ppmVar == 1 )
+  then
+    // There is no longer a way to 'redefine' a lookup.
+    // The new lookup format includes the X and Y params in the lookup data
+    // so they can't be redefined in rules.
+    dpmVar = lookup("TestLookup LK1");
+    dpmVar = lookup("TestLookup LK2");
+  end
 end
 
 guideline ("TestGuideline")
-	rule 			SimpleAliasRule1();
+  rule      SimpleAliasRule1();
 end
 
 /*
 guideline ("TestGuideline")
-	rule 			SimpleRule1();
-	ruleset 	SimpleRuleset2();
-	rule			SimpleRule2();
-	ruleset 	SimpleRuleset1();
+  rule      SimpleRule1();
+  ruleset   SimpleRuleset2();
+  rule      SimpleRule2();
+  ruleset   SimpleRuleset1();
 end
 */

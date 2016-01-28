@@ -1,0 +1,119 @@
+Lookup,,,,,,
+,MSA Title From Region Number LK,,,,,
+,,Xparameter,Yparameter,,,
+,,Region Number,Global Parameter,,,
+,,DPM,DPM,,,
+,,,,,,1
+,,,,,,1
+,,,,0,0,US National 
+,,,,1,1,Akron OH
+,,,,2,2,Albany-Schenectady-Troy NY
+,,,,3,3,Albuquerque NM
+,,,,4,4,Allentown-Bethlehem-Easton PA-NJ
+,,,,5,5,Ann Arbor MI
+,,,,6,6,Atlanta-Sandy Springs-Marietta GA
+,,,,7,7,Austin-Round Rock TX
+,,,,8,8,Bakersfield CA
+,,,,9,9,Baltimore-Towson MD
+,,,,10,10,Barnstable Town MA
+,,,,11,11,Baton Rouge LA
+,,,,12,12,Birmingham-Hoover AL
+,,,,13,13,Boise City-Nampa ID
+,,,,14,14,Boston-Cambridge-Quincy MA-NH
+,,,,15,15,Boulder CO
+,,,,16,16,Bridgeport-Stamford-Norwalk CT
+,,,,17,17,Buffalo-Niagara Falls NY
+,,,,18,18,Cape Coral-Fort Myers FL
+,,,,19,19,Charleston-North Charleston SC
+,,,,20,20,Charlotte-Gastonia-Concord NC-SC
+,,,,21,21,Chicago-Naperville-Joliet IL-IN-WI
+,,,,22,22,Cincinnati-Middletown OH-KY-IN
+,,,,23,23,Cleveland-Elyria-Mentor OH
+,,,,24,24,Colorado Springs CO
+,,,,25,25,Columbia SC
+,,,,26,26,Columbus OH
+,,,,27,27,Dallas-Fort Worth-Arlington TX
+,,,,28,28,Dayton OH
+,,,,29,29,Deltona-Daytona Beach-Ormond Beach FL
+,,,,30,30,Denver-Aurora CO
+,,,,31,31,Detroit-Warren-Livonia MI
+,,,,32,32,Flint MI
+,,,,33,33,Fort Collins-Loveland CO
+,,,,34,34,Fresno CA
+,,,,35,35,Grand Rapids-Wyoming MI
+,,,,36,36,Greensboro-High Point NC
+,,,,37,37,Greenville-Mauldin-Easley SC
+,,,,38,38,Hartford-West Hartford-East Hartford CT
+,,,,39,39,Honolulu HI
+,,,,40,40,Houston-Sugar Land-Baytown TX
+,,,,41,41,Indianapolis-Carmel IN
+,,,,42,42,Jacksonville FL
+,,,,43,43,Kansas City MO-KS
+,,,,44,44,Knoxville TN
+,,,,45,45,Las Vegas-Paradise NV
+,,,,46,46,Little Rock-North Little Rock-Conway AR
+,,,,47,47,Los Angeles-Long Beach-Santa Ana CA
+,,,,48,48,Louisville-Jefferson County KY-IN
+,,,,49,49,Madison WI
+,,,,50,50,Manchester-Nashua NH
+,,,,51,51,Memphis TN-MS-AR
+,,,,52,52,Miami-Fort Lauderdale-Pompano Beach FL
+,,,,53,53,Milwaukee-Waukesha-West Allis WI
+,,,,54,54,Minneapolis-St. Paul-Bloomington MN-WI
+,,,,55,55,Modesto CA
+,,,,56,56,Nashville-Davidson-Murfreesboro-Franklin TN
+,,,,57,57,New Haven-Milford CT
+,,,,58,58,New Orleans-Metairie-Kenner LA
+,,,,59,59,New York-Northern New Jersey-Long Island NY-NJ-PA
+,,,,60,60,Ogden-Clearfield UT
+,,,,61,61,Oklahoma City OK
+,,,,62,62,Omaha-Council Bluffs NE-IA
+,,,,63,63,Orlando-Kissimmee FL
+,,,,64,64,Oxnard-Thousand Oaks-Ventura CA
+,,,,65,65,Palm Bay-Melbourne-Titusville FL
+,,,,66,66,Philadelphia-Camden-Wilmington PA-NJ-DE-MD
+,,,,67,67,Phoenix-Mesa-Scottsdale AZ
+,,,,68,68,Pittsburgh PA
+,,,,69,69,Portland-South Portland-Biddeford ME
+,,,,70,70,Portland-Vancouver-Beaverton OR-WA
+,,,,71,71,Poughkeepsie-Newburgh-Middletown NY
+,,,,72,72,Providence-New Bedford-Fall River RI-MA
+,,,,73,73,Raleigh-Cary NC
+,,,,74,74,Reno-Sparks NV
+,,,,75,75,Richmond VA
+,,,,76,76,Riverside-San Bernardino-Ontario CA
+,,,,77,77,Rochester NY
+,,,,78,78,Sacramento-Arden-Arcade-Roseville CA
+,,,,79,79,Salinas CA
+,,,,80,80,Salt Lake City UT
+,,,,81,81,San Antonio TX
+,,,,82,82,San Diego-Carlsbad-San Marcos CA
+,,,,83,83,San Francisco-Oakland-Fremont CA
+,,,,84,84,San Jose-Sunnyvale-Santa Clara CA
+,,,,85,85,San Luis Obispo-Paso Robles CA
+,,,,86,86,Santa Barbara-Santa Maria-Goleta CA
+,,,,87,87,Santa Cruz-Watsonville CA
+,,,,88,88,Santa Rosa-Petaluma CA
+,,,,89,89,Sarasota-Bradenton-Venice FL
+,,,,90,90,Seattle-Tacoma-Bellevue WA
+,,,,91,91,St. Louis MO-IL
+,,,,92,92,Stockton CA
+,,,,93,93,Tampa-St. Petersburg-Clearwater FL
+,,,,94,94,Toledo OH
+,,,,95,95,Tucson AZ
+,,,,96,96,Tulsa OK
+,,,,97,97,Vallejo-Fairfield CA
+,,,,98,98,Virginia Beach-Norfolk-Newport News VA-NC
+,,,,99,99,Washington-Arlington-Alexandria DC-VA-MD-WV
+,,,,100,100,Worcester MA
+,,,,101,101,East North Central
+,,,,102,102,East South Central
+,,,,103,103,Middle Atlantic
+,,,,104,104,Mountain
+,,,,105,105,New England
+,,,,106,106,Pacific
+,,,,107,107,South Atlantic
+,,,,108,108,West North Central
+,,,,109,109,West South Central
+,,,,110,110,California
+,,,,,,

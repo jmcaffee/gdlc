@@ -34,14 +34,15 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 		XmlElem xParam = new XmlElem("XParameter");
 		XmlElem yParam = new XmlElem("YParameter");
 
-		node.jjtGetChild(0).jjtAccept(this, xParam);
-		node.jjtGetChild(1).jjtAccept(this, yParam);
-		
+		LookupData lkData = this.ctx.getLookupData(node.getName());
+
+        xParam.appendXml(getVarAsXmlElem(lkData.xParameter, lkData.xParameterType).toXml());
+        yParam.appendXml(getVarAsXmlElem(lkData.yParameter, lkData.yParameterType).toXml());
+
 		me.appendXml(xParam.toXml());
 		me.appendXml(yParam.toXml());
 		
 		// Handle lookup data
-		LookupData lkData = this.ctx.getLookupData(node.getName());
 		try{
 			formatLookupData(lkData, me);
 		}catch(IndexOutOfBoundsException e){
@@ -57,7 +58,51 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 		elem.appendXml(me.toXml());
 		return elem;
 	}
-	
+
+    /**
+     * Given a variable name and type, pull its info from the context and create
+     * an XmlElem object for the variable.
+     *
+     * @param varName
+     * @param varType
+     * @return XmlElem
+     */
+    XmlElem getVarAsXmlElem(String varName, String varType) {
+        XmlElem me = null;
+
+        if (varType.equalsIgnoreCase("DPM")) {
+            VarDpm dpm = (VarDpm)this.ctx.getVarDpm(varName);
+            // If we don't find it via alias, try via name.
+            if (null == dpm) {
+                dpm = (VarDpm)this.ctx.getVar(new VarDpm(varName));
+            }
+            me = new XmlElem(dpm.getVarType());
+            me.setIsShortTag(true);
+
+            me.putAttribute("Name", dpm.getAlias());
+
+            String[] attOrder = {"Name"};
+            me.setAttributeOrder(attOrder);
+        }
+        else {
+            VarPpm ppm = (VarPpm)this.ctx.getVarPpm(varName);
+            // If we don't find it via alias, try via name.
+            if (null == ppm) {
+                ppm = (VarPpm)this.ctx.getVar(new VarPpm(varName));
+            }
+            me = new XmlElem(ppm.getVarType());
+            me.setIsShortTag(true);
+
+            me.putAttribute("Name", ppm.getAlias());
+            me.putAttribute("DataType", ppm.getDataType());
+            me.putAttribute("Type", ppm.getType());
+
+            String[] attOrder = {"Name", "DataType", "Type"};
+            me.setAttributeOrder(attOrder);
+        }
+        return me;
+    }
+
 	public Object visit(ASTVarRef node, Object data) {
 		XmlElem elem = (XmlElem)data;
 
@@ -65,6 +110,8 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 		String varName = node.getName();
 		
 		if(this.ctx.containsVar(new VarDpm(varName))){
+            me = getVarAsXmlElem(varName, "DPM");
+            /* FIXME: Remove this if no errors
 			VarDpm dpm = (VarDpm)this.ctx.getVar(new VarDpm(varName));
 			me = new XmlElem(dpm.getVarType());
 			me.setIsShortTag(true);
@@ -73,8 +120,11 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 			
 			String[] attOrder = {"Name"};
 			me.setAttributeOrder(attOrder);
+			*/
 		} 
 		else {
+            me = getVarAsXmlElem(varName, "PPM");
+            /* FIXME: Remove this if no errors
 			VarPpm ppm = (VarPpm)this.ctx.getVar(new VarPpm(varName));
 			me = new XmlElem(ppm.getVarType());
 			me.setIsShortTag(true);
@@ -85,6 +135,7 @@ public class LookupNodeVisitor extends DepthFirstVisitor {
 			
 			String[] attOrder = {"Name", "DataType", "Type"};
 			me.setAttributeOrder(attOrder);
+			*/
 		}
 		
 		if(null == me){

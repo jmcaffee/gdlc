@@ -1,25 +1,25 @@
 /* **************************************************************************
- *	File: corruptCsvTest.gdl
+ *  File: corruptCsvTest.gdl
  *
- *	Description:
- *		This is to test parsing of corrupt csv lookup files.
+ *  Description:
+ *    This is to test parsing of corrupt csv lookup files.
  *
- *		Excel has a tendency to write out NULL values and inconsistant
- *		row data lengths. Some lines might have 5 items, some might have
- *		more or less. All within the same lookup
+ *    Excel has a tendency to write out NULL values and inconsistant
+ *    row data lengths. Some lines might have 5 items, some might have
+ *    more or less. All within the same lookup
  *
  ************************************************************************* */
- 
+
 import( lookup, "corrupted1.csv");
 import( lookup, "corrupted2.csv");
 
 
-dpm	numeric	finalPrice1st;
+dpm numeric finalPrice1st;
 dpm numeric globalParam;
-dpm text 	amortType1st;
+dpm text  amortType1st;
 dpm numeric tmp1;
 
-ppm	money	app		pLoanAmount	"Loan Amount";
+ppm money app   pLoanAmount "Loan Amount";
 
 
 /* ==========================================================================
@@ -31,17 +31,22 @@ ppm	money	app		pLoanAmount	"Loan Amount";
 rule DEFINE_LOOKUPS()
     if(pLoanAmount == pLoanAmount)
     then
-        tmp1    = lookup("FHA-Rate1st-Fxd30-15Day RTN LK1",finalPrice1st ,globalParam );
-        tmp1    = lookup("FHA-Rate1st-Fxd15-15Day RTN LK1",finalPrice1st ,globalParam );
-        tmp1    = lookup("FHA-Rate1st-1-1-15Day RTN LK1",finalPrice1st ,globalParam );
-        tmp1    = lookup("FHA-Rate1st-5-1-15Day RTN LK1",finalPrice1st ,globalParam );
-        tmp1    = lookup("FHA-MarginByProduct RTN LK1", amortType1st, globalParam);
+        tmp1    = lookup("FHA-Rate1st-Fxd30-15Day RTN LK1");
+        tmp1    = lookup("FHA-Rate1st-Fxd15-15Day RTN LK1");
+        tmp1    = lookup("FHA-Rate1st-1-1-15Day RTN LK1");
+        tmp1    = lookup("FHA-Rate1st-5-1-15Day RTN LK1");
+        tmp1    = lookup("FHA-MarginByProduct RTN LK1");
+        //tmp1    = lookup("FHA-Rate1st-Fxd30-15Day RTN LK1",finalPrice1st ,globalParam );
+        //tmp1    = lookup("FHA-Rate1st-Fxd15-15Day RTN LK1",finalPrice1st ,globalParam );
+        //tmp1    = lookup("FHA-Rate1st-1-1-15Day RTN LK1",finalPrice1st ,globalParam );
+        //tmp1    = lookup("FHA-Rate1st-5-1-15Day RTN LK1",finalPrice1st ,globalParam );
+        //tmp1    = lookup("FHA-MarginByProduct RTN LK1", amortType1st, globalParam);
     end
 end
 
 
 
 guideline("Test")
-	rule DEFINE_LOOKUPS();
-	
-end	
+  rule DEFINE_LOOKUPS();
+
+end

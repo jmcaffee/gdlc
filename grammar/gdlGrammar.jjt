@@ -1169,7 +1169,7 @@ void ConstantExpression() #Expression :
 void LookupDef() :
 {String nm;}
 {
-  "lookup" <LPAREN> nm=StringLiteral(){jjtThis.data.put("Name",nm);jjtThis.data.put("Id","1");} "," VarRef() "," VarRef() <RPAREN>
+  "lookup" <LPAREN> nm=StringLiteral(){jjtThis.data.put("Name",nm);jjtThis.data.put("Id","1");} <RPAREN>
 }
 
 

@@ -32,8 +32,9 @@ public class CompileMgrTester extends TestHelper {
 	CompilerParameters 	cp 			= null;
 //	String				TESTDIR		= rootDir + "/gdl/tests";
 	// Using relative directories for easier paths, now that GDLC supports them.
+	String				INCDIR		= "gdl/tests";
 	String				TESTDIR		= "gdl/tests/compile_mgr_tester";
-	String 				OUTPUTDIR	= TESTDIR+"/output";
+	String 				OUTPUTDIR	= "tmp/tests/compile_mgr_tester";
 	String 				EXPECTED	= TESTDIR+"/expected";
 	String 				LOOKUPS		= TESTDIR+"/lookups";
 
@@ -62,6 +63,7 @@ public class CompileMgrTester extends TestHelper {
 	 */
 	@Before
 	public void setUp() throws Exception {
+        mkCleanDirs(OUTPUTDIR);
 		this.cp = new CompilerParameters();
 	}
 
@@ -74,11 +76,13 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompile() {
-		String args[] = {new String(TESTDIR + "/compileTest.gdl"),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),};
+	public void testCompile() throws GdlcException {
+		String args[] = {TESTDIR + "/compileTest.gdl",
+						"--I"+INCDIR,
+                        //"-v",
+						//"-vp",
+						"-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -89,9 +93,10 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileVarDef() {
-		String args[] = {new String(TESTDIR + "/varDefTest.gdl"),
-						new String("-nooutput"),};
+	public void testCompileVarDef() throws GdlcException {
+		String args[] = {TESTDIR + "/varDefTest.gdl",
+						"-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -109,14 +114,19 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileMissingVarDef() {
-		String args[] = {new String(TESTDIR + "/missingVarDefTest.gdl"),
-						new String("-nooutput"),};
+	public void testCompileMissingVarDef() throws GdlcException {
+		String args[] = {TESTDIR + "/missingVarDefTest.gdl",
+						"-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
-		mgr.execute(this.cp);
-		
+        try {
+            mgr.execute(this.cp);
+        } catch (GdlcException e) {
+            // Expected error... do nothing.
+        }
+
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
 		IErrorContext ctx = mgr.getContext();
@@ -126,14 +136,19 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileMissingRuleDef() {
-		String args[] = {new String(TESTDIR + "/missingRuleDefTest.gdl"),
-				new String("-nooutput"),};
+	public void testCompileMissingRuleDef() throws GdlcException {
+		String args[] = {TESTDIR + "/missingRuleDefTest.gdl",
+				        "-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
-		mgr.execute(this.cp);
-		
+        try {
+            mgr.execute(this.cp);
+        } catch (GdlcException e) {
+            // Expected error... do nothing.
+        }
+
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
 		IErrorContext ctx = mgr.getContext();
@@ -143,14 +158,19 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileMissingRulesetDef() {
-		String args[] = {new String(TESTDIR + "/missingRulesetDefTest.gdl"),
-				new String("-nooutput"),};
+	public void testCompileMissingRulesetDef() throws GdlcException {
+		String args[] = {TESTDIR + "/missingRulesetDefTest.gdl",
+				        "-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
-		mgr.execute(this.cp);
-		
+        try {
+            mgr.execute(this.cp);
+        } catch (GdlcException e) {
+            // Expected error... do nothing.
+        }
+
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
 		IErrorContext ctx = mgr.getContext();
@@ -160,9 +180,10 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileDefdRule() {
-		String args[] = {new String(TESTDIR + "/ruleDefTest.gdl"),
-				new String("-nooutput"),};
+	public void testCompileDefdRule() throws GdlcException {
+		String args[] = {TESTDIR + "/ruleDefTest.gdl",
+				        "-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -174,9 +195,10 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileDefdRuleset() {
-		String args[] = {new String(TESTDIR + "/rulesetDefTest.gdl"),
-				new String("-nooutput"),};
+	public void testCompileDefdRuleset() throws GdlcException {
+		String args[] = {TESTDIR + "/rulesetDefTest.gdl",
+				        "-nooutput"
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -189,15 +211,21 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileMissingLookupData() {
-		String args[] = {new String(TESTDIR + "/missingLookupTest.gdl"),
-						new String("/I" + TESTDIR),
-						new String("-nooutput"),};
+	public void testCompileMissingLookupData() throws GdlcException {
+		String args[] = {TESTDIR + "/missingLookupTest.gdl",
+						"--I" + TESTDIR,
+						"-nooutput"
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
-		mgr.execute(this.cp);
-		
+        try {
+            mgr.execute(this.cp);
+        }
+        catch (GdlcException e) {
+            // Expected... do nothing.
+        }
+
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
 		CompilerContext ctx = (CompilerContext)mgr.getContext();
@@ -209,10 +237,12 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileLookupDef() {
-		String args[] = {new String(TESTDIR + "/LookupTest.gdl"),
-						new String("/I" + TESTDIR),
-						new String("-nooutput"),};
+	public void testCompileLookupDef() throws GdlcException {
+		String args[] = {TESTDIR + "/LookupTest.gdl",
+						"--I" + TESTDIR,
+                        "--I" + LOOKUPS,
+						"-nooutput"
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -231,14 +261,14 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testLookupXmlOutput() {
+	public void testLookupXmlOutput() throws GdlcException {
 		String outFile = OUTPUTDIR + "/testLookupXmlOutput.xml";
-		String args[] = {new String(TESTDIR + "/LookupTest4.gdl"),
-						outFile,
-						new String("/I" + TESTDIR),
-						new String("/I" + LOOKUPS),
-						new String("-Vod"),
-						new String("-Vop"),
+		String args[] = {TESTDIR + "/LookupTest4.gdl",
+						 outFile,
+						 "--I" + TESTDIR,
+						 "--I" + LOOKUPS,
+						 //"-Vod",
+						 //"-Vop",
 						};
 		this.cp.process(args);
 
@@ -262,12 +292,12 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testMoreThan2MathTermsXmlOutput() {
+	public void testMoreThan2MathTermsXmlOutput() throws GdlcException {
 		String outFile = OUTPUTDIR + "/mathTermXmlOutput.xml";
-		String args[] = {new String(TESTDIR + "/mathTermTest.gdl"),
-						outFile,
-						new String("/I" + TESTDIR),
-						new String("/I" + LOOKUPS),
+		String args[] = {TESTDIR + "/mathTermTest.gdl",
+						 outFile,
+						 "--I" + TESTDIR,
+						 "--I" + LOOKUPS,
 						};
 		this.cp.process(args);
 
@@ -291,12 +321,13 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompilePowerLookupDef() {
+	public void testCompilePowerLookupDef() throws GdlcException {
 		String outFile = OUTPUTDIR + "/testCompilePowerLookupDef.xml";
-		String args[] = {new String(TESTDIR + "/powerLookupTest.gdl"),
-						outFile,
-						new String("/I" + TESTDIR),
-						new String("-nooutput"),};
+		String args[] = {TESTDIR + "/powerLookupTest.gdl",
+						 outFile,
+						 "--I" + TESTDIR,
+						 "-nooutput",
+        };
 		this.cp.process(args);
 
 		deleteFileIfExists(outFile);
@@ -323,14 +354,15 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void compilePLKWithLookupAction() {
+	public void compilePLKWithLookupAction() throws GdlcException {
 		String outFile = OUTPUTDIR + "/testCompilePowerLookupWithLookupAction.xml";
-		String args[] = {new String(TESTDIR + "/powerLookupTest2.gdl"),
-						outFile,
-						new String("/I" + TESTDIR),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),};
+		String args[] = {TESTDIR + "/powerLookupTest2.gdl",
+						 outFile,
+						 "--I" + TESTDIR,
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
+        };
 		this.cp.process(args);
 
 		deleteFileIfExists(outFile);
@@ -357,16 +389,17 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void compilePLKWithManyComparisons() {
+	public void compilePLKWithManyComparisons() throws GdlcException {
 		String outFile = OUTPUTDIR + "/plk_with_many_comparisons.xml";
-		String args[] = {new String(TESTDIR + "/powerLookupTest3.gdl"),
-						outFile,
-						new String("/I" + TESTDIR),
-						new String("-v"),
-//						new String("-dd"),
-						new String("-dp"),
-						new String("-vp"),
-						new String("-nooutput"),};
+		String args[] = {TESTDIR + "/powerLookupTest3.gdl",
+						 outFile,
+						 "--I" + TESTDIR,
+						 "-v",
+//						 "-dd",
+						 "-dp",
+						 "-vp",
+						 "-nooutput",
+        };
 		this.cp.process(args);
 
 		String expected = new String(EXPECTED + "/plk_with_many_comparisons.xml");
@@ -395,14 +428,15 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testCompileManyANDComparisons() {
+	public void testCompileManyANDComparisons() throws GdlcException {
 		String outFile = OUTPUTDIR + "/testCompileManyANDComparisons.xml";
-		String args[] = {new String(TESTDIR + "/LookupTest3-1.gdl"),
-						outFile,
-						new String("/I" + TESTDIR),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),};
+		String args[] = {TESTDIR + "/LookupTest3-1.gdl",
+						 outFile,
+						 "--I" + TESTDIR,
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
+        };
 		this.cp.process(args);
 
 		String expected = new String(EXPECTED + "/testCompileManyANDComparisons.xml");
@@ -431,9 +465,10 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testRuleXmlOutput() {
-		String args[] = {new String(TESTDIR + "/ruleXmlTest.gdl"),
-				new String("-nooutput"),};
+	public void testRuleXmlOutput() throws GdlcException {
+		String args[] = {TESTDIR + "/ruleXmlTest.gdl",
+				         "-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -455,8 +490,8 @@ public class CompileMgrTester extends TestHelper {
 
 	@Test
 	public void verifyFileCompare() {
-		String outFile = new String(TESTDIR + "/aliasTest.gdl");
-		String expected = new String(TESTDIR + "/aliasTest.gdl");
+		String outFile = TESTDIR + "/aliasTest.gdl";
+		String expected = TESTDIR + "/aliasTest.gdl";
 		
 		assertTrue("File contents do not match", fileContentsAreIdentical(outFile, expected));
 		
@@ -464,14 +499,16 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testDeepComputeOutput() {
-		String outFile = new String(TESTDIR + "/output/deepComputeTest.xml");
-		String args[] = {new String(TESTDIR + "/deepComputeTest.gdl"),
+	public void testDeepComputeOutput() throws GdlcException {
+		mkdirs(OUTPUTDIR);
+		String outFile = OUTPUTDIR + "/deepComputeTest.xml";
+		String args[] = {TESTDIR + "/deepComputeTest.gdl",
 						outFile,
-						new String("/I" + TESTDIR),
-		//				new String("-nooutput"),
-						new String("-v"),
-						new String("-vp")};
+						"--I" + TESTDIR,
+		//				"-nooutput",
+					//  "-v",
+					//  "-vp"
+		};
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -492,7 +529,7 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testElseActionRuleXmlOutput() {
+	public void testElseActionRuleXmlOutput() throws GdlcException {
 		String args[] = {new String(TESTDIR + "/ruleXmlTest.gdl"),
 				new String("-nooutput"),};
 		this.cp.process(args);
@@ -515,7 +552,7 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testMsgRuleXmlOutput() {
+	public void testMsgRuleXmlOutput() throws GdlcException {
 		String args[] = {new String(TESTDIR + "/ruleXmlTest.gdl"),
 				new String("-nooutput"),};
 		this.cp.process(args);
@@ -538,7 +575,7 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testElseMsgRuleXmlOutput() {
+	public void testElseMsgRuleXmlOutput() throws GdlcException {
 		String args[] = {new String(TESTDIR + "/ruleXmlTest.gdl"),
 				new String("-nooutput"),};
 		this.cp.process(args);
@@ -561,7 +598,7 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testRulesetXmlOutput() {
+	public void testRulesetXmlOutput() throws GdlcException {
 		String args[] = {new String(TESTDIR + "/rulesetXmlTest.gdl"),
 				new String("-nooutput"),};
 		this.cp.process(args);
@@ -584,9 +621,9 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testGuidelineXmlOutput() {
+	public void testGuidelineXmlOutput() throws GdlcException {
 		String args[] = {new String(TESTDIR + "/gdlXmlTest.gdl"),
-						 new String("/I" + TESTDIR),
+						 new String("--I" + TESTDIR),
 							new String("-v"),
 							new String("-vp"),
 							new String("-nooutput"),};
@@ -614,9 +651,9 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testConfigurationDirectoryParameter() {
+	public void testConfigurationDirectoryParameter() throws GdlcException {
 		String args[] = {	new String(TESTDIR + "/conditionTest.gdl"),
-							new String("/C" + TESTDIR),		// Configuration directory
+							new String("--C" + TESTDIR),		// Configuration directory
 							new String("-nooutput"),};
 		this.cp.process(args);
 
@@ -637,9 +674,9 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testConditionCategoryConfiguration() {
+	public void testConditionCategoryConfiguration() throws GdlcException {
 		String args[] = {	new String(TESTDIR + "/conditionTest.gdl"),
-							new String("/C" + TESTDIR),		// Configuration directory
+							new String("--C" + TESTDIR),		// Configuration directory
 							new String("-nooutput"),};
 		this.cp.process(args);
 
@@ -660,10 +697,10 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testConditionMsgXmlOutput() {
+	public void testConditionMsgXmlOutput() throws GdlcException {
 		String args[] = {new String(TESTDIR + "/conditionTest.gdl"),
-				new String("/C"+TESTDIR),
-				new String("-nooutput"),};
+                         new String("--C"+TESTDIR),
+                         new String("-nooutput"),};
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -683,10 +720,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void compileRuleWithMetaOrdering() {
-		String args[] = {new String(TESTDIR + "/ruleWithMetaOrdering.gdl"),
-						new String("/C" + TESTDIR),		// Configuration directory
-						new String("-nooutput"),};
+	public void compileRuleWithMetaOrdering() throws GdlcException {
+		String args[] = {TESTDIR + "/ruleWithMetaOrdering.gdl",
+						 "--C" + TESTDIR,		// Configuration directory
+						 "-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -698,12 +736,13 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void ruleXmlContainsOrderedCompute() {
+	public void ruleXmlContainsOrderedCompute() throws GdlcException {
 		String outFile = OUTPUTDIR + "/ruleWithOrderedCompute.xml";
-		String args[] = {new String(TESTDIR + "/ruleWithOrderedCompute.gdl"),
+		String args[] = {TESTDIR + "/ruleWithOrderedCompute.gdl",
 						outFile,
-						new String("/I" + TESTDIR),
-						new String("-nooutput"),};
+						"--I" + TESTDIR,
+						"-nooutput",
+        };
 		this.cp.process(args);
 
 		deleteFileIfExists(outFile);
@@ -728,11 +767,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void ruleXmlContainsOrderedAssignTo() {
+	public void ruleXmlContainsOrderedAssignTo() throws GdlcException {
 		String outFile = OUTPUTDIR + "/ruleWithOrderedAssignTo.xml";
 		String args[] = {new String(TESTDIR + "/ruleWithOrderedAssignTo.gdl"),
 						outFile,
-						new String("/I" + TESTDIR),
+						new String("--I" + TESTDIR),
 						new String("-nooutput"),};
 		this.cp.process(args);
 
@@ -758,11 +797,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void ruleXmlContainsOrderedMessage() {
+	public void ruleXmlContainsOrderedMessage() throws GdlcException {
 		String outFile = OUTPUTDIR + "/ruleWithOrderedMessage.xml";
 		String args[] = {new String(TESTDIR + "/ruleWithOrderedMessage.gdl"),
 						outFile,
-						new String("/I" + TESTDIR),
+						new String("--I" + TESTDIR),
 						new String("-nooutput"),};
 		this.cp.process(args);
 
@@ -788,11 +827,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void ruleXmlContainsOrderedElseMessage() {
+	public void ruleXmlContainsOrderedElseMessage() throws GdlcException {
 		String outFile = OUTPUTDIR + "/ruleWithOrderedElseMessage.xml";
 		String args[] = {new String(TESTDIR + "/ruleWithOrderedElseMessage.gdl"),
 						outFile,
-						new String("/I" + TESTDIR),
+						new String("--I" + TESTDIR),
 						new String("-nooutput"),};
 		this.cp.process(args);
 
@@ -818,13 +857,14 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void ruleXmlContainsOrderedCondition() {
+	public void ruleXmlContainsOrderedCondition() throws GdlcException {
 		String outFile = OUTPUTDIR + "/ruleWithOrderedCondition.xml";
-		String args[] = {new String(TESTDIR + "/ruleWithOrderedCondition.gdl"),
+		String args[] = {TESTDIR + "/ruleWithOrderedCondition.gdl",
 						outFile,
-						new String("/I" + TESTDIR),
-						new String("/C" + TESTDIR),		// Configuration directory
-						new String("-nooutput"),};
+						"--I" + TESTDIR,
+						"--C" + TESTDIR,		// Configuration directory
+						"-nooutput",
+		};
 		this.cp.process(args);
 
 		deleteFileIfExists(outFile);
@@ -849,13 +889,14 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void ruleXmlContainsOrderedElseCondition() {
+	public void ruleXmlContainsOrderedElseCondition() throws GdlcException {
 		String outFile = OUTPUTDIR + "/ruleWithOrderedElseCondition.xml";
-		String args[] = {new String(TESTDIR + "/ruleWithOrderedElseCondition.gdl"),
+		String args[] = {TESTDIR + "/ruleWithOrderedElseCondition.gdl",
 						outFile,
-						new String("/I" + TESTDIR),
-						new String("/C" + TESTDIR),		// Configuration directory
-						new String("-nooutput"),};
+						"--I" + TESTDIR,
+						"--C" + TESTDIR,		// Configuration directory
+						"-nooutput",
+		};
 		this.cp.process(args);
 
 		deleteFileIfExists(outFile);
@@ -880,12 +921,13 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void plkXmlOutputContainsOrderAttributes() {
+	public void plkXmlOutputContainsOrderAttributes() throws GdlcException {
 		String outFile = OUTPUTDIR + "/orderAttribPLKTest.xml";
-		String args[] = {new String(TESTDIR + "/orderAttribPLKTest.gdl"),
+		String args[] = {TESTDIR + "/orderAttribPLKTest.gdl",
 						outFile,
-						new String("/I" + TESTDIR),
-						new String("-nooutput"),};
+						"--I" + TESTDIR,
+						"-nooutput",
+		};
 		this.cp.process(args);
 
 		deleteFileIfExists(outFile);
@@ -917,10 +959,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testConditionPLKMsgXmlOutput() {
-		String args[] = {new String(TESTDIR + "/conditionPLKTest.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-nooutput"),};
+	public void testConditionPLKMsgXmlOutput() throws GdlcException {
+		String args[] = {TESTDIR + "/conditionPLKTest.gdl",
+						 "--I" + TESTDIR,
+						 "-nooutput",
+		};
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -954,10 +997,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testConditionsElementXmlOutput() {
-		String args[] = {new String(TESTDIR + "/conditionTest.gdl"),
-				new String("/C"+TESTDIR),
-				new String("-nooutput"),};
+	public void testConditionsElementXmlOutput() throws GdlcException {
+		String args[] = {TESTDIR + "/conditionTest.gdl",
+                         "--C"+TESTDIR,
+                         "-nooutput",
+		};
 		String outFile = OUTPUTDIR + "/testConditionsElementXmlOutputToFile.xml";
 		deleteFileIfExists(outFile);
 
@@ -988,10 +1032,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testGuidelineXmlOutputToFile() {
-		String args[] = {new String(TESTDIR + "/LookupTest.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-nooutput"),};
+	public void testGuidelineXmlOutputToFile() throws GdlcException {
+		String args[] = {TESTDIR + "/LookupTest.gdl",
+						 "--I" + TESTDIR,
+						 "-nooutput",
+		};
 		String outFile = OUTPUTDIR + "/testGuidelineXmlOutputToFile.xml";
 		deleteFileIfExists(outFile);
 
@@ -1014,10 +1059,11 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testVarAlias() {
-		String args[] = {new String(TESTDIR + "/aliasTest.gdl"),
-				 new String("/I" + TESTDIR),
-				 new String("-nooutput"),};
+	public void testVarAlias() throws GdlcException {
+		String args[] = {TESTDIR + "/aliasTest.gdl",
+                         "--I" + TESTDIR,
+                         "-nooutput",
+        };
 		String outFile = OUTPUTDIR + "/testVarAlias.xml";
 		deleteFileIfExists(outFile);
 
@@ -1043,43 +1089,11 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testLookupRedefWarning() {
-		String args[] = {new String(TESTDIR + "/lookupRedef.gdl"),
-				 new String("/I" + TESTDIR),
-				 new String("-nooutput"),};
-		String outFile = OUTPUTDIR + "/testLookupRedefWarning.xml";
-		deleteFileIfExists(outFile);
-
-		this.cp.process(args);
-
-		CompileMgr mgr = new CompileMgr();
-		mgr.execute(this.cp);
-		
-		assertNotNull("Parse failed.",mgr.getParseTree());
-		
-		CompilerContext ctx = (CompilerContext)mgr.getContext();
-		assertIfContextHasError(mgr.getContext()); 
-
-		if(ctx.hasWarnings()){
-			ctx.dumpWarnings();
-		}
-		assertTrue("CContext should have a lookup redefinition warning.",ctx.hasWarnings());
-		assertEquals("CContext should only have 1 warning.", 1, ctx.getWarningCount());
-		
-		assertTrue("IOException thrown while creating output file [" + outFile + "]", writeXmlToFile(mgr, outFile));
-		
-			// Verify that the file was created.
-		File f=new File(outFile);
-		
-		assertTrue("Output file not created", f.exists());
-		
-	}
-
-	@Test
-	public void testFunctionDef() {
-		String args[] = {new String(TESTDIR + "/functionTest.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-nooutput"),};
+	public void testFunctionDef() throws GdlcException {
+		String args[] = {TESTDIR + "/functionTest.gdl",
+						 "--I" + TESTDIR,
+						 "-nooutput",
+        };
 		String outFile = OUTPUTDIR + "/testFunctionDef.xml";
 		deleteFileIfExists(outFile);
 
@@ -1103,10 +1117,11 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testAndOrOperator() {
-		String args[] = {new String(TESTDIR + "/operatorTest.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-nooutput"),};
+	public void testAndOrOperator() throws GdlcException {
+		String args[] = {TESTDIR + "/operatorTest.gdl",
+						 "--I" + TESTDIR,
+						 "-nooutput",
+        };
 		String outFile = OUTPUTDIR + "/testAndOrOperator.xml";
 		deleteFileIfExists(outFile);
 
@@ -1130,18 +1145,24 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testIncludeFileError() {
-		String args[] = {new String(TESTDIR + "/includeFileErrorTest.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-nooutput"),};
+	public void testIncludeFileError() throws GdlcException {
+		String args[] = {TESTDIR + "/includeFileErrorTest.gdl",
+						 "--I" + TESTDIR,
+						 "-nooutput",
+        };
 		String outFile = OUTPUTDIR + "/includeFileErrorTest.xml";
 		deleteFileIfExists(outFile);
 
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
-		mgr.execute(this.cp);
-		
+        try {
+            mgr.execute(this.cp);
+        }
+        catch (GdlcException e) {
+            // Expected exception... do nothing.
+        }
+
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
 		assertIfContextErrorNotExist(mgr.getContext(),"badIncludeFile.gdl"); 
@@ -1157,10 +1178,11 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testInsertPricingRule() {
-		String args[] = {new String(TESTDIR + "/insertPricingGuideline.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-nooutput"),};
+	public void testInsertPricingRule() throws GdlcException {
+		String args[] = {TESTDIR + "/insertPricingGuideline.gdl",
+						 "--I" + TESTDIR,
+						 "-nooutput",
+        };
 		String outFile = OUTPUTDIR + "/insertPricingGuideline.xml";
 		deleteFileIfExists(outFile);
 
@@ -1182,14 +1204,15 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void compilesFunctionDefinition() {
+	public void compilesFunctionDefinition() throws GdlcException {
 		fail("Embedded rule references are not yet supported.");
 
-		String args[] = {new String(TESTDIR + "/functionDefTest.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-v"),
-						 new String("-vp"),
-						 new String("-nooutput"),};
+		String args[] = {TESTDIR + "/functionDefTest.gdl",
+						 "--I" + TESTDIR,
+						 //"-v",
+						 //"-vp",
+						 //"-nooutput",
+        };
 		String outFile = OUTPUTDIR + "/functionDefTest.xml";
 		deleteFileIfExists(outFile);
 
@@ -1213,18 +1236,24 @@ public class CompileMgrTester extends TestHelper {
 
 
 	@Test
-	public void testMissingFunctionDefinition() {
-		String args[] = {new String(TESTDIR + "/missingFunctionDefTest.gdl"),
-						 new String("/I" + TESTDIR),
-						 new String("-v"),
-						 new String("-vp"),
-						 new String("-nooutput"),};
+	public void testMissingFunctionDefinition() throws GdlcException {
+		String args[] = {TESTDIR + "/missingFunctionDefTest.gdl",
+						 "--I" + TESTDIR,
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
+        };
 
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
-		mgr.execute(this.cp);
-		
+        try {
+            mgr.execute(this.cp);
+        }
+        catch (GdlcException e) {
+            // Expected exception... do nothing.
+        }
+
 		assertNotNull("Parse failed.",mgr.getParseTree());
 
 		assertIfContextErrorNotExist(mgr.getContext(), "Function [missingFunction] definition missing."); 
@@ -1232,24 +1261,25 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 	@Test
-	public void testFhaGuidelineOutput() {
+	public void testFhaGuidelineOutput() throws GdlcException {
 //		String FHAROOT = "r:/sandbox/fha/src";
 		
 //		String args[] = {new String(FHAROOT + "/FHA-Pricing1st.gdl"),
-//				 		 new String("/I" + FHAROOT),
-//						 new String("/I" + FHAROOT + "/lookups"),
-//						 new String("/I" + FHAROOT + "/lookups/pl"),
+//				 		 new String("--I" + FHAROOT),
+//						 new String("--I" + FHAROOT + "/lookups"),
+//						 new String("--I" + FHAROOT + "/lookups/pl"),
 //						 new String("-v"),
 ////						 new String("-vp"),
 //						 new String("-nooutput"),};
 //		String outFile = FHAROOT + "/FHA-Pricing1st.xml";
-		String args[] = {new String(TESTDIR + "/corruptCsvTest.gdl"),
-		 		 new String("/I" + TESTDIR),
-				 new String("/I" + TESTDIR + "/lookups"),
-				 new String("/I" + TESTDIR + "/lookups/pl"),
-				 new String("-v"),
-//				 new String("-vp"),
-				 new String("-nooutput"),};
+		String args[] = {TESTDIR + "/corruptCsvTest.gdl",
+                         "--I" + TESTDIR,
+                         "--I" + TESTDIR + "/lookups",
+                         "--I" + TESTDIR + "/lookups/pl",
+        //               "-v",
+        //				 "-vp",
+                         "-nooutput",
+        };
 		String outFile = OUTPUTDIR + "/corruptCsvTest.xml";
 		deleteFileIfExists(outFile);
 
@@ -1272,45 +1302,13 @@ public class CompileMgrTester extends TestHelper {
 		
 	}
 
-
-//	@Test
-//	public void testFhaCsvFileImport() {
-//		String args[] = {new String(TESTDIR + "/corruptCsvTest2.gdl"),
-//		 		 new String("/I" + TESTDIR),
-//				 new String("/I" + TESTDIR + "/lookups"),
-//				 new String("/I" + TESTDIR + "/lookups/pl"),
-//				 new String("-v"),
-////				 new String("-vp"),
-//				 new String("-nooutput"),};
-//		String outFile = OUTPUTDIR + "/corruptCsvTest2.xml";
-//		deleteFileIfExists(outFile);
-//
-//		this.cp.process(args);
-//
-//		CompileMgr mgr = new CompileMgr();
-//		mgr.execute(this.cp);
-//		
-//		assertNotNull("Parse failed.",mgr.getParseTree());
-//
-//
-//		writeXmlToFile(mgr, outFile);
-//		
-//		assertIfContextErrorNotExist(mgr.getContext(), "FHA-Rate1st-Fxd30-15Day RTN LK1"); 
-//
-//			// Verify that the file was created.
-//		File f=new File(outFile);
-//		
-//		assertTrue("Output file not created", f.exists());
-//		
-//	}
-
-
 	@Test
-	public void testCompileUsingReservedConstants() {
-		String args[] = {new String(TESTDIR + "/compileTest-reservedConstants.gdl"),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),};
+	public void testCompileUsingReservedConstants() throws GdlcException {
+		String args[] = {TESTDIR + "/compileTest-reservedConstants.gdl",
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -1345,11 +1343,12 @@ public class CompileMgrTester extends TestHelper {
 
 	
 	@Test
-	public void testCompileUsingVarCasting() {
-		String args[] = {new String(TESTDIR + "/compileTest-varCasting.gdl"),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),};
+	public void testCompileUsingVarCasting() throws GdlcException {
+		String args[] = {TESTDIR + "/compileTest-varCasting.gdl",
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -1394,12 +1393,12 @@ public class CompileMgrTester extends TestHelper {
 
 	
 	@Test
-	public void compilesPLK_CastingVars() {
-		String args[] = {new String(TESTDIR + "/powerLookupTest-castingVars.gdl"),
-						new String("/I" + TESTDIR),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),
+	public void compilesPLK_CastingVars() throws GdlcException {
+		String args[] = {TESTDIR + "/powerLookupTest-castingVars.gdl",
+						 "--I" + TESTDIR,
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
 						};
 		this.cp.process(args);
 
@@ -1454,12 +1453,12 @@ public class CompileMgrTester extends TestHelper {
 
 	
 	@Test
-	public void testCompilePowerLookups_exeType() {
-		String args[] = {new String(TESTDIR + "/powerLookupTest-exeType.gdl"),
-						new String("/I" + TESTDIR),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),
+	public void testCompilePowerLookups_exeType() throws GdlcException {
+		String args[] = {TESTDIR + "/powerLookupTest-exeType.gdl",
+						 "--I" + TESTDIR,
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
 						};
 		this.cp.process(args);
 
@@ -1489,12 +1488,12 @@ public class CompileMgrTester extends TestHelper {
 
 	
 	@Test
-	public void compilesPLKs_Msgs() {
-		String args[] = {new String(TESTDIR + "/powerLookupTest-msgs.gdl"),
-						new String("/I" + TESTDIR),
-						new String("-v"),
-						new String("-vp"),
-						new String("-nooutput"),
+	public void compilesPLKs_Msgs() throws GdlcException {
+		String args[] = {TESTDIR + "/powerLookupTest-msgs.gdl",
+						 "--I" + TESTDIR,
+						 //"-v",
+						 //"-vp",
+						 "-nooutput",
 						};
 		this.cp.process(args);
 
@@ -1521,6 +1520,4 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertXmlContains("<IfMessages><Message Type=\"Exceptions\" Order=\"3\"><![CDATA[True Message 1: <DPM>DPM Text</DPM>.]]></Message></IfMessages>", xml);
 	}
-
-	
 }

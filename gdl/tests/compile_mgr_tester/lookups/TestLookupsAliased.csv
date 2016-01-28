@@ -1,7 +1,7 @@
 Lookup,,,,,,,,,
 ,TestLookup LK1,,,,,,,,
 ,,Xparameter,Yparameter,,,,,,
-,,ppmVar,dpmVar,,,,,,
+,,PPM Alias Var,Alias DPM Variable,,,,,,
 ,,PPM,DPM,,,,,,
 ,,,,,,0,60.0005,70.0005,80.0005
 ,,,,,,60.0004,70.0004,80.0004,100
@@ -11,7 +11,7 @@ Lookup,,,,,,,,,
 LOOKUP,,,,,,,,,
 ,TestLookup LK2,,,,,,,,
 ,,Xparameter,Yparameter,,,,,,
-,,ppmVar,dpmVar,,,,,,
+,,PPM Alias Var,Alias DPM Variable,,,,,,
 ,,PPM,DPM,,,,,,
 ,,,,,,0,60.0005,70.0005,80.0005
 ,,,,,,60.0004,70.0004,80.0004,100
@@ -21,7 +21,7 @@ LOOKUP,,,,,,,,,
 LOOKUP,,,,,,,,,
 ,TestLookup LK3,,,,,,,,
 ,,Xparameter,Yparameter,,,,,,
-,,ppmVar,dpmVar,,,,,,
+,,PPM Alias Var,Alias DPM Variable,,,,,,
 ,,PPM,DPM,,,,,,
 ,,,,,,0,60.0005,70.0005,80.0005
 ,,,,,,60.0004,70.0004,80.0004,100

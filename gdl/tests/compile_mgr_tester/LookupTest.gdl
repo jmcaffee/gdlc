@@ -1,34 +1,34 @@
 /* **************************************************************************
- *	File: LookupTest.gdl
+ *  File: LookupTest.gdl
  *
- *	Description:
- *		These are guideline definitions for lookup testing.
+ *  Description:
+ *    These are guideline definitions for lookup testing.
  *
  ************************************************************************* */
- 
+
 include ("simple.gdl");
 
-import( lookup, "TestLookups.csv" );				// Import the lookup CSV file
+import( lookup, "TestLookups.csv" );        // Import the lookup CSV file
 
-rule SimpleLookupRule1()							// Define the rule.
-	if ( ppmVar == 1 )	
-	then
-		dpmVar = lookup("TestLookup LK1", ppmVar, dpmVar);
-		dpmVar = lookup("TestLookup LK2", ppmVar, dpmVar);
-		dpmVar = lookup("TestLookup LK3", ppmVar, dpmVar);
-	end
+rule SimpleLookupRule1()              // Define the rule.
+  if ( ppmVar == 1 )
+  then
+    dpmVar = lookup("TestLookup LK1");
+    dpmVar = lookup("TestLookup LK2");
+    dpmVar = lookup("TestLookup LK3");
+  end
 end
 
 
 guideline ("TestGuideline")
-	rule 			SimpleLookupRule1();
+  rule      SimpleLookupRule1();
 end
 
 /*
 guideline ("TestGuideline")
-	rule 			SimpleRule1();
-	ruleset 	SimpleRuleset2();
-	rule			SimpleRule2();
-	ruleset 	SimpleRuleset1();
+  rule      SimpleRule1();
+  ruleset   SimpleRuleset2();
+  rule      SimpleRule2();
+  ruleset   SimpleRuleset1();
 end
 */

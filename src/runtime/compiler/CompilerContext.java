@@ -440,40 +440,10 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 	}
 	
 	public void addLookup(String key, ASTLookupDef lk){
-		String lkupId = "";
-		if(isRedefining(key, lk)){
-				addWarning(new CompileWarning(CompileWarning.warnings.REDEFINITION,
-					new String("Lookup [" + key + "] is being redefined. One or both delta variables are different.")));
-				lkupId = this.getLookup(key).getData("Id");
-		}
-		else {
-			lkupId = Integer.toString(this.getNextLookupId());
-		}
-		
+		String lkupId = Integer.toString(this.getNextLookupId());
+
 		lk.data.put("Id", lkupId);
 		this.lookups.put(key, lk);
-	}
-
-	protected boolean isRedefining(String key, ASTLookupDef lk){
-		ASTLookupDef currentNode = getLookup(key);
-		if(null == currentNode){
-			return false; 
-		}
-		
-		ASTVarRef curDelta = (ASTVarRef)currentNode.jjtGetChild(0);
-		ASTVarRef newDelta = (ASTVarRef)lk.jjtGetChild(0);
-		if(!curDelta.getName().equals(newDelta.getName())){
-			return true;
-		}
-		
-		curDelta = (ASTVarRef)currentNode.jjtGetChild(1);
-		newDelta = (ASTVarRef)lk.jjtGetChild(1);
-		if(!curDelta.getName().equals(newDelta.getName())){
-			return true;
-		}
-		
-			
-		return false;
 	}
 
 	public ASTLookupDef getLookup(String key){
