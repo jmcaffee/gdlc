@@ -2,32 +2,32 @@
  * This is a test of the parser comment ignoring feature.
  *
  */
- 
+
 /* Another comment test */
 
 // Last comment test
 
-include "r:\sandbox\net.bd.gdlc\gdl\varInc1.gdl";
-include "r:\sandbox\net.bd.gdlc\gdl\rulesetInc1.gdl";
+include "varInc1.gdl";
+include "rulesetInc1.gdl";
 
 
 guideline ("Test Guideline")
 
-	ruleset CoolRuleset();
-	rule	G-TestRule4();
+  ruleset CoolRuleset();
+  rule  G-TestRule4();
 
   rule G-TestRule5 ()
     if ( Loan_Amount_1st > 100000 &&
           ( (Loan_Amount_1st < 200000) ||
-            Loan_Amount_1st == 1 
+            Loan_Amount_1st == 1
           )
        )
     then
       Rate = Rate_1st;
     end
   end
-	
-	ruleset RSInc1-RefRuleset1();
-	ruleset RSInc1-RefRuleset2();
-	
+
+  ruleset RSInc1-RefRuleset1();
+  ruleset RSInc1-RefRuleset2();
+
 end

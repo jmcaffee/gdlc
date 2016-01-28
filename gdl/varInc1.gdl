@@ -1,5 +1,10 @@
-			dpm 	numeric 	Rate_1st;
-decision 	dpm 	numeric 	Rate_Adj-Total;
-			dpm 	numeric 	G-TestDpm;
-decision 	dpm 	numeric 	testDsm;
-			ppm 	app 		appPpm;
+          dpm   numeric   Loan_Amount_1st;
+          dpm   numeric   Rate;
+          dpm   numeric   Rate_1st;
+          dpm   numeric   G-TestDpm;
+
+decision  dpm   numeric   Rate_Adj-Total;
+decision  dpm   numeric   testDsm;
+
+          ppm   text app     appPpm;
+          ppm   numeric app   Loan_Amount;

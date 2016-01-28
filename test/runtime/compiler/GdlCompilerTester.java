@@ -9,18 +9,21 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import runtime.helpers.TestHelper;
 import runtime.main.CompileMgr;
 import runtime.main.CompilerParameters;
+import runtime.main.GdlcException;
 
 /**
  * @author killer
  *
  */
-public class GdlCompilerTester {
+public class GdlCompilerTester extends TestHelper {
 	CompilerParameters cp = null;
 
 	String				TESTDIR		= "gdl/tests/gdl_compiler";
-	String 				OUTPUTDIR	= TESTDIR+"/output";
+    String				INCDIR		= "gdl/tests";
+	String 				OUTPUTDIR	= "tmp/tests/gdl_compiler";
 	String 				EXPECTED	= TESTDIR+"/expected";
 	String 				LOOKUPS		= TESTDIR+"/lookups";
 	
@@ -30,6 +33,7 @@ public class GdlCompilerTester {
 	@Before
 	public void setUp() throws Exception {
 		this.cp = new CompilerParameters();
+        mkCleanDirs(OUTPUTDIR);
 	}
 
 	/**
@@ -44,8 +48,11 @@ public class GdlCompilerTester {
 	 * Test method for {@link runtime.compiler.GdlCompiler#GdlCompiler(runtime.parser.ASTCompilationUnit)}.
 	 */
 	@Test
-	public void testGdlCompiler() {
-		String args[] = {new String(TESTDIR+"/compileTest.gdl"),};
+	public void testGdlCompiler() throws GdlcException {
+		String args[] = {TESTDIR+"/compileTest.gdl",
+                         OUTPUTDIR+"/compileTest.xml",
+						 "--I"+"gdl",
+		};
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -62,8 +69,12 @@ public class GdlCompilerTester {
 	 * Test method for {@link runtime.compiler.GdlCompiler#compile(runtime.compiler.CompilerContext)}.
 	 */
 	@Test
-	public void testCompile() {
-		String args[] = {new String(TESTDIR+"/parseTest.gdl"),};
+	public void testCompile() throws GdlcException {
+        String args[] = {TESTDIR+"/parseTest.gdl",
+                        OUTPUTDIR+"/parseTest.xml",
+                        "--I"+"gdl",
+                        "--I"+INCDIR,
+        };
 		String badArgs[] = {new String(TESTDIR+"/doesnotexist.gdl"),};
 
 		this.cp.process(args);

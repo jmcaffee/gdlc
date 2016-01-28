@@ -16,7 +16,22 @@ public class TestHelper {
 	
 	public TestHelper() {
 		super();
-		rootDir = "c:/Users/Jeff/projects/java/gdlc";
+		rootDir = ".";
+	}
+
+	public static void mkdirs(String dirPath) {
+		File f = new File(dirPath);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+	}
+
+	public static void mkCleanDirs(String dirPath) {
+		File f = new File(dirPath);
+		if (f.exists()) {
+			f.delete();
+		}
+		f.mkdirs();
 	}
 
 	/**

@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import runtime.main.CompileMgr;
 import runtime.main.CompilerParameters;
+import runtime.main.GdlcException;
 
 /**
  * @author killer
@@ -23,6 +24,7 @@ public class CompilerContextTester {
 	CompilerParameters cp = null;
 
 	String				TESTDIR		= "gdl/tests/compiler_context";
+    String				INCDIR		= "gdl/tests";
 	String 				OUTPUTDIR	= TESTDIR+"/output";
 	String 				EXPECTED	= TESTDIR+"/expected";
 	String 				LOOKUPS		= TESTDIR+"/lookups";
@@ -44,16 +46,18 @@ public class CompilerContextTester {
 	}
 
 	@Test
-	public void testIncludeDirArgs() {
-		String incDir1 = "/I"+TESTDIR;
-		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
+	public void testIncludeDirArgs() throws GdlcException {
+		String incDir1 = "--I"+TESTDIR;
+		String args[] = {TESTDIR+"/compileTest.gdl",
 						incDir1,
-						new String("-nooutput"), };
+                        "--I"+INCDIR,
+						"-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
 		mgr.execute(this.cp);
-		
+
 		assertNotNull("Context is null.",mgr.getContext());
 		CompilerContext ctx = (CompilerContext)mgr.getContext();
 		
@@ -61,15 +65,17 @@ public class CompilerContextTester {
 	}
 
 	@Test
-	public void testConfigDirArgs() {
-		String incDir1 = "/I"+TESTDIR;
-		String configDir1 = "/C"+TESTDIR;
-		String configDir2 = "/C"+EXPECTED;
-		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
-						incDir1, 
+	public void testConfigDirArgs() throws GdlcException {
+		String incDir1 = "--I"+TESTDIR;
+		String configDir1 = "--C"+TESTDIR;
+		String configDir2 = "--C"+EXPECTED;
+		String args[] = {TESTDIR+"/compileTest.gdl",
+						incDir1,
+                        "--I"+INCDIR,
 						configDir1, 
 						configDir2,
-						new String("-nooutput"), };
+						"-nooutput",
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -80,9 +86,9 @@ public class CompilerContextTester {
 		
 		int dirCount = 0;
 		for(String path : ctx.configDirs){
-			if(path.equals(configDir1.substring(2)))
+			if(path.equals(configDir1.substring(3)))
 				dirCount++;
-			if(path.equals(configDir2.substring(2)))
+			if(path.equals(configDir2.substring(3)))
 				dirCount++;
 		}
 		
@@ -93,15 +99,17 @@ public class CompilerContextTester {
 
 
 	@Test
-	public void testFindPropertyFilesNamed() {
-		String incDir1 = "/I"+TESTDIR;
-		String configDir1 = "/C"+TESTDIR;
-		String configDir2 = "/C"+EXPECTED;
-		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
-						new String("-nooutput"),
-						incDir1, 
+	public void testFindPropertyFilesNamed() throws GdlcException {
+		String incDir1 = "--I"+TESTDIR;
+		String configDir1 = "--C"+TESTDIR;
+		String configDir2 = "--C"+EXPECTED;
+		String args[] = {TESTDIR+"/compileTest.gdl",
+						"-nooutput",
+						incDir1,
+                        "--I"+INCDIR,
 						configDir1, 
-						configDir2,};
+						configDir2,
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();
@@ -120,15 +128,17 @@ public class CompilerContextTester {
 	}
 
 	@Test
-	public void testFindPropertyFilesNamedWithRelativeDirs() {
-		String incDir1 = "/I"+TESTDIR;
-		String configDir1 = "/C"+TESTDIR;
-		String configDir2 = "/C"+EXPECTED;
-		String args[] = {new String(TESTDIR+"/compileTest.gdl"),
-						new String("-nooutput"),
-						incDir1, 
+	public void testFindPropertyFilesNamedWithRelativeDirs() throws GdlcException {
+		String incDir1 = "--I"+TESTDIR;
+		String configDir1 = "--C"+TESTDIR;
+		String configDir2 = "--C"+EXPECTED;
+		String args[] = {TESTDIR+"/compileTest.gdl",
+						"-nooutput",
+						incDir1,
+                        "--I"+INCDIR,
 						configDir1, 
-						configDir2,};
+						configDir2,
+        };
 		this.cp.process(args);
 
 		CompileMgr mgr = new CompileMgr();

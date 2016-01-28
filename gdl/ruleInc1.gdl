@@ -1,4 +1,4 @@
-include "r:\sandbox\net.bd.gdlc\gdl\varInc1.gdl";
+include "varInc1.gdl";
 
 
 rule G-IncRule1 ()
@@ -41,9 +41,8 @@ end
 
 rule G-TestRule2 ()
   if ( Loan_Amount_1st > 100000 &&
-        ( Loan_Amount_1st < 200000 ||
-          Loan_Amount_1st == 1 
-        )
+        ( Loan_Amount_1st < 200000 ) ||
+        (Loan_Amount_1st == 1)
      )
   then
     Rate = Rate_1st;
