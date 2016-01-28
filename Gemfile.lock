@@ -1,10 +1,3 @@
-GIT
-  remote: git@github.com:jmcaffee/rakeutils.git
-  revision: 66efdbb6896d3af0400d17d778dcfc48a5884e62
-  specs:
-    rakeutils (0.1.0)
-      ktutils
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -29,6 +22,8 @@ GEM
       byebug (~> 3.4)
       pry (~> 0.10)
     rake (10.4.2)
+    rakeutils (0.1.1)
+      ktutils
     slop (3.6.0)
     tartancloth (0.0.2)
       bluecloth (~> 2.2, >= 2.2.0)
@@ -41,5 +36,8 @@ DEPENDENCIES
   pry
   pry-byebug
   rake
-  rakeutils!
+  rakeutils
   tartancloth
+
+BUNDLED WITH
+   1.11.2
