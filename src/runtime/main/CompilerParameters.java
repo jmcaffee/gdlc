@@ -65,7 +65,7 @@ public class CompilerParameters extends CommandLineParameters {
         System.out.println();
         System.out.println("GDLC GuideLine Compiler v" + Constants.VERSION);
         System.out.println();
-        System.out.println("Copyright (C) 2015 Jeff McAffee");
+        System.out.println("Copyright (C) 2016 Jeff McAffee");
         System.out.println();
         System.out.println("This program comes with ABSOLUTELY NO WARRANTY.");
         System.out.println("This is free software, and you are welcome to redistribute");

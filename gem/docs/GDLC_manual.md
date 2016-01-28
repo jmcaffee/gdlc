@@ -206,7 +206,15 @@ The type of data the variable will contain:
 + `text`
 + `datetime`
 
-TODO: NUMERIC PRECISION
+To specify the _visible_ precision of a numeric value, surround the desired
+precision with parens immediately after the `numeric` keyword.
+
+Note that this doesn't affect the actual precision of the variable's value
+when used in calculations (16 places), only how it is displayed to the user.
+
+##### Example
+
+    dpm numeric(2) loanAmount "Loan Amount";
 
 #### References
 
@@ -241,14 +249,24 @@ _This restriction does not apply to the AMS Guideline Engine._
 
 ### Definitions
 
+_Prior to 3.0:_
+
     lookup("Lookup Name", xParameterVariable, yParameterVariable);
+
+_3.0 +_
+
+    lookup("Lookup Name");
+
+The `Xparameter` and `Yparameter` details are now included as part of the Lookup
+data. Previously, the parameters were defined in the `lookup` declaration
+statement (above).
 
 ### References
 
 This statement defines a lookup and returns the looked-up value. It can be used
 on the right hand side of an assignment ( `=` ) statement.
 
-    aValue = lookup("FHA-ClosingCostState", pSubjectPropertyState, globalParam);
+    aValue = lookup("FHA-ClosingCostState");
 
 When a lookup is defined, the compiler searches for the lookup data in memory.
 An error will be thrown if the data does not exist. See the `import` statement
@@ -262,11 +280,18 @@ All lookup definition/reference statements must be terminated with a `;`.
 
 ### Definitions
 
-TODO: Need more info here.
-
-    Example needed.
+PowerLookups are just `Ruleset`s defined within a `xls/csv` file.
+As such, there are no special definition statements for PLKs.
 
 ### References
+
+Because PowerLookups are simply Rulesets, they are referenced the
+same way any other ruleset is referenced:
+
+    ruleset SomeRuleset();
+
+Prior to referencing a PowerLookup ruleset, the ruleset must be
+`import`ed.
 
 - - -
 ## Rules
@@ -420,7 +445,7 @@ has already been defined, use this syntax:
 
 ### Definitions
 
-TODO: Missing info about 'PL' modifier keyword.
+_TODO: Missing info about 'PL' modifier keyword._
 
     ruleset InitAppraisedValue(continue)
 
@@ -590,9 +615,9 @@ When using DPM variables within messages, if the DPM/DSM has an alias
 defined, the alias must be used; the engine only recognizes/knows about the
 alias.
 
-TODO: IS THIS STILL TRUE (ABOUT ALIASES)?
+_TODO: IS THIS STILL TRUE (ABOUT ALIASES)?_
 
-TODO: DISCUSS THE ABILITY TO UNDERSTAND ALIAS' WHEN PULLING FROM PLKS.
+_TODO: DISCUSS THE ABILITY TO UNDERSTAND ALIAS' WHEN PULLING FROM PLKS._
 
 Message definition statements must be terminated with a `;`.
 
@@ -770,6 +795,24 @@ Imported files must also be on the inclusion path.
     import( lookup, "TestLookups.csv");
 
 The `lookup` import type will import Lookup matricies from a CSV file.
+
+_Prior to 3.0_
+
+The expected format of a lookup table is:
+
+![Old Lookup format](img/old_lookup_format.png "Pre 3.0 Lookup Format")
+
+_3.0 +_
+
+The expected format is now:
+
+
+![New Lookup format](img/new_lookup_format.png "3.0 Lookup Format")
+
+
+The `Xparameter` and `Yparameter` details are now included as part of the Lookup
+data. Previously, the parameters were defined in the `lookup` declaration
+statement.
 
 - - -
 ### PowerLookup Files
