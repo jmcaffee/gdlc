@@ -16,6 +16,7 @@ import com.Ostermiller.util.CSVParser;
 public class CsvPowerLookupFile {
 
 	String [][] data = null;
+	String lastFilepath = null;
 	
 /**
  * parse
@@ -24,6 +25,7 @@ public class CsvPowerLookupFile {
  * @throws IOException
  */	
 	public void parse(String filepath) throws FileNotFoundException, IOException {
+		lastFilepath = filepath;
 		BufferedReader in = new BufferedReader(new FileReader(filepath));
 		data = CSVParser.parse(in);
 	}
@@ -38,6 +40,15 @@ public class CsvPowerLookupFile {
 		boolean varTypesRead 	= false;
 		boolean	actionsRead		= false;
 		PlkCsvData plk			= new PlkCsvData();
+
+		if (data == null) {
+			if (lastFilepath == null) {
+				throw new CompileException("No PLK data to extract. No file has been parsed.");
+			} else {
+				throw new CompileException("No PLK data to extract. Verify [" + lastFilepath + "] contains valid data.");
+			}
+		}
+
 		for(String[] row : data){
 			plk.addRow(row);
 			if(plk.isLookupComplete()){
