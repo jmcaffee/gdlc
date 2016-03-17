@@ -6,8 +6,12 @@
 
 *************************************************************************** */
 
+// FIXME: Need test that generates errors; verify error message contains
+// line numbers when failing for incorrect arg count.
+
 // Define some functions
 
+xmlfunc noArgFunc();
 xmlfunc round(IN "value", IN "precision");
 xmlfunc output(IN "value", OUT "anotherValue");
 xmlfunc funcWithNoFlowIndicators("value", "anotherValue");
@@ -21,6 +25,13 @@ dpm numeric numToRound;
 
 
 // Define rules using the functions
+
+rule TestXmlFunction-NoArgFunc()
+  if(pAccountName == pAccountName)
+  then
+    tempNumber = noArgFunc();
+  end
+end
 
 rule TestXmlFunction-Round()
   if(pAccountName == pAccountName)
@@ -46,19 +57,21 @@ end
 rule TestXmlFunction-FuncOptIndicators()
   if(pAccountName == pAccountName)
   then
-    // Call function with no args
-    tempNumber = funcOptIndicators();
-
     // Call function with args
     tempNumber = funcOptIndicators(numToRound);
     tempNumber = funcOptIndicators(numToRound, tempNumber);
     tempNumber = funcOptIndicators(numToRound, tempNumber, tempNumber);
+
+    // Call function with no args
+    tempNumber = funcOptIndicators();
+
   end
 end
 
 
 guideline("XmlFunctionDefTest")
 
+  rule TestXmlFunction-NoArgFunc();
   rule TestXmlFunction-Round();
   rule TestXmlFunction-Output();
   rule TestXmlFunction-FuncWithNoFlowIndicators();

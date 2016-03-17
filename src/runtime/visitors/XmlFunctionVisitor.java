@@ -73,21 +73,29 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 		
 		node.childrenAccept(this, data);
 
+		int defReqArgCount = def.getRequiredArgCount();
 		int defArgCount = def.getArgCount();
-		
-		if(this.argCount < defArgCount){
-			int countDiff = defArgCount - this.argCount;
+
+		int countDiff = 0;
+		if (this.argCount < defReqArgCount) {
+			countDiff = defReqArgCount - this.argCount;
+		}
+
+		if (this.argCount > defArgCount) {
+			countDiff = this.argCount - defArgCount;
+		}
+
+		if(countDiff != 0){
+			// FIXME: Include parent rule name in error message
+			String argCountStr = "" + Integer.toString(defReqArgCount) + "..." + Integer.toString(defArgCount);
+			if (defReqArgCount == defArgCount) {
+				argCountStr = Integer.toString(defArgCount);
+			}
 			ctx.addError(new CompileError(CompileError.errors.MISSINGARG,
-						new String("XmlFunction reference [" + id + "] is missing " + Integer.toString(countDiff) + " argument(s). Expecting " + Integer.toString(defArgCount) + ", found " + Integer.toString(this.argCount) + ".")));
+						new String("XmlFunction reference [" + id + "] is expecting " + argCountStr + " argument(s). Received " + Integer.toString(this.argCount) + " instead.")));
 			Log.error("Xmlfunc ref is missing argument: " + id + ". Missing Arg error generated.");
 		}
-		
-		if(this.argCount > defArgCount){
-			ctx.addError(new CompileError(CompileError.errors.UNEXPECTEDARG,
-						new String("XmlFunction reference [" + id + "] has too many arguments. Expecting " + Integer.toString(defArgCount) + ", found " + Integer.toString(this.argCount) + ".")));
-			Log.error("Xmlfunc ref has extra arguments: " + id + ". Unexpected Arg error generated.");		
-		}
-		
+
 		return ctx;
 	}
 

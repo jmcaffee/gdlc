@@ -1548,7 +1548,6 @@ public class CompileMgrTester extends TestHelper {
 		File f=new File(outFile);
 
 		assertTrue("Output file not created", f.exists());
-
 	}
 
 }

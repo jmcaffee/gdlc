@@ -190,8 +190,11 @@ TOKEN :  /* Guideline 'Message' Keywords */
 
 TOKEN :  /* XML Function input/output var indicators */
 {
-  < IND_IN:   "IN">
-| < IND_OUT:    "OUT">
+  < IND_IN:         "IN">
+| < IND_OUT:        "OUT">
+| < IND_OPT:        "OPT">
+| < IND_IN_OPT:     "INOPT">
+| < IND_OUT_OPT:    "OUTOPT">
 }
 
 
@@ -662,7 +665,7 @@ String CodeBlock() :
 void XmlFuncDef() :
 {String nm;}
 {
-  <XMLFUNC> nm=Name(){jjtThis.data.put("Identifier",nm);} <LPAREN> (XmlFuncDefArgList() )? <RPAREN> EOS()
+  <XMLFUNC> nm=Name(){jjtThis.data.put("Identifier",nm);} ( <DEREFERENCE> | <LPAREN> (XmlFuncDefArgList() )? <RPAREN> ) EOS()
 }
 
 
@@ -676,11 +679,23 @@ void XmlFuncDefArgList() :
 
 
 void XmlFuncDefArg() :
-{}
-{  
-  ( LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? Constant()
-  | LOOKAHEAD(2) ( <IND_IN> | <IND_OUT> )? VarRef()
+{String flowType;}
+{
+  ( LOOKAHEAD(2) ( flowType=XmlFuncDefArgFlowInd(){ jjtThis.data.put("FlowType",flowType); } )? Constant()
+  | LOOKAHEAD(2) ( flowType=XmlFuncDefArgFlowInd(){ jjtThis.data.put("FlowType",flowType); } )? VarRef()
   )
+}
+
+
+
+String XmlFuncDefArgFlowInd() #void :
+{}
+{
+  ( <IND_IN>
+    | <IND_OUT>
+    | <IND_OPT>
+    | <IND_IN_OPT>
+    | <IND_OUT_OPT> ){ return token.image;}
 }
 
 
@@ -688,7 +703,7 @@ void XmlFuncDefArg() :
 void XmlFuncRef() :
 {String nm;}
 {
-  nm=Name(){jjtThis.data.put("Identifier",nm);} <LPAREN> (XmlFuncRefArgList() )? <RPAREN>
+  nm=Name(){jjtThis.data.put("Identifier",nm);} ( <DEREFERENCE> | <LPAREN> (XmlFuncRefArgList() )? <RPAREN> )
 }
 
 
