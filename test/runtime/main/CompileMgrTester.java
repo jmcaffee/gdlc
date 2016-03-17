@@ -1520,4 +1520,35 @@ public class CompileMgrTester extends TestHelper {
 		
 		assertXmlContains("<IfMessages><Message Type=\"Exceptions\" Order=\"3\"><![CDATA[True Message 1: <DPM>DPM Text</DPM>.]]></Message></IfMessages>", xml);
 	}
+
+
+
+
+	@Test
+	public void testXmlFunctionDef() throws GdlcException {
+		String args[] = {TESTDIR + "/xml_function_def_test.gdl",
+				"--I" + TESTDIR,
+				"-nooutput",
+		};
+		String outFile = OUTPUTDIR + "/test_xml_function_def.xml";
+		deleteFileIfExists(outFile);
+
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		mgr.execute(this.cp);
+
+		assertNotNull("Parse failed.",mgr.getParseTree());
+
+		assertIfContextHasError(mgr.getContext());
+
+		writeXmlToFile(mgr, outFile);
+
+		// Verify that the file was created.
+		File f=new File(outFile);
+
+		assertTrue("Output file not created", f.exists());
+
+	}
+
 }

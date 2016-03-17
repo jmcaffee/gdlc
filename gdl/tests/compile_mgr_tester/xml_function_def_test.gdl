@@ -1,0 +1,68 @@
+/* ***************************************************************************
+  File:     xml_function_def_test.gdl
+  Purpose:  Test Xml Function Definitions
+
+  Author:   Jeff McAffee 03/17/2016
+
+*************************************************************************** */
+
+// Define some functions
+
+xmlfunc round(IN "value", IN "precision");
+xmlfunc output(IN "value", OUT "anotherValue");
+xmlfunc funcWithNoFlowIndicators("value", "anotherValue");
+xmlfunc funcOptIndicators(INOPT "value", OUTOPT "anotherValue", OPT "yetAnotherVal");
+
+// Define some vars
+
+ppm text app pAccountName "Account Name";
+dpm numeric tempNumber;
+dpm numeric numToRound;
+
+
+// Define rules using the functions
+
+rule TestXmlFunction-Round()
+  if(pAccountName == pAccountName)
+  then
+    tempNumber = round(numToRound, 2);
+  end
+end
+
+rule TestXmlFunction-Output()
+  if(pAccountName == pAccountName)
+  then
+    tempNumber = output(numToRound, tempNumber);
+  end
+end
+
+rule TestXmlFunction-FuncWithNoFlowIndicators()
+  if(pAccountName == pAccountName)
+  then
+    tempNumber = funcWithNoFlowIndicators(numToRound, tempNumber);
+  end
+end
+
+rule TestXmlFunction-FuncOptIndicators()
+  if(pAccountName == pAccountName)
+  then
+    // Call function with no args
+    tempNumber = funcOptIndicators();
+
+    // Call function with args
+    tempNumber = funcOptIndicators(numToRound);
+    tempNumber = funcOptIndicators(numToRound, tempNumber);
+    tempNumber = funcOptIndicators(numToRound, tempNumber, tempNumber);
+  end
+end
+
+
+guideline("XmlFunctionDefTest")
+
+  rule TestXmlFunction-Round();
+  rule TestXmlFunction-Output();
+  rule TestXmlFunction-FuncWithNoFlowIndicators();
+  rule TestXmlFunction-FuncOptIndicators();
+
+end
+
