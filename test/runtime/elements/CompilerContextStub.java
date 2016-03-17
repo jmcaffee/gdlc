@@ -19,6 +19,7 @@ import runtime.parser.ASTGuidelineDef;
 import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTVarDef;
 import runtime.parser.ASTXmlFuncDef;
+import runtime.parser.SimpleNode;
 
 public class CompilerContextStub implements IProgramContext {
 	ASTCompilationUnit	rootNode;
@@ -156,7 +157,9 @@ public class CompilerContextStub implements IProgramContext {
 	 * @see runtime.compiler.IProgramContext#hasErrors()
 	 */
 	public boolean hasErrors() { return (!errors.isEmpty()); }
-	
+
+	public String getParentRuleIdentifier(SimpleNode node){ return "NOP"; }
+
 	public void addVar(VarPpm var){ /*ppmVars.put(var.getName(), var);*/ }
 
 	public VarPpm getVar(VarPpm var){ return null; /*return ppmVars.get(var.getName());*/	}

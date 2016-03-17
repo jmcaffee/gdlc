@@ -86,13 +86,12 @@ public class XmlFunctionVisitor extends DepthFirstVisitor {
 		}
 
 		if(countDiff != 0){
-			// FIXME: Include parent rule name in error message
 			String argCountStr = "" + Integer.toString(defReqArgCount) + "..." + Integer.toString(defArgCount);
 			if (defReqArgCount == defArgCount) {
 				argCountStr = Integer.toString(defArgCount);
 			}
 			ctx.addError(new CompileError(CompileError.errors.MISSINGARG,
-						new String("XmlFunction reference [" + id + "] is expecting " + argCountStr + " argument(s). Received " + Integer.toString(this.argCount) + " instead.")));
+						new String("@ rule " + ctx.getParentRuleIdentifier(node) + ":\n    XmlFunction reference [" + id + "] is expecting " + argCountStr + " argument(s). Received " + Integer.toString(this.argCount) + " instead.")));
 			Log.error("Xmlfunc ref is missing argument: " + id + ". Missing Arg error generated.");
 		}
 

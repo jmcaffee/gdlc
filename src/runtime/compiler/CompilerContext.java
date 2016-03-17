@@ -22,6 +22,8 @@ import runtime.parser.ASTRuleDef;
 import runtime.parser.ASTConditionMsgDef;
 import runtime.parser.ASTVarRef;
 import runtime.parser.ASTXmlFuncDef;
+import runtime.parser.Node;
+import runtime.parser.SimpleNode;
 
 public class CompilerContext implements IProgramContext, ILookups, IFunctionContext, IXmlFunctionContext {
 	
@@ -286,8 +288,23 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 	public boolean hasErrors() { return (!errors.isEmpty()); }
 	
 
-	
-	
+	public String getParentRuleIdentifier(SimpleNode node) {
+		if (node.getClass().getSimpleName().equalsIgnoreCase("ASTRuleDef")) {
+			return node.getName();
+		}
+
+		Node currNode = node.jjtGetParent();
+		while (currNode != null) {
+			if (currNode.getClass().getSimpleName().equalsIgnoreCase("ASTRuleDef")) {
+				return ((SimpleNode)currNode).getName();
+			}
+			currNode = currNode.jjtGetParent();
+		}
+
+		return "Unknown";
+	}
+
+
 	public void dumpDpmVars() {
 		Set<Map.Entry<String, IVariable>> set = dpmVars.entrySet();
 		

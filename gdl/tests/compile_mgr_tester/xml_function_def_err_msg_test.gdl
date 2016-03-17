@@ -1,0 +1,46 @@
+/* ***************************************************************************
+  File:     xml_function_def__err_msg_test.gdl
+  Purpose:  Test Xml Function Definition Error messages
+
+  Author:   Jeff McAffee 03/17/2016
+
+*************************************************************************** */
+
+// Define some functions
+
+xmlfunc noArgFunc();
+xmlfunc round(IN "value", IN "precision");
+
+// Define some vars
+
+ppm text app pAccountName "Account Name";
+dpm numeric tempNumber;
+dpm numeric numToRound;
+
+
+// Define rules using the functions
+
+rule TestXmlFunction-NoArgFunc()
+  if(pAccountName == pAccountName)
+  then
+    // Generate error for 'expecting 0, received 1 arg'
+    tempNumber = noArgFunc(tempNumber);
+  end
+end
+
+rule TestXmlFunction-Round()
+  if(pAccountName == pAccountName)
+  then
+    // Generate error for 'expecting 2, received 1 arg'
+    tempNumber = round(numToRound);
+  end
+end
+
+
+guideline("XmlFunctionDefErrMsgTest")
+
+  rule TestXmlFunction-NoArgFunc();
+  rule TestXmlFunction-Round();
+
+end
+

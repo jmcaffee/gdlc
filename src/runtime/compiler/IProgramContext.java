@@ -9,7 +9,8 @@ import runtime.main.IProblem;
 import runtime.parser.ASTCompilationUnit;
 import runtime.parser.ASTConditionMsgDef;
 import runtime.parser.ASTRuleDef;
- 
+import runtime.parser.SimpleNode;
+
 public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncludeDirs, IFunctionContext, IXmlFunctionContext {
 
 	public abstract void 				setRootNode(ASTCompilationUnit cuRoot);
@@ -62,5 +63,6 @@ public interface IProgramContext extends IGuidelineContext, IErrorContext, IIncl
 
 	public abstract void 				setConditionPriorTos(HashMap<String, Integer> conditionPriorTos);
 
+	public abstract String 				getParentRuleIdentifier(SimpleNode node);
 
 }

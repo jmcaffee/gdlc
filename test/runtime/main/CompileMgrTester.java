@@ -1522,8 +1522,6 @@ public class CompileMgrTester extends TestHelper {
 	}
 
 
-
-
 	@Test
 	public void testXmlFunctionDef() throws GdlcException {
 		String args[] = {TESTDIR + "/xml_function_def_test.gdl",
@@ -1550,4 +1548,32 @@ public class CompileMgrTester extends TestHelper {
 		assertTrue("Output file not created", f.exists());
 	}
 
+
+	@Test
+	public void testXmlFunctionDefErrorMsgs() throws GdlcException {
+		String args[] = {TESTDIR + "/xml_function_def_err_msg_test.gdl",
+				"--I" + TESTDIR,
+				"-nooutput",
+		};
+		String outFile = OUTPUTDIR + "/test_xml_function_def_err_msg.xml";
+		deleteFileIfExists(outFile);
+
+		this.cp.process(args);
+
+		CompileMgr mgr = new CompileMgr();
+		try {
+			mgr.execute(this.cp);
+		} catch (GdlcException e) {
+			// Expected error... do nothing.
+		}
+
+		IErrorContext ctx = mgr.getContext();
+        assertIfContextErrorNotExist(ctx,"XmlFunction reference [noArgFunc] is expecting 0 argument(s). Received 1 instead.");
+		assertIfContextErrorNotExist(ctx,"XmlFunction reference [round] is expecting 2 argument(s). Received 1 instead.");
+
+		// Name of failing rule is included in messages
+		assertIfContextErrorNotExist(ctx,"Argument Missing. @ rule TestXmlFunction-NoArgFunc:");
+		assertIfContextErrorNotExist(ctx,"Argument Missing. @ rule TestXmlFunction-Round:");
+
+	}
 }
