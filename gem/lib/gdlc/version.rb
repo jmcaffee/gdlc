@@ -1,5 +1,5 @@
 ##############################################################################
-#    Copyright (C) 2015  Jeff McAffee
+#    Copyright (C) 2016  Jeff McAffee
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 #
 
 module Gdlc
-  VERSION = "3.0.0.0" unless constants.include?("VERSION")
+  VERSION = "3.1.0.0" unless constants.include?("VERSION")
   APPNAME = "GDLC" unless constants.include?("APPNAME")
   COPYRIGHT = "Copyright (c) 2016 Jeff McAffee. All rights reserved" unless constants.include?("COPYRIGHT")
 end

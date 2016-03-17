@@ -202,6 +202,7 @@
 <li><span class="h3toc"><a href="#Lookup.Files">Lookup Files</a></span></li>
 <li><span class="h3toc"><a href="#PowerLookup.Files">PowerLookup Files</a></span></li>
 <li><span class="h2toc"><a href="#XML.Functions">XML Functions</a></span></li>
+<li><span class="h3toc"><a href="#Argument.Flow.Type.Indicators">Argument Flow Type Indicators</a></span></li>
 <li><span class="h3toc"><a href="#Definitions.7">Definitions</a></span></li>
 <li><span class="h3toc"><a href="#References.6">References</a></span></li>
 <li><span class="h2toc"><a href="#Miscellaneous">Miscellaneous</a></span></li>
@@ -1220,7 +1221,7 @@ end // guideline MyGuideline
 <a name="XML.Functions"></a>
 <h2>XML Functions</h2>
 
-<pre><code>xmlfunc identifier( [IN|OUT] dpmVariable, [IN|OUT] "constant", [IN|OUT] 15.5 );
+<pre><code>xmlfunc identifier( [FLOW_TYPE] dpmVariable, [FLOW_TYPE] "constant", [FLOW_TYPE] 15.5 );
 </code></pre>
 
 <p>XML Functions are defined and provided by the engine. The compiler does not
@@ -1229,13 +1230,31 @@ the function exists before using it in your guideline.</p>
 
 <p>To use an XML function, it must first be defined. The compiler does check the
 argument count against the function definition when it is referenced within a
-rule. Errors will be thrown if the argument count doesn't match.</p>
+rule. Errors will be thrown if the <em>required</em> argument count doesn't match.</p>
+
+<a name="Argument.Flow.Type.Indicators"></a>
+<h3>Argument Flow Type Indicators</h3>
+
+<p>Available flow types:</p>
+
+<pre><code>IN
+OUT
+OPT
+INOPT
+OUTOPT
+</code></pre>
 
 <p>In both definitions and references, the <code>IN</code> and <code>OUT</code> keywords can be used in
 front of each argument. These keywords are optional. They affect nothing and
 are only used as an indicator for the user as to whether the variable is used
 for INput to the function or OUTput from the function. <code>IN</code> and <code>OUT</code> can be
 used in either definitions, or references, or both.</p>
+
+<p><code>OPT</code>, <code>INOPT</code>, and <code>OUTOPT</code> are <em>optional</em> indicators. They indicate that the
+argument is <strong>optional</strong> (ie. not required). <em>The compiler will not flag
+a function reference (throw an error) that doesn't include optional arguments.</em>
+<code>INOPT</code> and <code>OUTOPT</code> are used to indicate OPTional INput and OPTional OUTput
+arguments.</p>
 
 <p>DPM variables, PPM variables, numbers and constants (values surrounded with
 quotes) can be used as arguments. Inline expressions are not allowed as

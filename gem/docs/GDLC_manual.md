@@ -849,7 +849,7 @@ its use would be as follows:
 - - -
 ## XML Functions
 
-    xmlfunc identifier( [IN|OUT] dpmVariable, [IN|OUT] "constant", [IN|OUT] 15.5 );
+    xmlfunc identifier( [FLOW_TYPE] dpmVariable, [FLOW_TYPE] "constant", [FLOW_TYPE] 15.5 );
 
 XML Functions are defined and provided by the engine. The compiler does not
 know whether or not a function is available. It is up to the user to verify
@@ -857,13 +857,30 @@ the function exists before using it in your guideline.
 
 To use an XML function, it must first be defined. The compiler does check the
 argument count against the function definition when it is referenced within a
-rule. Errors will be thrown if the argument count doesn't match.
+rule. Errors will be thrown if the _required_ argument count doesn't match.
+
+### Argument Flow Type Indicators
+
+Available flow types:
+
+    IN
+    OUT
+    OPT
+    INOPT
+    OUTOPT
 
 In both definitions and references, the `IN` and `OUT` keywords can be used in
 front of each argument. These keywords are optional. They affect nothing and
 are only used as an indicator for the user as to whether the variable is used
 for INput to the function or OUTput from the function. `IN` and `OUT` can be
 used in either definitions, or references, or both.
+
+`OPT`, `INOPT`, and `OUTOPT` are _optional_ indicators. They indicate that the
+argument is **optional** (ie. not required). _The compiler will not flag
+a function reference (throw an error) that doesn't include optional arguments._
+`INOPT` and `OUTOPT` are used to indicate OPTional INput and OPTional OUTput
+arguments.
+
 
 DPM variables, PPM variables, numbers and constants (values surrounded with
 quotes) can be used as arguments. Inline expressions are not allowed as
