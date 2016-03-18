@@ -53,12 +53,12 @@ public class ImportPowerLookupVisitor extends DepthFirstVisitor {
 		}
 		catch(FileNotFoundException e){
 			ctx.addError(new CompileError(CompileError.errors.FILENOTFOUND,
-					new String("PowerLookup file [" + filepath + "] not found.")));
+					new String("PowerLookup file [" + filename + "] not found.")));
 			return;
 		}
 		catch(IOException e){
 			ctx.addError(new CompileError(CompileError.errors.UNKNOWN,
-					new String("There was an problem reading the power lookup file [" + filepath + "].")));
+					new String("There was an problem reading the power lookup file [" + filename + "].")));
 			return;
 		}
 		

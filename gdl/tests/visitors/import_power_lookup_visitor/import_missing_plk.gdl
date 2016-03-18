@@ -1,0 +1,15 @@
+/* ***************************************************************************
+  File:     import_missing_plk.gdl
+  Purpose:  Test importing a non-existing PLK file.
+
+  Author:   Jeff McAffee 03/18/2016
+
+*************************************************************************** */
+
+import(powerlookup, "does_not_exist.csv");
+
+guideline("import_missing_plk")
+  ruleset DoesNotExist();
+end
+
+
