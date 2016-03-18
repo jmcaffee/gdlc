@@ -372,14 +372,15 @@ public class CompilerContext implements IProgramContext, ILookups, IFunctionCont
 		StringBuffer errs = new StringBuffer();
 		String newLine = new String("\n");
 		
-		errs.append("Errors: " + errors.size() + newLine);
 		if(hasErrors()){
 			for(IProblem me : errors) {
 				errs.append("Error (E" + me.getId() + "): " + me.getDesc() + ". " + me.getMsg() + newLine);
 			}
 			errs.append(newLine);
-		} 
-		
+		}
+
+		errs.append("Errors: " + errors.size() + newLine);
+
 		return errs.toString();
 	}
 	
