@@ -1,0 +1,24 @@
+/* ***************************************************************************
+  File:     reference_missing_variable.gdl
+  Purpose:  Test missing var definition error message
+
+  Author:   Jeff McAffee 03/18/2016
+
+*************************************************************************** */
+
+ppm text app pAccountName;
+
+rule MissingVarRule()
+  if(pAccountName == pAccountName)
+  then
+    missingVar = "Test";
+  end
+end
+
+
+guideline("reference_missing_variable")
+
+  rule MissingVarRule();
+
+end
+

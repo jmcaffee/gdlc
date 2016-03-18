@@ -10,6 +10,7 @@ import runtime.parser.ASTMessage;
 import runtime.parser.ASTRuleRef;
 import runtime.parser.ASTRulesetRef;
 import runtime.parser.ASTVarRef;
+import runtime.parser.SimpleNode;
 
 public class ResolveRefsVisitor extends DepthFirstVisitor {
 
@@ -53,7 +54,7 @@ public class ResolveRefsVisitor extends DepthFirstVisitor {
 					} else{
 						// It's not a valid name, it's not a valid alias.
 						ctx.addError(new CompileError(CompileError.errors.DEFMISSING,
-								new String("Variable [" + name + "] definition missing.")));
+								createAtRuleErrorMessage(ctx, node, "Variable [" + name + "] definition missing.")));
 					}
 				}
 			} else if(cast.equalsIgnoreCase("PPM")){
@@ -67,19 +68,19 @@ public class ResolveRefsVisitor extends DepthFirstVisitor {
 					} else{
 						// It's not a valid name, it's not a valid alias.
 						ctx.addError(new CompileError(CompileError.errors.DEFMISSING,
-								new String("Variable [" + name + "] definition missing.")));
+								createAtRuleErrorMessage(ctx, node, "Variable [" + name + "] definition missing.")));
 					}
 				}
 			} else {
 				// It's not a valid cast.
 				ctx.addError(new CompileError(CompileError.errors.BADCAST,
-						new String("Invalid cast operation: Variable [" + name + "].")));
+						createAtRuleErrorMessage(ctx, node, "Invalid cast operation: Variable [" + name + "].")));
 			}
 				
 		} else if(!ctx.containsVar(new VarDpm(name)) &&
 			!ctx.containsVar(new VarPpm(name))) {
 			ctx.addError(new CompileError(CompileError.errors.DEFMISSING,
-					new String("Variable [" + name + "] definition missing.")));
+					createAtRuleErrorMessage(ctx, node, "Variable [" + name + "] definition missing.")));
 		}
 		
 		return ctx;
@@ -135,6 +136,8 @@ public class ResolveRefsVisitor extends DepthFirstVisitor {
 		return data;
 	}
 
-
+	String createAtRuleErrorMessage(IProgramContext ctx, SimpleNode node, String err) {
+		return new String("@ rule " + ctx.getParentRuleIdentifier(node) + ":\n    " + err);
+	}
 
 }
