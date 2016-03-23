@@ -16,7 +16,7 @@
 #
 
 module Gdlc
-  VERSION = "3.1.1.0" unless constants.include?("VERSION")
+  VERSION = "3.1.2.0" unless constants.include?("VERSION")
   APPNAME = "GDLC" unless constants.include?("APPNAME")
   COPYRIGHT = "Copyright (c) 2016 Jeff McAffee. All rights reserved" unless constants.include?("COPYRIGHT")
 end
