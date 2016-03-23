@@ -464,7 +464,7 @@ String PpmVarType() #void :
 {}
 {
   <APPLICATION>   { return new String("APM");}
-  | <CREDIT>        { return new String("CRD");}
+  | <CREDIT>        { return new String("CRP");}
   | <PRODUCT>       { return new String("PRD");}
 }
 
