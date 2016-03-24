@@ -324,15 +324,7 @@ public class PowerLookupRulesetBuilder {
 		if(value.startsWith("PPM(") && value.endsWith(")")){
 			return genVar.lookupAndCast(stripCast(value), "PPM");
 		}
-		
-		if(value.equalsIgnoreCase("TRUE")){
-			return "True";
-		}
-		
-		if(value.equalsIgnoreCase("FALSE")){
-			return "False";
-		}
-		
+
 		if(value.equalsIgnoreCase("NULL")){
 			return "NULL";
 		}
