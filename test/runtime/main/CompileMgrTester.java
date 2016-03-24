@@ -1326,17 +1326,23 @@ public class CompileMgrTester extends TestHelper {
 		
 		xml = mgr.getRuleXml("Rule-TestTrueConstant");
 		assertTrue("XML string is empty", (xml.length() > 0));
-		
+
+		/* We're no longer converting TRUE or true to True.
+
 		expectedResult = EXPECTED + "/Rule-TestTrueConstant.xml";
 		validXml = getFileContents(expectedResult);
 		assertEquals("TrueConstant XML string is not valid", validXml, xml);
+		*/
 		
 		xml = mgr.getRuleXml("Rule-TestFalseConstant");
 		assertTrue("XML string is empty", (xml.length() > 0));
 		
+		/* We're no longer converting FALSE or false to False.
+
 		expectedResult = EXPECTED + "/Rule-TestFalseConstant.xml";
 		validXml = getFileContents(expectedResult);
 		assertEquals("FalseConstant XML string is not valid", validXml, xml);
+		*/
 		
 
 	}

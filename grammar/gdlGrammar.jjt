@@ -964,11 +964,11 @@ void Constant() :
 { Token t; String str; }
 {
   t=<NUMERIC_CONSTANT>  { jjtThis.data.put("value",t.image ); }
-  | t=<CONST_NULL>    { jjtThis.data.put("value","NULL" ); }
-  | t=<TRUE>        { jjtThis.data.put("value","True" ); }
-  | t=<FALSE>       { jjtThis.data.put("value","False" ); }
-    | 
-    str=StringLiteral()   { jjtThis.data.put("value",str); }
+  | t=<CONST_NULL>      { jjtThis.data.put("value","NULL" ); }
+  | t=<TRUE>            { jjtThis.data.put("value",t.image ); }
+  | t=<FALSE>           { jjtThis.data.put("value",t.image ); }
+  |
+  str=StringLiteral()   { jjtThis.data.put("value",str); }
 }
 
 
